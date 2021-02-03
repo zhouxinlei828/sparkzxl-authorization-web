@@ -20,22 +20,8 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-select
-              v-model="queryForm.nation"
-              class="filter-item search-item"
-              placeholder="请选择民族"
-            >
-              <el-option
-                v-for="item in nationData"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item>
             <TreeSelect
-              v-model="queryForm.org"
+              v-model="queryForm.orgId"
               class="filter-item search-item"
               :load-options="loadListOptions"
               :multiple="false"
@@ -72,6 +58,8 @@
     </vab-query-form>
     <el-table
       v-loading="listLoading"
+      border
+      height="510"
       :data="list"
       :element-loading-text="elementLoadingText"
       @selection-change="setSelectRows"
@@ -79,43 +67,70 @@
       <el-table-column show-overflow-tooltip type="selection"></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="id"
-        label="id"
+        prop="account"
+        label="账号"
       ></el-table-column>
       <el-table-column
         show-overflow-tooltip
-        prop="username"
-        label="用户名"
+        prop="name"
+        label="姓名"
       ></el-table-column>
-      <el-table-column
-        show-overflow-tooltip
-        prop="email"
-        label="邮箱"
-      ></el-table-column>
-
-      <el-table-column show-overflow-tooltip label="权限">
+      <el-table-column show-overflow-tooltip prop="sex" label="性别" width="60">
         <template #default="{ row }">
-          <el-tag v-for="(item, index) in row.permissions" :key="index">
-            {{ item }}
+          <el-tag v-if="row.sex.code === 1">
+            {{ row.sex.desc }}
+          </el-tag>
+          <el-tag v-if="row.sex.code !== 1" type="success">
+            {{ row.sex.desc }}
           </el-tag>
         </template>
       </el-table-column>
-
       <el-table-column
         show-overflow-tooltip
-        prop="datatime"
-        label="修改时间"
+        prop="positionStatus"
+        label="职位状态"
+      >
+        <template #default="{ row }">
+          <span v-if="row.positionStatus.data != null">
+            {{ row.positionStatus.data }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column show-overflow-tooltip prop="station" label="岗位">
+        <template #default="{ row }">
+          <span v-if="row.station.data != null">
+            {{ row.station.data.name }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="status"
+        label="状态"
+        width="80"
+      >
+        <template #default="{ row }">
+          <el-tag v-if="row.status === true">启用</el-tag>
+          <el-tag v-if="row.status !== true" type="danger">停用</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        show-overflow-tooltip
+        prop="createTime"
+        label="创建时间"
+        width="160"
       ></el-table-column>
-      <el-table-column show-overflow-tooltip label="操作" width="200">
+      <el-table-column show-overflow-tooltip label="操作" width="100">
         <template #default="{ row }">
           <el-button type="text" @click="handleEdit(row)">编辑</el-button>
+          <el-divider direction="vertical"></el-divider>
           <el-button type="text" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
       background
-      :current-page="queryForm.pageNo"
+      :current-page="queryForm.pageNum"
       :page-size="queryForm.pageSize"
       :layout="layout"
       :total="total"
@@ -127,10 +142,11 @@
 </template>
 
 <script>
-  import { getList, doDelete } from '@/api/userManagement'
+  import { getUserPage, doDelete } from '@/api/userManagement'
   import { getDictionaryItemList } from '@/api/dictionary'
   import Edit from './components/UserManagementEdit'
   import { getOrgList } from '@/api/org'
+  import moment from 'moment'
 
   export default {
     name: 'UserManagement',
@@ -144,12 +160,11 @@
         selectRows: '',
         elementLoadingText: '正在加载...',
         queryForm: {
-          pageNo: 1,
+          pageNum: 1,
           pageSize: 10,
           username: '',
           name: '',
-          nation: null,
-          org: null,
+          orgId: null,
         },
         nationData: [],
         orgData: [],
@@ -167,7 +182,6 @@
             dictionaryType: 'NATION',
           }
           getDictionaryItemList(data).then((response) => {
-            debugger
             this.nationData = response.data
           })
         }
@@ -191,7 +205,27 @@
       },
       handleEdit(row) {
         if (row.id) {
-          this.$refs['edit'].showEdit(row)
+          const updateData = {
+            id: row.id,
+            account: row.account,
+            name: row.name,
+            org: row.org === null ? '' : row.org.key,
+            station: row.station === null ? '' : row.station.key,
+            email: row.email,
+            mobile: row.mobile,
+            sex: row.sex === null ? '' : row.sex.code + '',
+            nation: row.nation === null ? '' : row.nation.key,
+            education: row.education === null ? '' : row.education.key,
+            positionStatus:
+              row.positionStatus === null ? '' : row.positionStatus.key,
+            status: row.status === true ? '1' : '2',
+            workDescribe: row.workDescribe,
+            nationData: this.nationData,
+            educationData: this.educationData,
+            positionStatusData: this.positionStatusData,
+            orgData: this.orgData,
+          }
+          this.$refs['edit'].showEdit(updateData)
         } else {
           this.$refs['edit'].showEdit()
         }
@@ -201,7 +235,7 @@
           this.$baseConfirm('你确定要删除当前项吗', null, async () => {
             const { msg } = await doDelete({ ids: row.id })
             this.$baseMessage(msg, 'success')
-            this.fetchData()
+            await this.fetchData()
           })
         } else {
           if (this.selectRows.length > 0) {
@@ -209,7 +243,7 @@
             this.$baseConfirm('你确定要删除选中项吗', null, async () => {
               const { msg } = await doDelete({ ids })
               this.$baseMessage(msg, 'success')
-              this.fetchData()
+              await this.fetchData()
             })
           } else {
             this.$baseMessage('未选中任何行', 'error')
@@ -222,7 +256,7 @@
         this.fetchData()
       },
       handleCurrentChange(val) {
-        this.queryForm.pageNo = val
+        this.queryForm.pageNum = val
         this.fetchData()
       },
       queryData() {
@@ -231,9 +265,17 @@
       },
       async fetchData() {
         this.listLoading = true
-        const { data, totalCount } = await getList(this.queryForm)
-        this.list = data
-        this.total = totalCount
+        await getUserPage(this.queryForm).then((response) => {
+          const result = response.data
+          console.log(result)
+          this.total = parseInt(result.total)
+          this.list = result.list
+          for (const model of this.list) {
+            model.createTime = moment(model.createTime).format(
+              'YYYY-MM-DD HH:mm:ss'
+            )
+          }
+        })
         setTimeout(() => {
           this.listLoading = false
         }, 300)

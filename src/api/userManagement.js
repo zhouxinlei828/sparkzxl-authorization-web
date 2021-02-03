@@ -1,5 +1,13 @@
 import request from '@/utils/request'
-
+const api = {
+  userPage: '/uaa/user/listPage',
+  userList: '/uaa/user/list',
+  exportExcelUser: '/uaa/user/exportUserData',
+  saveUser: '/uaa/user/saveAuthUser',
+  updateUser: '/uaa/user/updateAuthUser',
+  deleteUser: '/uaa/user/delete',
+  importUserData: '/uaa/user/importUserData',
+}
 export function getList(data) {
   return request({
     url: '/userManagement/getList',
@@ -21,5 +29,13 @@ export function doDelete(data) {
     url: '/userManagement/doDelete',
     method: 'post',
     data,
+  })
+}
+
+export function getUserPage(parameter) {
+  return request({
+    url: api.userPage,
+    method: 'post',
+    data: parameter,
   })
 }
