@@ -5,9 +5,6 @@ const api = {
   stationPageList: '/uaa/station/stations',
   operateStation: '/uaa/station/station',
 }
-
-export default api
-
 export function getStationList() {
   return request({
     url: api.stationList,
