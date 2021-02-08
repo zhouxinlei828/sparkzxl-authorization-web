@@ -1,15 +1,15 @@
 import request from '@/utils/request'
 
 const api = {
-  dictionaryItem: '/uaa/common/dictionaryItem/dictionaryItemList',
-  dictionaryPage: '/uaa/common/dictionary/page',
-  dictionaryItemPage: '/uaa/common/dictionaryItem/page',
-  saveDictionary: '/uaa/common/dictionary/save',
-  updateDictionary: '/uaa/common/dictionary/update',
-  deleteDictionary: '/uaa/common/dictionary/delete',
-  saveDictionaryItem: '/uaa/common/dictionaryItem/save',
-  updateDictionaryItem: '/uaa/common/dictionaryItem/update',
-  deleteDictionaryItem: '/uaa/common/dictionaryItem/delete',
+  dictionaryItem: '/authorization/common/dictionaryItem/dictionaryItemList',
+  dictionaryPage: '/authorization/common/dictionary/page',
+  dictionaryItemPage: '/authorization/common/dictionaryItem/page',
+  saveDictionary: '/authorization/common/dictionary/save',
+  updateDictionary: '/authorization/common/dictionary/update',
+  deleteDictionary: '/authorization/common/dictionary/delete',
+  saveDictionaryItem: '/authorization/common/dictionaryItem/save',
+  updateDictionaryItem: '/authorization/common/dictionaryItem/update',
+  deleteDictionaryItem: '/authorization/common/dictionaryItem/delete',
 }
 
 export function getDictionaryItemList(parameter) {

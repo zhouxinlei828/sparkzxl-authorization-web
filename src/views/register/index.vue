@@ -92,7 +92,6 @@
 </template>
 <script>
   import { isPassword, isPhone } from '@/utils/validate'
-  import { register } from '@/api/user'
   export default {
     username: 'Register',
     directives: {
@@ -192,8 +191,8 @@
               password: this.form.password,
               phoneCode: this.form.phoneCode,
             }
-            const { msg } = await register(param)
-            this.$baseMessage(msg, 'success')
+            /*const { msg } = await register(param)
+            this.$baseMessage(msg, 'success')*/
           }
         })
       },

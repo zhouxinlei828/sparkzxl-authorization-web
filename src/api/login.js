@@ -1,15 +1,15 @@
 import request from '@/utils/request'
 
 const userApi = {
-  Login: '/uaa/oauth/token',
-  Logout: '/uaa/logout',
-  ForgePassword: '/uaa/forge-password',
-  Register: '/uaa/register',
-  getCaptcha: '/uaa/oauth/captcha',
+  Login: '/authorization/oauth/token',
+  Logout: '/authorization/logout',
+  ForgePassword: '/authorization/forge-password',
+  Register: '/authorization/register',
+  getCaptcha: '/authorization/oauth/captcha',
   SendSmsErr: '/account/sms_err',
   // get my info
-  UserInfo: '/uaa/user/currentUser',
-  UserMenu: '/uaa/user/routers',
+  UserInfo: '/authorization/user/currentUser',
+  UserMenu: '/authorization/user/routers',
 }
 
 export function login(parameter) {

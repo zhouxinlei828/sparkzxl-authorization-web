@@ -4,31 +4,40 @@
  */
 
 import Vue from 'vue'
-import { getUserInfo, login, logout } from '@/api/user'
+import { getInfo, login } from '@/api/login'
 import {
   getAccessToken,
   removeAccessToken,
   setAccessToken,
+  setTokenType,
 } from '@/utils/accessToken'
 import { resetRouter } from '@/router'
 import { title, tokenName } from '@/config'
 
 const state = () => ({
+  tokenType: 'bearer ',
   accessToken: getAccessToken(),
   username: '',
   avatar: '',
+  roles: [],
   permissions: [],
 })
 const getters = {
+  tokenType: (state) => state.tokenType,
   accessToken: (state) => state.accessToken,
   username: (state) => state.username,
   avatar: (state) => state.avatar,
   permissions: (state) => state.permissions,
+  roles: (state) => state.roles,
 }
 const mutations = {
   setAccessToken(state, accessToken) {
     state.accessToken = accessToken
     setAccessToken(accessToken)
+  },
+  setTokenType(state, tokenType) {
+    state.tokenType = tokenType.concat(' ')
+    setTokenType(tokenType)
   },
   setUsername(state, username) {
     state.username = username
@@ -39,16 +48,22 @@ const mutations = {
   setPermissions(state, permissions) {
     state.permissions = permissions
   },
+  SET_INFO: (state, info) => {
+    state.info = info
+  },
+  SET_ROLES: (state, roles) => {
+    debugger
+    state.roles = roles
+  },
 }
 const actions = {
-  setPermissions({ commit }, permissions) {
-    commit('setPermissions', permissions)
-  },
   async login({ commit }, userInfo) {
     const { data } = await login(userInfo)
-    const accessToken = data[tokenName]
+    const accessToken = data['access_token']
+    const tokenType = data['token_type']
     if (accessToken) {
       commit('setAccessToken', accessToken)
+      commit('setTokenType', tokenType)
       const hour = new Date().getHours()
       const thisTime =
         hour < 8
@@ -68,25 +83,25 @@ const actions = {
       )
     }
   },
-  async getUserInfo({ commit, state }) {
-    const { data } = await getUserInfo(state.accessToken)
+  async getUserInfo({ commit }) {
+    const { data } = await getInfo()
     if (!data) {
       Vue.prototype.$baseMessage('验证失败，请重新登录...', 'error')
       return false
     }
-    let { permissions, username, avatar } = data
-    if (permissions && username && Array.isArray(permissions)) {
-      commit('setPermissions', permissions)
+    let { username, avatar, roleBasicInfos } = data
+    if (data) {
+      commit('SET_INFO', data)
       commit('setUsername', username)
       commit('setAvatar', avatar)
-      return permissions
+      commit('SET_ROLES', roleBasicInfos)
+      return data
     } else {
       Vue.prototype.$baseMessage('用户信息接口异常', 'error')
       return false
     }
   },
   async logout({ dispatch }) {
-    await logout(state.accessToken)
     await dispatch('resetAccessToken')
     await resetRouter()
   },

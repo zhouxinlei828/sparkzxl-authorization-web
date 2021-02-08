@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
 const api = {
-  orgList: '/uaa/org/orgs',
-  operateOrg: '/uaa/org/org',
-  deleteOrg: '/uaa/org/org/batch?ids=',
+  orgList: '/authorization/org/orgs',
+  operateOrg: '/authorization/org/org',
+  deleteOrg: '/authorization/org/org/batch?ids=',
 }
 
 export default api

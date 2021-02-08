@@ -1,10 +1,13 @@
 import request from '@/utils/request'
 
 const api = {
-  stationList: '/uaa/station/stationList',
-  stationPageList: '/uaa/station/stations',
-  operateStation: '/uaa/station/station',
+  stationList: '/authorization/station/stationList',
+  stationPageList: '/authorization/station/stations',
+  operateStation: '/authorization/station/station',
 }
+
+export default api
+
 export function getStationList() {
   return request({
     url: api.stationList,

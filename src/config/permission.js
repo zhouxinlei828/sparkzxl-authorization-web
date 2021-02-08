@@ -7,8 +7,8 @@ import store from '@/store'
 import VabProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import getPageTitle from '@/utils/pageTitle'
+
 import {
-  authentication,
   loginInterception,
   progressBar,
   recordRoute,
@@ -32,33 +32,21 @@ router.beforeResolve(async (to, from, next) => {
       next({ path: '/' })
       if (progressBar) VabProgress.done()
     } else {
-      const hasPermissions =
-        store.getters['user/permissions'] &&
-        store.getters['user/permissions'].length > 0
-      if (hasPermissions) {
+      const hasRoles = store.getters['user/roles']
+      debugger
+      if (hasRoles.length > 0) {
         next()
       } else {
-        try {
-          let permissions
-          if (!loginInterception) {
-            //settings.js loginInterception为false时，创建虚拟权限
-            await store.dispatch('user/setPermissions', ['admin'])
-            permissions = ['admin']
-          } else {
-            permissions = await store.dispatch('user/getUserInfo')
+        let userInfo = store.dispatch('user/getUserInfo')
+        if (userInfo) {
+          try {
+            let accessRoutes = store.dispatch('routes/setAllRoutes')
+            router.addRoutes(await accessRoutes)
+            next({ ...to, replace: true })
+          } catch {
+            await store.dispatch('user/resetAccessToken')
+            if (progressBar) VabProgress.done()
           }
-
-          let accessRoutes = []
-          if (authentication === 'intelligence') {
-            accessRoutes = await store.dispatch('routes/setRoutes', permissions)
-          } else if (authentication === 'all') {
-            accessRoutes = await store.dispatch('routes/setAllRoutes')
-          }
-          router.addRoutes(accessRoutes)
-          next({ ...to, replace: true })
-        } catch {
-          await store.dispatch('user/resetAccessToken')
-          if (progressBar) VabProgress.done()
         }
       }
     }

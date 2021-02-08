@@ -6,17 +6,11 @@ import './plugins'
 import '@/layouts/export'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-/**
- * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
- * @description 生产环境默认都使用mock，如果正式用于生产环境时，记得去掉
- */
-
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('@/utils/static')
-  mockXHR()
-}
+import Table from 'ant-design-vue'
+import 'ant-design-vue/dist/antd.css'
 
 Vue.config.productionTip = false
+Vue.use(Table)
 Vue.component('TreeSelect', Treeselect)
 new Vue({
   el: '#vue-admin-beautiful',

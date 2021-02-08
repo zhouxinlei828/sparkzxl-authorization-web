@@ -1,11 +1,5 @@
 <template>
   <div class="login-container">
-    <el-alert
-      title="beautiful boys and girls欢迎加入vue-admin-beautifulQQ群：972435319"
-      type="success"
-      :closable="false"
-      style="position: fixed"
-    ></el-alert>
     <el-row>
       <el-col :xs="24" :sm="24" :md="12" :lg="16" :xl="16">
         <div style="color: transparent">占位符</div>
@@ -87,7 +81,7 @@
     },
     data() {
       const validateusername = (rule, value, callback) => {
-        if ('' == value) {
+        if ('' === value) {
           callback(new Error('用户名不能为空'))
         } else {
           callback()
@@ -141,13 +135,6 @@
     },
     beforeDestroy() {
       document.body.style.overflow = 'auto'
-    },
-    mounted() {
-      this.form.username = 'admin'
-      this.form.password = '123456'
-      setTimeout(() => {
-        this.handleLogin()
-      }, 3000)
     },
     methods: {
       handlePassword() {

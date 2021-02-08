@@ -3,7 +3,7 @@
  * @description 路由拦截状态管理，目前两种模式：all模式与intelligence模式，其中partialRoutes是菜单暂未使用
  */
 import { asyncRoutes, constantRoutes } from '@/router'
-import { getRouterList } from '@/api/router'
+import { getCurrentUserNav } from '@/api/login'
 import { convertRouter, filterAsyncRoutes } from '@/utils/handleRoutes'
 
 const state = () => ({
@@ -25,9 +25,26 @@ const mutations = {
     state.partialRoutes = constantRoutes.concat(routes)
   },
 }
+const rootRouter = {
+  path: '/',
+  component: 'Layout',
+  redirect: 'index',
+  children: [
+    {
+      path: 'index',
+      name: 'Index',
+      component: 'index/index',
+      meta: {
+        title: '首页',
+        icon: 'home',
+        affix: true,
+      },
+    },
+  ],
+}
+
 const actions = {
   async setRoutes({ commit }, permissions) {
-    //开源版只过滤动态路由permissions，admin不再默认拥有全部权限
     const finallyAsyncRoutes = await filterAsyncRoutes(
       [...asyncRoutes],
       permissions
@@ -36,9 +53,24 @@ const actions = {
     return finallyAsyncRoutes
   },
   async setAllRoutes({ commit }) {
-    let { data } = await getRouterList()
-    data.push({ path: '*', redirect: '/404', hidden: true })
-    let accessRoutes = convertRouter(data)
+    let { data } = await getCurrentUserNav()
+    data.push({
+      name: '404',
+      path: '*',
+      redirect: '/404',
+      hidden: true,
+      component: '@/views/404',
+      meta: { title: '404' },
+    })
+    const menuNav = []
+    menuNav.push(rootRouter)
+    data.forEach((result) => {
+      const item = { ...result }
+      menuNav.push(item)
+    })
+    let accessRoutes = convertRouter(menuNav)
+    console.log(accessRoutes)
+    debugger
     commit('setAllRoutes', accessRoutes)
     return accessRoutes
   },

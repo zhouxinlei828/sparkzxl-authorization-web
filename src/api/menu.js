@@ -1,14 +1,14 @@
 import request from '@/utils/request'
 
 const api = {
-  menuTree: '/uaa/menu/tree',
-  menuResource: '/uaa/resource/page',
-  saveMenu: '/uaa/menu/save',
-  updateMenu: '/uaa/menu/update',
-  deleteMenu: '/uaa/menu/deleteMenu',
-  saveResource: '/uaa/resource/save',
-  updateResource: '/uaa/resource/update',
-  deleteResource: '/uaa/resource/deleteResource',
+  menuTree: '/authorization/menu/tree',
+  menuResource: '/authorization/resource/page',
+  saveMenu: '/authorization/menu/save',
+  updateMenu: '/authorization/menu/update',
+  deleteMenu: '/authorization/menu/deleteMenu',
+  saveResource: '/authorization/resource/save',
+  updateResource: '/authorization/resource/update',
+  deleteResource: '/authorization/resource/deleteResource',
 }
 
 export default api

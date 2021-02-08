@@ -46,15 +46,24 @@ module.exports = {
   lintOnSave,
   transpileDependencies,
   devServer: {
-    hot: true,
-    port: devPort,
-    open: true,
-    noInfo: false,
-    overlay: {
-      warnings: true,
-      errors: true,
+    // development server port 8000
+    port: 8000,
+    // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:8900',
+        ws: false,
+        changeOrigin: true,
+      },
+      '/service': {
+        target: 'http://127.0.0.1:8900/service',
+        ws: false,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/service': '/api/activiti/',
+        },
+      },
     },
-    after: mockServer(),
   },
   configureWebpack() {
     return {

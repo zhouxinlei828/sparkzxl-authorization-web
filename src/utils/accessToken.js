@@ -1,10 +1,5 @@
-import { storage, tokenTableName } from '@/config'
+import { storage, tokenTableName, tokenTypeName } from '@/config'
 
-/**
- * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
- * @description 获取accessToken
- * @returns {string|ActiveX.IXMLDOMNode|Promise<any>|any|IDBRequest<any>|MediaKeyStatus|FormDataEntryValue|Function|Promise<Credential | null>}
- */
 export function getAccessToken() {
   if (storage) {
     if ('localStorage' === storage) {
@@ -19,12 +14,20 @@ export function getAccessToken() {
   }
 }
 
-/**
- * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
- * @description 存储accessToken
- * @param accessToken
- * @returns {void|*}
- */
+export function getTokenType() {
+  if (storage) {
+    if ('localStorage' === storage) {
+      return localStorage.getItem(tokenTypeName)
+    } else if ('sessionStorage' === storage) {
+      return sessionStorage.getItem(tokenTypeName)
+    } else {
+      return localStorage.getItem(tokenTypeName)
+    }
+  } else {
+    return localStorage.getItem(tokenTypeName)
+  }
+}
+
 export function setAccessToken(accessToken) {
   if (storage) {
     if ('localStorage' === storage) {
@@ -38,12 +41,21 @@ export function setAccessToken(accessToken) {
     return localStorage.setItem(tokenTableName, accessToken)
   }
 }
+export function setTokenType(accessToken, tokenType) {
+  if (storage) {
+    if ('localStorage' === storage) {
+      localStorage.setItem(tokenTypeName, tokenType)
+      return localStorage.setItem(tokenTableName, accessToken)
+    } else if ('sessionStorage' === storage) {
+      return localStorage.setItem(tokenTypeName, tokenType)
+    } else {
+      return localStorage.setItem(tokenTypeName, tokenType)
+    }
+  } else {
+    return localStorage.setItem(tokenTypeName, tokenType)
+  }
+}
 
-/**
- * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
- * @description 移除accessToken
- * @returns {void|Promise<void>}
- */
 export function removeAccessToken() {
   if (storage) {
     if ('localStorage' === storage) {
