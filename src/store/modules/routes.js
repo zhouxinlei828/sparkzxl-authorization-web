@@ -4,7 +4,11 @@
  */
 import { asyncRoutes, constantRoutes } from '@/router'
 import { getCurrentUserNav } from '@/api/login'
-import { convertRouter, filterAsyncRoutes } from '@/utils/handleRoutes'
+import {
+  convertRouter,
+  buildRouterJson,
+  filterAsyncRoutes,
+} from '@/utils/handleRoutes'
 
 const state = () => ({
   routes: [],
@@ -33,7 +37,7 @@ const rootRouter = {
     {
       path: 'index',
       name: 'Index',
-      component: 'index/index',
+      component: '@/views/index/index',
       meta: {
         title: '首页',
         icon: 'home',
@@ -54,24 +58,15 @@ const actions = {
   },
   async setAllRoutes({ commit }) {
     let { data } = await getCurrentUserNav()
-    data.push({
-      name: '404',
-      path: '*',
-      redirect: '/404',
-      hidden: true,
-      component: '@/views/404',
-      meta: { title: '404' },
+    const routeData = []
+    routeData.push(rootRouter)
+    const routJsonData = buildRouterJson(data)
+    routJsonData.forEach((routeJson) => {
+      routeData.push(routeJson)
     })
-    const menuNav = []
-    menuNav.push(rootRouter)
-    data.forEach((result) => {
-      const item = { ...result }
-      menuNav.push(item)
-    })
-    let accessRoutes = convertRouter(menuNav)
-    console.log(accessRoutes)
-    debugger
+    let accessRoutes = convertRouter(routeData)
     commit('setAllRoutes', accessRoutes)
+    console.log(accessRoutes)
     return accessRoutes
   },
   setPartialRoutes({ commit }, accessRoutes) {

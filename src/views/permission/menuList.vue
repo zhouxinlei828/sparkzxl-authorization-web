@@ -1,7 +1,7 @@
 <template>
   <div>
-    <a-row :gutter="10">
-      <a-col :span="8">
+    <el-row :gutter="10">
+      <el-col :span="8">
         <el-card shadow="hover" style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
             <span>菜单</span>
@@ -50,8 +50,8 @@
             @node-click="handleNodeClick"
           />
         </el-card>
-      </a-col>
-      <a-col :span="7">
+      </el-col>
+      <el-col :span="7">
         <el-card shadow="hover" style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
             <span>{{ title }}</span>
@@ -111,8 +111,8 @@
             </el-form-item>
           </el-form>
         </el-card>
-      </a-col>
-      <a-col :span="9">
+      </el-col>
+      <el-col :span="9">
         <el-card shadow="hover" style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
             <span>资源</span>
@@ -183,8 +183,8 @@
             ></el-pagination>
           </div>
         </el-card>
-      </a-col>
-    </a-row>
+      </el-col>
+    </el-row>
     <resource-create-form ref="createForm" @fetch-data="getMenuResource" />
   </div>
 </template>

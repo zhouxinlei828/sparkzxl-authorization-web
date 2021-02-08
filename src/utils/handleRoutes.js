@@ -1,73 +1,87 @@
 import { isUrl } from '@/utils/util'
 
-export const convertRouter = (routerMap, parent) => {
-  return routerMap.map((item) => {
-    let { label, component, show, hideChildren, icon } = item || {}
+export function buildRouterJson(routeData, parent) {
+  return routeData.map((item) => {
+    const { label, component, icon } = item || {}
     const currentRouter = {
-      alwaysShow: true,
+      // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
       path: item.path || `${(parent && parent.path) || ''}/${item.key}`,
-      // 路由名称，建议唯一
-      name: item.label || item.key || '',
-      redirect: item.redirect !== undefined ? item.redirect : 'noRedirect',
       // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
       meta: {
+        title: label,
         noKeepAlive: true,
       },
     }
     if (label !== undefined && label !== '') {
       currentRouter.meta.title = label
+      currentRouter.name = label
     } else if (item.name !== undefined) {
       currentRouter.meta.title = item.name
+      currentRouter.name = item.name
     }
     if (icon !== undefined && icon !== '') {
       currentRouter.meta.icon = icon
-    }
-    if (component) {
-      if (component === 'Layout') {
-        component = (resolve) => require(['@/layouts'], resolve)
-      } else if (component === 'EmptyLayout') {
-        component = (resolve) => require(['@/layouts/EmptyLayout'], resolve)
-      } else {
-        const index = component.indexOf('views')
-        const path = index > 0 ? component.slice(index) : `views/${component}`
-        component = (resolve) => require([`@/${path}`], resolve)
-      }
-    }
-    currentRouter.component = component
-    // 是否设置了隐藏菜单
-    if (show === false) {
-      currentRouter.hidden = true
-    }
-    // 是否设置了隐藏子菜单
-    if (hideChildren) {
-      currentRouter.hideChildrenInMenu = true
     }
     // 为了防止出现后端返回结果不规范，处理有可能出现拼接出两个 反斜杠
     if (!currentRouter.path.startsWith('http')) {
       currentRouter.path = currentRouter.path.replace('//', '/')
     }
-    if (isUrl(item.path)) {
-      currentRouter.meta.target = '_blank'
-    }
-
+    currentRouter.component = component
     // 是否有子菜单，并递归处理
     if (item.children && item.children.length > 0) {
-      // Recursion
-      currentRouter.children = convertRouter(item.children, currentRouter)
-    } else {
-      delete currentRouter.children
+      currentRouter.children = buildRouterJson(item.children, currentRouter)
+      currentRouter.redirect =
+        item.redirect !== undefined ? item.redirect : 'noRedirect'
     }
     return currentRouter
   })
 }
 
-export function filterAsyncRoutes(routes, roles) {
+export function convertRouter(asyncRoutes) {
+  return asyncRoutes.map((route) => {
+    if (route.component) {
+      if (route.component === 'Layout') {
+        route.component = (resolve) => require(['@/layouts'], resolve)
+      } else if (route.component === 'EmptyLayout') {
+        route.component = (resolve) =>
+          require(['@/layouts/EmptyLayout'], resolve)
+      } else {
+        const index = route.component.indexOf('views')
+        const path =
+          index > 0 ? route.component.slice(index) : `views/${route.component}`
+        route.component = (resolve) => require([`@/${path}`], resolve)
+      }
+    }
+    if (route.children && route.children.length)
+      route.children = convertRouter(route.children)
+    if (route.children && route.children.length === 0) delete route.children
+    return route
+  })
+}
+
+function hasPermission(permissions, route) {
+  if (route.meta && route.meta.permissions) {
+    return permissions.some((role) => route.meta.permissions.includes(role))
+  } else {
+    return true
+  }
+}
+
+/**
+ * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
+ * @description intelligence模式根据permissions数组拦截路由
+ * @param routes
+ * @param permissions
+ * @returns {[]}
+ */
+export function filterAsyncRoutes(routes, permissions) {
   const finallyRoutes = []
   routes.forEach((route) => {
     const item = { ...route }
-    debugger
-    if (route.children && route.children.length) {
-      item.children = filterAsyncRoutes(item.children, roles)
+    if (hasPermission(permissions, item)) {
+      if (item.children) {
+        item.children = filterAsyncRoutes(item.children, permissions)
+      }
       finallyRoutes.push(item)
     }
   })

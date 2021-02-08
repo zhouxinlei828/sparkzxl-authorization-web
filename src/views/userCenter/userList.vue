@@ -341,7 +341,6 @@
         })
       },
       handleImportUserData(data) {
-        debugger
         const formData = new FormData()
         formData.append('file', data.file)
         importUserData(formData).then((response) => {

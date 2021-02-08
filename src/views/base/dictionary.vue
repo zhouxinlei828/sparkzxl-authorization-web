@@ -54,12 +54,12 @@
               @change="getDictionaryPage"
             >
               <span slot="status" slot-scope="status">
-                <a-tag
-                  :key="status"
-                  :color="status !== true ? 'red' : 'geekblue'"
+                <el-tag
+                  :type="status === true ? 'primary' : 'success'"
+                  disable-transitions
                 >
                   {{ status !== true ? '禁用' : '启用' }}
-                </a-tag>
+                </el-tag>
               </span>
               <span slot="action" slot-scope="text, record">
                 <template>
@@ -122,12 +122,12 @@
               @change="getDictionaryItemList()"
             >
               <span slot="status" slot-scope="status">
-                <a-tag
-                  :key="status"
-                  :color="status !== true ? 'red' : 'geekblue'"
+                <el-tag
+                  :type="status === true ? 'primary' : 'success'"
+                  disable-transitions
                 >
                   {{ status !== true ? '禁用' : '启用' }}
-                </a-tag>
+                </el-tag>
               </span>
               <span slot="action" slot-scope="text, record">
                 <template>

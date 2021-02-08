@@ -52,7 +52,6 @@ const mutations = {
     state.info = info
   },
   SET_ROLES: (state, roles) => {
-    debugger
     state.roles = roles
   },
 }

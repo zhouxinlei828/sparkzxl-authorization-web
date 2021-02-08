@@ -40,19 +40,17 @@
             </el-form-item>
           </el-form>
           <div style="overflow-y: auto; height: 390px">
-            <a-spin :spinning="loading">
-              <el-tree
-                ref="area-tree"
-                :data="areaData"
-                node-key="id"
-                check-on-click-node
-                show-checkbox
-                :default-expand-all="false"
-                :highlight-current="true"
-                :filter-node-method="filterNode"
-                @node-click="handleNodeClick"
-              />
-            </a-spin>
+            <el-tree
+              ref="area-tree"
+              :data="areaData"
+              node-key="id"
+              check-on-click-node
+              show-checkbox
+              :default-expand-all="false"
+              :highlight-current="true"
+              :filter-node-method="filterNode"
+              @node-click="handleNodeClick"
+            />
           </div>
         </el-card>
       </el-col>
@@ -131,7 +129,6 @@
         areaData: [],
         createVisible: false,
         createData: null,
-        loading: false,
         resourceColumns: [
           {
             title: '编码',
@@ -208,7 +205,6 @@
     },
     methods: {
       getAreaTree() {
-        this.loading = true
         getAreaTree().then((response) => {
           const responseData = response.data
           this.areaData = responseData
@@ -216,7 +212,6 @@
             this.areaId = this.areaId === 0 ? responseData[0].id : this.areaId
             this.setCurrentNodeKey(responseData[0].id)
           }
-          this.loading = false
         })
       },
       handleAdd() {

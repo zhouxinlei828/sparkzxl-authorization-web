@@ -24,7 +24,6 @@ VabProgress.configure({
 router.beforeResolve(async (to, from, next) => {
   if (progressBar) VabProgress.start()
   let hasToken = store.getters['user/accessToken']
-
   if (!loginInterception) hasToken = true
 
   if (hasToken) {
@@ -33,7 +32,6 @@ router.beforeResolve(async (to, from, next) => {
       if (progressBar) VabProgress.done()
     } else {
       const hasRoles = store.getters['user/roles']
-      debugger
       if (hasRoles.length > 0) {
         next()
       } else {

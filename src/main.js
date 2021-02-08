@@ -6,12 +6,15 @@ import './plugins'
 import '@/layouts/export'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-import Table from 'ant-design-vue'
+import { Table, Icon } from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
-
+const iconFont = Icon.createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_946821_xoz4k984fl.js',
+})
 Vue.config.productionTip = false
 Vue.use(Table)
 Vue.component('TreeSelect', Treeselect)
+Vue.component('IconFont', iconFont)
 new Vue({
   el: '#vue-admin-beautiful',
   router,

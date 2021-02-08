@@ -1,7 +1,7 @@
 <template>
   <div>
-    <a-row :gutter="12">
-      <a-col :span="12">
+    <el-row :gutter="12">
+      <el-col :span="12">
         <el-card shadow="hover" style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
             <span>组织</span>
@@ -50,8 +50,8 @@
             @node-click="handleNodeClick"
           ></el-tree>
         </el-card>
-      </a-col>
-      <a-col :span="12">
+      </el-col>
+      <el-col :span="12">
         <el-card shadow="hover" style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
             <span>{{ title }}</span>
@@ -100,8 +100,8 @@
             </el-form-item>
           </el-form>
         </el-card>
-      </a-col>
-    </a-row>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
