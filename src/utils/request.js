@@ -21,7 +21,6 @@ const handleCode = (code, msg) => {
   switch (code) {
     case invalidCode:
       Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
-      // store.dispatch('user/resetAccessToken').catch(() => {})
       if (loginInterception) {
         location.reload()
       }
@@ -95,25 +94,25 @@ instance.interceptors.response.use(
   (error) => {
     if (loadingInstance) loadingInstance.close()
     let { response, message } = error
-    /*if (error.response && error.response.data) {
+    if (error.response && error.response.data) {
       const { status, data } = response
       handleCode(status, data.msg || message)
       return Promise.reject(error)
-    } else {*/
-    /*let { message } = error*/
-    if (message === 'Network Error') {
-      message = '后端接口连接异常'
+    } else {
+      let { message } = error
+      if (message === 'Network Error') {
+        message = '后端接口连接异常'
+      }
+      if (message.includes('timeout')) {
+        message = '后端接口请求超时'
+      }
+      if (message.includes('Request failed with status code')) {
+        const code = message.substr(message.length - 3)
+        message = '后端接口' + code + '异常'
+      }
+      Vue.prototype.$baseMessage(message || `后端接口未知异常`, 'error')
+      return Promise.reject(error)
     }
-    if (message.includes('timeout')) {
-      message = '后端接口请求超时'
-    }
-    if (message.includes('Request failed with status code')) {
-      const code = message.substr(message.length - 3)
-      message = '后端接口' + code + '异常'
-    }
-    Vue.prototype.$baseMessage(message || `后端接口未知异常`, 'error')
-    return Promise.reject(error)
-    /* }*/
   }
 )
 

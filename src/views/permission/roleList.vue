@@ -1,26 +1,24 @@
 <template>
-  <el-card shadow="hover">
-    <div class="filter-container" style="padding-bottom: 0">
-      <el-form :inline="true" size="small">
-        <el-form-item label="编码">
-          <el-input v-model="queryParam.code" placeholder="请输入角色编码" />
-        </el-form-item>
-        <el-form-item label="角色名称">
-          <el-input v-model="queryParam.name" placeholder="请输入角色名称" />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="search" @click="getRoleList()">
-            查询
-          </el-button>
-          <el-button
-            style="margin-left: 8px"
-            @click="() => (this.queryParam = {})"
-          >
-            重置
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+  <div class="filter-container" style="padding-bottom: 0">
+    <el-form :inline="true" size="small">
+      <el-form-item label="编码">
+        <el-input v-model="queryParam.code" placeholder="请输入角色编码" />
+      </el-form-item>
+      <el-form-item label="角色名称">
+        <el-input v-model="queryParam.name" placeholder="请输入角色名称" />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="search" @click="getRoleList()">
+          查询
+        </el-button>
+        <el-button
+          style="margin-left: 8px"
+          @click="() => (this.queryParam = {})"
+        >
+          重置
+        </el-button>
+      </el-form-item>
+    </el-form>
     <el-divider content-position="left">结果列表</el-divider>
     <div class="table-operator">
       <el-button size="small" type="primary" @click="handleAdd">新建</el-button>
@@ -73,7 +71,7 @@
     <role-edit-form ref="editForm" @fetch-data="getRoleList" />
     <role-user-form ref="roleUserForm" @fetch-data="getRoleList" />
     <role-authority-form ref="roleAuthorityForm" @fetch-data="getRoleList" />
-  </el-card>
+  </div>
 </template>
 
 <script>

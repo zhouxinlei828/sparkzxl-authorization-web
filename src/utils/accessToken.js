@@ -45,7 +45,7 @@ export function setTokenType(accessToken, tokenType) {
   if (storage) {
     if ('localStorage' === storage) {
       localStorage.setItem(tokenTypeName, tokenType)
-      return localStorage.setItem(tokenTableName, accessToken)
+      return localStorage.setItem(tokenTypeName, accessToken)
     } else if ('sessionStorage' === storage) {
       return localStorage.setItem(tokenTypeName, tokenType)
     } else {

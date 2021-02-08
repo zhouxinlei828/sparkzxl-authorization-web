@@ -1,42 +1,40 @@
 <template>
-  <el-card shadow="hover">
-    <div class="filter-container" style="padding-bottom: 0">
-      <el-input
-        v-model="queryParam.account"
-        class="filter-item search-item"
-        placeholder="账号"
-      />
-      <el-input
-        v-model="queryParam.name"
-        class="filter-item search-item"
-        placeholder="姓名"
-      />
-      <TreeSelect
-        v-model="queryParam.org"
-        class="filter-item search-item"
-        :load-options="loadListOptions"
-        :multiple="false"
-        :searchable="true"
-        placeholder="组织"
-        :options="orgData"
-      />
-      <el-button
-        size="small"
-        class="filter-item button-item"
-        icon="search"
-        type="primary"
-        @click="getUserPage()"
-      >
-        查询
-      </el-button>
-      <el-button
-        size="small"
-        class="filter-item button-item"
-        @click="() => (this.queryParam = {})"
-      >
-        重置
-      </el-button>
-    </div>
+  <div class="filter-container" style="padding-bottom: 0">
+    <el-input
+      v-model="queryParam.account"
+      class="filter-item search-item"
+      placeholder="账号"
+    />
+    <el-input
+      v-model="queryParam.name"
+      class="filter-item search-item"
+      placeholder="姓名"
+    />
+    <TreeSelect
+      v-model="queryParam.org"
+      class="filter-item search-item"
+      :load-options="loadListOptions"
+      :multiple="false"
+      :searchable="true"
+      placeholder="组织"
+      :options="orgData"
+    />
+    <el-button
+      size="small"
+      class="filter-item button-item"
+      icon="search"
+      type="primary"
+      @click="getUserPage()"
+    >
+      查询
+    </el-button>
+    <el-button
+      size="small"
+      class="filter-item button-item"
+      @click="() => (this.queryParam = {})"
+    >
+      重置
+    </el-button>
     <el-divider content-position="left">结果列表</el-divider>
     <div class="filter-container">
       <el-button
@@ -142,7 +140,7 @@
       @current-change="handleCurrentChange"
     ></el-pagination>
     <user-edit-form ref="editForm" @fetch-data="getUserPage" />
-  </el-card>
+  </div>
 </template>
 <script>
   import moment from 'moment'

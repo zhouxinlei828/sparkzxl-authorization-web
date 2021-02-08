@@ -84,6 +84,7 @@
     }
     .app-main-height {
       min-height: $base-app-main-height;
+      margin-bottom: 10px;
     }
 
     .footer-copyright {

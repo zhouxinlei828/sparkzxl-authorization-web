@@ -2,7 +2,7 @@
   <div>
     <el-row :gutter="12">
       <el-col :span="12">
-        <el-card shadow="hover" style="overflow-y: auto; height: 550px">
+        <el-card style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
             <span>组织</span>
           </div>
@@ -52,7 +52,7 @@
         </el-card>
       </el-col>
       <el-col :span="12">
-        <el-card shadow="hover" style="overflow-y: auto; height: 550px">
+        <el-card style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
             <span>{{ title }}</span>
           </div>

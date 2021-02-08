@@ -64,6 +64,7 @@ const actions = {
     routJsonData.forEach((routeJson) => {
       routeData.push(routeJson)
     })
+    routeData.push({ path: '*', redirect: '/404', hidden: true })
     let accessRoutes = convertRouter(routeData)
     commit('setAllRoutes', accessRoutes)
     console.log(accessRoutes)

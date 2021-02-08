@@ -20,6 +20,7 @@ export function buildRouterJson(routeData, parent) {
       currentRouter.name = item.name
     }
     if (icon !== undefined && icon !== '') {
+      currentRouter.meta.useVabIcon = icon.indexOf('icon') !== 0
       currentRouter.meta.icon = icon
     }
     // 为了防止出现后端返回结果不规范，处理有可能出现拼接出两个 反斜杠
@@ -30,6 +31,7 @@ export function buildRouterJson(routeData, parent) {
     // 是否有子菜单，并递归处理
     if (item.children && item.children.length > 0) {
       currentRouter.children = buildRouterJson(item.children, currentRouter)
+      currentRouter.alwaysShow = true
       currentRouter.redirect =
         item.redirect !== undefined ? item.redirect : 'noRedirect'
     }

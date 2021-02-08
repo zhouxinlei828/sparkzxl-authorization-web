@@ -2,7 +2,7 @@
   <div>
     <el-row :gutter="12">
       <el-col :span="12">
-        <el-card shadow="hover" style="overflow-y: auto; height: 650px">
+        <el-card style="overflow-y: auto; height: 650px">
           <div slot="header" class="clearfix">
             <span>字典列表</span>
             <el-tag
@@ -79,7 +79,7 @@
         </el-card>
       </el-col>
       <el-col :span="12">
-        <el-card shadow="hover" style="overflow-y: auto; height: 650px">
+        <el-card style="overflow-y: auto; height: 650px">
           <div slot="header" class="clearfix">
             <span>{{ activeData.dictionaryItemTitle }}</span>
           </div>

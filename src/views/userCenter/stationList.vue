@@ -1,39 +1,37 @@
 <template>
-  <el-card shadow="hover">
-    <div class="filter-container" style="padding-bottom: 0">
-      <el-input
-        v-model="queryParam.name"
-        size="small"
-        class="filter-item search-item"
-        placeholder="岗位名称"
-      />
-      <TreeSelect
-        v-model="queryParam.orgId"
-        class="filter-item search-item"
-        size="small"
-        :load-options="loadListOptions"
-        :multiple="false"
-        :searchable="true"
-        placeholder="组织"
-        :options="orgData"
-      />
-      <el-button
-        size="small"
-        class="filter-item button-item"
-        icon="search"
-        type="primary"
-        @click="getStationList()"
-      >
-        查询
-      </el-button>
-      <el-button
-        size="small"
-        class="filter-item button-item"
-        @click="() => (this.queryParam = {})"
-      >
-        重置
-      </el-button>
-    </div>
+  <div class="filter-container" style="padding-bottom: 0">
+    <el-input
+      v-model="queryParam.name"
+      size="small"
+      class="filter-item search-item"
+      placeholder="岗位名称"
+    />
+    <TreeSelect
+      v-model="queryParam.orgId"
+      class="filter-item search-item"
+      size="small"
+      :load-options="loadListOptions"
+      :multiple="false"
+      :searchable="true"
+      placeholder="组织"
+      :options="orgData"
+    />
+    <el-button
+      size="small"
+      class="filter-item button-item"
+      icon="search"
+      type="primary"
+      @click="getStationList()"
+    >
+      查询
+    </el-button>
+    <el-button
+      size="small"
+      class="filter-item button-item"
+      @click="() => (this.queryParam = {})"
+    >
+      重置
+    </el-button>
     <el-divider content-position="left">结果列表</el-divider>
     <div class="table-operator">
       <el-button size="small" type="primary" @click="handleAdd">新建</el-button>
@@ -86,7 +84,7 @@
       @current-change="handleCurrentChange"
     ></el-pagination>
     <station-edit-form ref="editForm" @fetch-data="getStationList" />
-  </el-card>
+  </div>
 </template>
 
 <script>
