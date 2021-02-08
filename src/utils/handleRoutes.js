@@ -27,6 +27,9 @@ export function buildRouterJson(routeData, parent) {
     if (!currentRouter.path.startsWith('http')) {
       currentRouter.path = currentRouter.path.replace('//', '/')
     }
+    if (isUrl(currentRouter.path)) {
+      currentRouter.meta.target = '_blank'
+    }
     currentRouter.component = component
     // 是否有子菜单，并递归处理
     if (item.children && item.children.length > 0) {
