@@ -42,6 +42,7 @@ const rootRouter = {
         title: '首页',
         icon: 'home',
         affix: true,
+        useVabIcon: true,
       },
     },
   ],
