@@ -13,7 +13,7 @@ requireComponents.keys().forEach((fileName) => {
 })
 
 const requireZxLayouts = require.context(
-  './components/zx-layouts',
+  './components/base-layouts',
   true,
   /\.vue$/
 )
