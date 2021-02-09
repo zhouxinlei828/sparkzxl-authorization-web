@@ -33,7 +33,15 @@
         </el-form-item>
       </el-form>
       <el-divider content-position="left">结果列表</el-divider>
-      <el-table :data="modelData" border style="width: 100%" max-height="450">
+      <el-table
+        v-loading="tableLoading"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        :data="modelData"
+        border
+        style="width: 100%"
+        max-height="450"
+      >
         <el-table-column
           prop="processInstanceId"
           label="流程实例id"
@@ -144,6 +152,7 @@
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         modelData: [],
+        tableLoading: false,
       }
     },
     created() {
@@ -159,6 +168,7 @@
         this.getProcessInstanceList()
       },
       getProcessInstanceList() {
+        this.tableLoading = true
         getProcessInstanceList(this.queryParam).then((response) => {
           const responseData = response.data
           this.total = parseInt(responseData.total)
@@ -185,6 +195,7 @@
             }
           }
           this.modelData = responseData.list
+          this.tableLoading = false
         })
       },
       handleShowFlowChart(processInstanceId) {

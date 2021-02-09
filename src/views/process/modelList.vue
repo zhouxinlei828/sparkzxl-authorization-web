@@ -42,7 +42,15 @@
           新建
         </el-button>
       </div>
-      <el-table :data="modelData" border style="width: 100%" max-height="450">
+      <el-table
+        v-loading="tableLoading"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        :data="modelData"
+        border
+        style="width: 100%"
+        max-height="450"
+      >
         <el-table-column prop="name" label="流程名称"></el-table-column>
         <el-table-column
           prop="key"
@@ -141,6 +149,7 @@
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         modelData: [],
+        tableLoading: false,
       }
     },
     created() {
@@ -156,10 +165,12 @@
         this.getModelList()
       },
       getModelList() {
+        this.tableLoading = true
         getModelList(this.queryParam).then((response) => {
           const responseData = response.data
           this.total = parseInt(responseData.total)
           this.modelData = responseData.list
+          this.tableLoading = false
         })
       },
       handleAdd() {

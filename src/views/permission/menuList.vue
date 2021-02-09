@@ -41,7 +41,10 @@
           </el-form>
           <el-tree
             ref="menu-tree"
+            v-loading="treeLoading"
             :data="menuData"
+            element-loading-text="拼命加载中"
+            element-loading-spinner="el-icon-loading"
             node-key="id"
             style="overflow-y: auto; height: 340px"
             show-checkbox
@@ -153,7 +156,10 @@
             </el-form-item>
           </el-form>
           <el-table
+            v-loading="tableLoading"
             :data="resourceData"
+            element-loading-text="拼命加载中"
+            element-loading-spinner="el-icon-loading"
             border
             style="width: 100%"
             max-height="300"
@@ -218,6 +224,7 @@
           label: 'label',
         },
         tableLoading: false,
+        treeLoading: false,
         filterText: '',
         title: '新增菜单',
         buttonName: '新增',
@@ -267,6 +274,7 @@
     },
     methods: {
       getMenuTree() {
+        this.treeLoading = true
         getMenuTree().then((response) => {
           const responseData = response.data
           this.menuData = responseData
@@ -275,6 +283,7 @@
             this.setCurrentNodeKey(responseData[0].id)
           }
           this.getMenuResource()
+          this.treeLoading = false
         })
       },
       handleSizeChange(val) {
@@ -286,6 +295,7 @@
         this.getMenuResource()
       },
       getMenuResource() {
+        this.tableLoading = true
         const params = {
           pageNum: this.queryForm.current,
           pageSize: this.queryForm.pageSize,

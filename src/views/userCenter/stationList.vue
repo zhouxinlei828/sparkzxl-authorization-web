@@ -36,7 +36,15 @@
     <div class="table-operator">
       <el-button size="small" type="primary" @click="handleAdd">新建</el-button>
     </div>
-    <el-table :data="stationData" border style="width: 100%" max-height="450">
+    <el-table
+      v-loading="tableLoading"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      :data="stationData"
+      border
+      style="width: 100%"
+      max-height="450"
+    >
       <el-table-column prop="name" label="岗位名称"></el-table-column>
       <el-table-column
         prop="describe"
@@ -158,6 +166,7 @@
         this.getStationList()
       },
       async getStationList() {
+        this.tableLoading = true
         const params = {
           pageNum: this.queryParam.pageNum,
           pageSize: this.queryParam.pageSize,

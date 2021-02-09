@@ -76,7 +76,15 @@
         导出
       </el-button>
     </div>
-    <el-table :data="userTableData" border style="width: 100%" max-height="450">
+    <el-table
+      v-loading="tableLoading"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      :data="userTableData"
+      border
+      style="width: 100%"
+      max-height="450"
+    >
       <el-table-column prop="account" label="账号"></el-table-column>
       <el-table-column prop="name" label="姓名"></el-table-column>
       <el-table-column prop="describe" label="性别" width="60">

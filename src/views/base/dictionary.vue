@@ -43,7 +43,10 @@
           </el-form>
           <div style="overflow-y: auto; height: 450px">
             <el-table
+              v-loading="tableLoading"
               :data="dictionaryData"
+              element-loading-text="拼命加载中"
+              element-loading-spinner="el-icon-loading"
               border
               style="width: 100%"
               highlight-current-row
@@ -125,7 +128,14 @@
             </el-form-item>
           </el-form>
           <div style="overflow-y: auto; height: 450px">
-            <el-table :data="dictionaryItemData" border style="width: 100%">
+            <el-table
+              v-loading="tableItemLoading"
+              element-loading-text="拼命加载中"
+              element-loading-spinner="el-icon-loading"
+              :data="dictionaryItemData"
+              border
+              style="width: 100%"
+            >
               <el-table-column prop="code" label="编码"></el-table-column>
               <el-table-column prop="name" label="名称"></el-table-column>
               <el-table-column prop="status" label="状态" width="70">
@@ -188,33 +198,6 @@
     },
     data() {
       return {
-        createDictionaryItemVisible: false,
-        createDictionaryItemData: null,
-        dictionaryItemColumns: [
-          {
-            title: '编码',
-            dataIndex: 'code',
-            align: 'center',
-          },
-          {
-            title: '名称',
-            dataIndex: 'name',
-            align: 'center',
-          },
-          {
-            title: '状态',
-            dataIndex: 'status',
-            align: 'center',
-            scopedSlots: { customRender: 'status' },
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            width: '150px',
-            align: 'center',
-            scopedSlots: { customRender: 'action' },
-          },
-        ],
         form: {
           id: null,
           parentId: 0,
@@ -246,32 +229,10 @@
           dictionaryType: '',
           dictionaryItemTitle: '字典详情',
         },
-        selectedRowKeys: [],
-        selectedRows: [],
         dictionaryData: [],
         tableLoading: false,
         tableItemLoading: false,
         dictionaryItemData: [],
-        rowClick: (record) => ({
-          // 事件
-          on: {
-            click: () => {
-              this.activeData = {
-                dictionaryId: record.id,
-                dictionaryType: record.type,
-                dictionaryItemTitle: '字典详情（'
-                  .concat(record.name)
-                  .concat('）'),
-                activeDictionary: record.name,
-              }
-              this.queryItemForm = {
-                code: '',
-                name: '',
-              }
-              this.getDictionaryItemList()
-            },
-          },
-        }),
       }
     },
     mounted() {
@@ -403,22 +364,6 @@
       filterNode(value, data) {
         if (!value) return true
         return data.label.indexOf(value) !== -1
-      },
-      onSelectChange(selectedRowKeys, selectedRows) {
-        this.selectedRowKeys = selectedRowKeys
-        this.selectedRows = selectedRows
-      },
-      handleCancel() {
-        this.createDictionaryData = {}
-        this.createDictionaryItemVisible = false
-        this.createDictionaryItemData = {}
-        this.getDictionaryPage()
-      },
-      handleConfirm() {
-        this.createDictionaryData = {}
-        this.createDictionaryItemVisible = false
-        this.createDictionaryItemData = {}
-        this.getDictionaryPage()
       },
     },
   }

@@ -41,6 +41,9 @@
           </el-form>
           <el-tree
             ref="tree"
+            v-loading="treeLoading"
+            element-loading-text="拼命加载中"
+            element-loading-spinner="el-icon-loading"
             :data="orgData"
             node-key="id"
             :default-expand-all="true"
@@ -120,6 +123,7 @@
         title: '新增',
         buttonName: '新增',
         parentId: 0,
+        treeLoading: false,
         form: {
           id: null,
           parentId: 0,
@@ -160,12 +164,14 @@
     },
     methods: {
       getOrgList() {
+        this.treeLoading = true
         const parameter = {
           name: '',
           status: true,
         }
         getOrgList(parameter).then((response) => {
           this.orgData = response.data
+          this.treeLoading = false
         })
       },
       handleAdd() {

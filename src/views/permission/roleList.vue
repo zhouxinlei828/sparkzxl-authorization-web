@@ -23,7 +23,15 @@
     <div class="table-operator">
       <el-button size="small" type="primary" @click="handleAdd">新建</el-button>
     </div>
-    <el-table :data="modelData" border style="width: 100%" max-height="450">
+    <el-table
+      v-loading="tableLoading"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      :data="modelData"
+      border
+      style="width: 100%"
+      max-height="450"
+    >
       <el-table-column prop="code" label="编码"></el-table-column>
       <el-table-column prop="name" label="角色名称"></el-table-column>
       <el-table-column

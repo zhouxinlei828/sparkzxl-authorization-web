@@ -42,6 +42,9 @@
           <div style="overflow-y: auto; height: 390px">
             <el-tree
               ref="area-tree"
+              v-loading="treeLoading"
+              element-loading-text="拼命加载中"
+              element-loading-spinner="el-icon-loading"
               :data="areaData"
               node-key="id"
               check-on-click-node
@@ -127,32 +130,6 @@
     data() {
       return {
         areaData: [],
-        createVisible: false,
-        createData: null,
-        resourceColumns: [
-          {
-            title: '编码',
-            dataIndex: 'code',
-            align: 'center',
-          },
-          {
-            title: '名称',
-            dataIndex: 'name',
-            align: 'center',
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            width: '150px',
-            align: 'center',
-            fixed: 'right',
-            scopedSlots: { customRender: 'action' },
-          },
-        ],
-        defaultProps: {
-          children: 'children',
-          label: 'label',
-        },
         filterText: '',
         title: '新增地区',
         buttonName: '新增',
@@ -164,27 +141,8 @@
           sortValue: 1,
           level: 'COUNTRY',
         },
-        queryForm: {
-          code: '',
-          name: '',
-        },
         areaId: 0,
-        pagination: {
-          current: 1,
-          pageSize: 10,
-          defaultCurrent: 1,
-          defaultPageSize: 10,
-          showSizeChanger: true,
-          pageSizeOptions: ['5', '10', '30'],
-          onShowSizeChange: (current, pageSize) => {
-            this.pagination.current = current
-            this.pagination.pageSize = pageSize
-          },
-          showTotal: (total) => `共有 ${total} 条数据`,
-        },
-        selectedRowKeys: [],
-        selectedRows: [],
-        resourceData: [],
+        treeLoading: false,
         rules: {
           parentId: [
             { required: true, message: '上级ID不能为空', trigger: 'blur' },
@@ -200,11 +158,12 @@
         this.$refs['area-tree'].filter(val)
       },
     },
-    mounted() {
+    created() {
       this.getAreaTree()
     },
     methods: {
       getAreaTree() {
+        this.treeLoading = true
         getAreaTree().then((response) => {
           const responseData = response.data
           this.areaData = responseData
@@ -212,6 +171,7 @@
             this.areaId = this.areaId === 0 ? responseData[0].id : this.areaId
             this.setCurrentNodeKey(responseData[0].id)
           }
+          this.treeLoading = false
         })
       },
       handleAdd() {
