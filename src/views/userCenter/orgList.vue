@@ -42,13 +42,13 @@
           <el-tree
             ref="tree"
             v-loading="treeLoading"
+            style="overflow-y: auto; max-height: 380px"
             element-loading-text="拼命加载中"
             element-loading-spinner="el-icon-loading"
             :data="orgData"
             node-key="id"
-            :default-expand-all="true"
-            :show-checkbox="true"
-            :highlight-current="true"
+            default-expand-all
+            highlight-current
             :filter-node-method="filterNode"
             @node-click="handleNodeClick"
           ></el-tree>

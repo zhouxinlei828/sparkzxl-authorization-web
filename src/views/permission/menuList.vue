@@ -1,7 +1,7 @@
 <template>
   <div>
-    <el-row :gutter="10">
-      <el-col :span="8">
+    <el-row :gutter="15">
+      <el-col :span="12">
         <el-card shadow="hover" style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
             <span>菜单</span>
@@ -43,83 +43,53 @@
               </el-button>
             </el-form-item>
           </el-form>
-          <el-tree
-            ref="menu-tree"
-            v-loading="treeLoading"
+          <el-table
+            ref="menuTable"
+            v-loading="menuLoading"
             :data="menuData"
+            style="width: 100%"
+            row-key="id"
             element-loading-text="拼命加载中"
             element-loading-spinner="el-icon-loading"
-            node-key="id"
-            style="overflow-y: auto; height: 340px"
-            show-checkbox
-            highlight-current
-            :filter-node-method="filterNode"
-            @node-click="handleNodeClick"
-          />
-        </el-card>
-      </el-col>
-      <el-col :span="7">
-        <el-card shadow="hover" style="overflow-y: auto; height: 550px">
-          <div slot="header" class="clearfix">
-            <span>{{ title }}</span>
-          </div>
-          <el-form
-            ref="ruleForm"
-            :model="form"
-            :rules="rules"
-            size="small"
-            label-width="80px"
+            border
+            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+            highlight-current-row
+            @current-change="handleCurrentTableChange"
           >
-            <el-form-item label="上级ID:" prop="parentId" required>
-              <el-input v-model="form.parentId" />
-            </el-form-item>
-            <el-form-item label="名称:" prop="label" required>
-              <el-input v-model="form.label" />
-            </el-form-item>
-            <el-form-item label="路由URI:" prop="abbreviation">
-              <el-input v-model="form.path" />
-            </el-form-item>
-            <el-form-item label="组件:" prop="describe">
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="组件路径"
-                placement="bottom"
-              >
-                <el-input v-model="form.component" />
-              </el-tooltip>
-            </el-form-item>
-            <el-form-item label="状态:" prop="isEnable" required>
-              <el-radio v-model="form.isEnable" label="1">启用</el-radio>
-              <el-radio v-model="form.isEnable" label="2">禁用</el-radio>
-            </el-form-item>
-            <el-form-item label="排序值:" prop="sortValue">
-              <el-input-number v-model="form.sortValue" :min="1" :max="100" />
-            </el-form-item>
-            <el-form-item label="描述:" prop="workDescribe">
-              <el-input v-model="form.describe" type="textarea" />
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                size="small"
-                style="margin-left: 12px"
-                type="primary"
-                @click="handleSave"
-              >
-                {{ buttonName }}
-              </el-button>
-              <el-button
-                size="small"
-                style="margin-left: 12px"
-                @click="resetForm"
-              >
-                重置
-              </el-button>
-            </el-form-item>
-          </el-form>
+            <el-table-column
+              prop="label"
+              label="菜单标题"
+              width="180"
+            ></el-table-column>
+            <el-table-column prop="icon" label="图标" align="center" width="80">
+              <template #default="{ row }">
+                <div v-show="row.icon !== '' && row.icon.indexOf('icon') === 0">
+                  <IconFont :type="row.icon" />
+                </div>
+                <div v-show="row.icon !== '' && row.icon.indexOf('icon') !== 0">
+                  <i :class="row.icon" />
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="sortValue" label="排序" />
+            <el-table-column label="操作" align="center" width="130">
+              <template #default="{ row }">
+                <el-link type="primary">
+                  <IconFont type="icon-edit" @click="handleEditResource(row)" />
+                </el-link>
+                <el-divider direction="vertical"></el-divider>
+                <el-link type="primary">
+                  <IconFont
+                    type="icon-template_delete"
+                    @click="handleDeleteResource(row.id)"
+                  />
+                </el-link>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-card>
       </el-col>
-      <el-col :span="9">
+      <el-col :span="12">
         <el-card shadow="hover" style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
             <span>资源</span>
@@ -230,10 +200,11 @@
           label: 'label',
         },
         tableLoading: false,
-        treeLoading: false,
+        menuLoading: false,
         filterText: '',
         title: '新增菜单',
         buttonName: '新增',
+        currentRow: null,
         parentId: 0,
         form: {
           id: null,
@@ -269,27 +240,22 @@
         },
       }
     },
-    watch: {
-      filterText(val) {
-        this.$refs['menu-tree'].filter(val)
-      },
-    },
     mounted() {
       this.getMenuTree()
-      this.getMenuResource()
     },
     methods: {
       getMenuTree() {
-        this.treeLoading = true
+        this.menuLoading = true
         getMenuTree().then((response) => {
           const responseData = response.data
           this.menuData = responseData
           if (this.menuData.length > 0) {
             this.menuId = this.menuId === 0 ? responseData[0].id : this.menuId
-            this.setCurrentNodeKey(responseData[0].id)
+            this.currentRow = this.menuData[0]
+            this.$refs.menuTable.setCurrentRow(this.currentRow)
           }
           this.getMenuResource()
-          this.treeLoading = false
+          this.menuLoading = false
         })
       },
       handleSizeChange(val) {
@@ -434,25 +400,14 @@
         if (!value) return true
         return data.label.indexOf(value) !== -1
       },
-      setCurrentNodeKey(key) {
-        this.$nextTick(function () {
-          this.$refs['menu-tree'].setCurrentKey(key)
-        })
-      },
-      handleNodeClick(data) {
-        this.title = '修改菜单'
-        this.buttonName = '修改'
-        this.parentId = data.id
+      handleCurrentTableChange(data) {
+        this.currentRow = data
         this.menuId = data.id
-        this.form = {
-          id: data.id,
-          parentId: data.parentId,
-          label: data.label,
-          path: data.path,
-          component: data.component,
-          isEnable: data.isEnable === true ? '1' : '2',
-          sortValue: data.sortValue,
-          describe: data.describe,
+        this.queryForm = {
+          pageNum: 1,
+          pageSize: 10,
+          code: '',
+          name: '',
         }
         this.getMenuResource()
       },
