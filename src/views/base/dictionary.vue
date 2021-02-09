@@ -42,39 +42,53 @@
             </el-form-item>
           </el-form>
           <div style="overflow-y: auto; height: 450px">
-            <a-table
-              size="middle"
-              :columns="dictionaryColumns"
-              :row-key="(record) => record.id"
-              :loading="tableLoading"
-              :data-source="dictionaryData"
-              :pagination="dictionaryPagination"
-              :custom-row="rowClick"
-              bordered
-              @change="getDictionaryPage"
+            <el-table
+              :data="dictionaryData"
+              border
+              style="width: 100%"
+              highlight-current-row
+              @current-change="handleCurrentTableChange"
             >
-              <span slot="status" slot-scope="status">
-                <el-tag
-                  :type="status === true ? 'primary' : 'success'"
-                  disable-transitions
-                >
-                  {{ status !== true ? '禁用' : '启用' }}
-                </el-tag>
-              </span>
-              <span slot="action" slot-scope="text, record">
-                <template>
-                  <IconFont
-                    type="icon-edit"
-                    @click="handleEditDictionary(record)"
-                  />
-                  <el-divider direction="vertical"></el-divider>
-                  <IconFont
-                    type="icon-template_delete"
-                    @click="handleDeleteDictionary(record.id)"
-                  />
+              <el-table-column prop="type" label="类型"></el-table-column>
+              <el-table-column prop="name" label="名称"></el-table-column>
+              <el-table-column prop="status" label="状态" width="70">
+                <template #default="{ row }">
+                  <el-tag
+                    :type="row.status === true ? 'primary' : 'success'"
+                    disable-transitions
+                  >
+                    {{ row.status === true ? '启用' : '停用' }}
+                  </el-tag>
                 </template>
-              </span>
-            </a-table>
+              </el-table-column>
+              <el-table-column label="操作" align="center">
+                <template #default="{ row }">
+                  <el-link type="primary">
+                    <IconFont
+                      type="icon-edit"
+                      @click="handleEditDictionary(row)"
+                    />
+                  </el-link>
+                  <el-divider direction="vertical"></el-divider>
+                  <el-link type="primary">
+                    <IconFont
+                      type="icon-template_delete"
+                      @click="handleDeleteDictionary(row.id)"
+                    />
+                  </el-link>
+                </template>
+              </el-table-column>
+            </el-table>
+            <el-pagination
+              background
+              :current-page="queryForm.pageNum"
+              :page-size="queryForm.pageSize"
+              :layout="layout"
+              :total="total"
+              :page-sizes="[5, 10, 20, 30]"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            ></el-pagination>
           </div>
         </el-card>
       </el-col>
@@ -111,38 +125,37 @@
             </el-form-item>
           </el-form>
           <div style="overflow-y: auto; height: 450px">
-            <a-table
-              :columns="dictionaryItemColumns"
-              size="middle"
-              :row-key="(record) => record.id"
-              :loading="tableItemLoading"
-              :data-source="dictionaryItemData"
-              :pagination="false"
-              bordered
-              @change="getDictionaryItemList()"
-            >
-              <span slot="status" slot-scope="status">
-                <el-tag
-                  :type="status === true ? 'primary' : 'success'"
-                  disable-transitions
-                >
-                  {{ status !== true ? '禁用' : '启用' }}
-                </el-tag>
-              </span>
-              <span slot="action" slot-scope="text, record">
-                <template>
-                  <IconFont
-                    type="icon-edit"
-                    @click="handleUpdateDictionaryItem(record)"
-                  />
-                  <el-divider direction="vertical"></el-divider>
-                  <IconFont
-                    type="icon-template_delete"
-                    @click="handleDeleteDictionaryItem(record.id)"
-                  />
+            <el-table :data="dictionaryItemData" border style="width: 100%">
+              <el-table-column prop="code" label="编码"></el-table-column>
+              <el-table-column prop="name" label="名称"></el-table-column>
+              <el-table-column prop="status" label="状态" width="70">
+                <template #default="{ row }">
+                  <el-tag
+                    :type="row.status === true ? 'primary' : 'success'"
+                    disable-transitions
+                  >
+                    {{ row.status === true ? '启用' : '停用' }}
+                  </el-tag>
                 </template>
-              </span>
-            </a-table>
+              </el-table-column>
+              <el-table-column label="操作" align="center">
+                <template #default="{ row }">
+                  <el-link type="primary">
+                    <IconFont
+                      type="icon-edit"
+                      @click="handleUpdateDictionaryItem(row)"
+                    />
+                  </el-link>
+                  <el-divider direction="vertical"></el-divider>
+                  <el-link type="primary">
+                    <IconFont
+                      type="icon-template_delete"
+                      @click="handleDeleteDictionaryItem(row.id)"
+                    />
+                  </el-link>
+                </template>
+              </el-table-column>
+            </el-table>
           </div>
         </el-card>
       </el-col>
@@ -177,31 +190,6 @@
       return {
         createDictionaryItemVisible: false,
         createDictionaryItemData: null,
-        dictionaryColumns: [
-          {
-            title: '类型',
-            dataIndex: 'type',
-            align: 'center',
-          },
-          {
-            title: '名称',
-            dataIndex: 'name',
-            align: 'center',
-          },
-          {
-            title: '状态',
-            dataIndex: 'status',
-            align: 'center',
-            scopedSlots: { customRender: 'status' },
-          },
-          {
-            title: '操作',
-            dataIndex: 'action',
-            width: '150px',
-            align: 'center',
-            scopedSlots: { customRender: 'action' },
-          },
-        ],
         dictionaryItemColumns: [
           {
             title: '编码',
@@ -238,35 +226,25 @@
           describe: '',
         },
         queryForm: {
+          pageNum: 1,
+          pageSize: 10,
           type: '',
           name: '',
         },
+        total: 0,
+        layout: 'total, sizes, prev, pager, next, jumper',
+        currentRow: null,
         queryItemForm: {
           code: '',
           name: '',
         },
+        itemTotal: 0,
+        itemLayout: 'total, sizes, prev, pager, next, jumper',
         activeData: {
           activeDictionary: '',
           dictionaryId: 0,
           dictionaryType: '',
           dictionaryItemTitle: '字典详情',
-        },
-        dictionaryPagination: {
-          current: 1,
-          pageSize: 10,
-          defaultCurrent: 1,
-          defaultPageSize: 10,
-          showSizeChanger: true,
-          pageSizeOptions: ['5', '10', '30'],
-          onShowSizeChange: (current, pageSize) => {
-            this.dictionaryPagination.current = current
-            this.dictionaryPagination.pageSize = pageSize
-          },
-          change: (page, pageSize) => {
-            this.dictionaryPagination.current = page.pageSize
-            this.dictionaryPagination.pageSize = pageSize
-          },
-          showTotal: (total) => `共有 ${total} 条数据`,
         },
         selectedRowKeys: [],
         selectedRows: [],
@@ -312,11 +290,18 @@
           this.tableItemLoading = false
         })
       },
-      getDictionaryPage(current, pageSize) {
-        this.tableLoading = true
+      handleSizeChange(val) {
+        this.queryForm.pageSize = val
+        this.getDictionaryPage()
+      },
+      handleCurrentChange(val) {
+        this.queryForm.pageNum = val
+        this.getDictionaryPage()
+      },
+      getDictionaryPage() {
         const params = {
-          pageNum: current,
-          pageSize: pageSize,
+          pageNum: this.queryForm.pageNum,
+          pageSize: this.queryForm.pageSize,
           sort: 'id',
           model: {
             type: this.queryForm.type,
@@ -325,10 +310,8 @@
         }
         getDictionaryPage(params).then((response) => {
           const responseData = response.data
-          const pagination = { ...this.dictionaryPagination }
-          pagination.total = parseInt(responseData.total)
+          this.total = parseInt(responseData.total)
           this.dictionaryData = responseData.list
-          this.dictionaryPagination = pagination
           if (this.dictionaryData.length > 0) {
             const dictionaryId = this.activeData.dictionaryId
             this.activeData = {
@@ -341,7 +324,6 @@
               activeDictionary: this.dictionaryData[0].name,
             }
           }
-          this.tableLoading = false
           this.getDictionaryItemList()
         })
       },
@@ -373,6 +355,20 @@
           describe: record.describe,
         }
         this.$refs['dictionaryCreateForm'].showDialog(data)
+      },
+      handleCurrentTableChange(val) {
+        this.currentRow = val
+        this.activeData = {
+          dictionaryId: val.id,
+          dictionaryType: val.type,
+          dictionaryItemTitle: '字典详情（'.concat(val.name).concat('）'),
+          activeDictionary: val.name,
+        }
+        this.queryItemForm = {
+          code: '',
+          name: '',
+        }
+        this.getDictionaryItemList()
       },
       handleAddDictionaryItem() {
         const data = this.activeData

@@ -36,7 +36,7 @@
     <div class="table-operator">
       <el-button size="small" type="primary" @click="handleAdd">新建</el-button>
     </div>
-    <el-table :data="stationData" border style="width: 100%">
+    <el-table :data="stationData" border style="width: 100%" max-height="450">
       <el-table-column prop="name" label="岗位名称"></el-table-column>
       <el-table-column
         prop="describe"
@@ -67,9 +67,16 @@
       ></el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="{ row }">
-          <IconFont type="icon-edit" @click="handleEdit(row)" />
+          <el-link type="primary">
+            <IconFont type="icon-edit" @click="handleEdit(row)" />
+          </el-link>
           <el-divider direction="vertical"></el-divider>
-          <IconFont type="icon-template_delete" @click="handleDelete(row.id)" />
+          <el-link type="primary">
+            <IconFont
+              type="icon-template_delete"
+              @click="handleDelete(row.id)"
+            />
+          </el-link>
         </template>
       </el-table-column>
     </el-table>

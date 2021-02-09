@@ -152,36 +152,43 @@
               </el-button>
             </el-form-item>
           </el-form>
-          <div style="overflow-y: auto; max-height: 340px">
-            <el-table :data="resourceData" border style="width: 100%">
-              <el-table-column
-                prop="code"
-                width="140"
-                label="编码"
-              ></el-table-column>
-              <el-table-column prop="name" label="名称"></el-table-column>
-              <el-table-column label="操作" align="center">
-                <template #default="{ row }">
+          <el-table
+            :data="resourceData"
+            border
+            style="width: 100%"
+            max-height="300"
+          >
+            <el-table-column
+              prop="code"
+              width="140"
+              label="编码"
+            ></el-table-column>
+            <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column label="操作" align="center">
+              <template #default="{ row }">
+                <el-link type="primary">
                   <IconFont type="icon-edit" @click="handleEditResource(row)" />
-                  <el-divider direction="vertical"></el-divider>
+                </el-link>
+                <el-divider direction="vertical"></el-divider>
+                <el-link type="primary">
                   <IconFont
                     type="icon-template_delete"
                     @click="handleDeleteResource(row.id)"
                   />
-                </template>
-              </el-table-column>
-            </el-table>
-            <el-pagination
-              background
-              :current-page="queryForm.pageNum"
-              :page-size="queryForm.pageSize"
-              :layout="layout"
-              :total="total"
-              :page-sizes="[5, 10, 20, 30]"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-            ></el-pagination>
-          </div>
+                </el-link>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+            background
+            :current-page="queryForm.pageNum"
+            :page-size="queryForm.pageSize"
+            :layout="layout"
+            :total="total"
+            :page-sizes="[5, 10, 20, 30]"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          ></el-pagination>
         </el-card>
       </el-col>
     </el-row>
@@ -199,7 +206,6 @@
     updateMenu,
   } from '@/api/menu'
   import ResourceCreateForm from '@/views/permission/modules/ResourceCreateForm'
-
   export default {
     components: {
       ResourceCreateForm,

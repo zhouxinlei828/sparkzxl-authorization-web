@@ -7,7 +7,7 @@
   >
     <el-row :gutter="12">
       <el-col :span="10">
-        <el-card style="overflow-y: auto; height: 550px">
+        <el-card style="overflow-y: auto; height: 450px">
           <div slot="header" class="clearfix">
             <span>菜单</span>
           </div>
@@ -18,7 +18,7 @@
               </el-input>
             </el-form-item>
           </el-form>
-          <div style="overflow-y: auto; max-height: 320px">
+          <div style="overflow-y: auto; max-height: 290px">
             <el-tree
               ref="menu-tree"
               :data="menuData"
@@ -34,11 +34,11 @@
         </el-card>
       </el-col>
       <el-col :span="14">
-        <el-card style="overflow-y: auto; height: 550px">
+        <el-card style="overflow-y: auto; height: 450px">
           <div slot="header" class="clearfix">
             <span>资源</span>
           </div>
-          <div style="overflow-y: auto; max-height: 370px">
+          <div style="overflow-y: auto; max-height: 340px">
             <a-table
               size="middle"
               :columns="resourceColumns"
