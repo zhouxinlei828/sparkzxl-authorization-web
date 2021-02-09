@@ -8,7 +8,11 @@
           </div>
           <el-form :inline="true" size="small">
             <el-form-item>
-              <el-input v-model="filterText" placeholder="输入关键字进行过滤">
+              <el-input
+                v-model="filterText"
+                prefix-icon="el-icon-search"
+                placeholder="输入关键字进行过滤"
+              >
                 >
               </el-input>
             </el-form-item>
@@ -124,6 +128,7 @@
             <el-form-item>
               <el-input
                 v-model="queryForm.code"
+                prefix-icon="el-icon-search"
                 placeholder="编码"
                 style="width: 130px"
               />
@@ -131,6 +136,7 @@
             <el-form-item>
               <el-input
                 v-model="queryForm.name"
+                prefix-icon="el-icon-search"
                 placeholder="名称"
                 style="width: 130px"
               />

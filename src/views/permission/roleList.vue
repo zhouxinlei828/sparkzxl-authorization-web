@@ -2,10 +2,18 @@
   <div class="filter-container" style="padding-bottom: 0">
     <el-form :inline="true" size="small">
       <el-form-item label="编码">
-        <el-input v-model="queryParam.code" placeholder="请输入角色编码" />
+        <el-input
+          v-model="queryParam.code"
+          prefix-icon="el-icon-search"
+          placeholder="请输入角色编码"
+        />
       </el-form-item>
       <el-form-item label="角色名称">
-        <el-input v-model="queryParam.name" placeholder="请输入角色名称" />
+        <el-input
+          v-model="queryParam.name"
+          prefix-icon="el-icon-search"
+          placeholder="请输入角色名称"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="getRoleList()">

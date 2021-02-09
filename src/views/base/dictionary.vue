@@ -16,10 +16,20 @@
           </div>
           <el-form :inline="true" size="small">
             <el-form-item>
-              <el-input v-model="queryForm.type" placeholder="类型" />
+              <el-input
+                v-model="queryForm.type"
+                prefix-icon="el-icon-search"
+                style="width: 150px"
+                placeholder="类型"
+              />
             </el-form-item>
             <el-form-item>
-              <el-input v-model="queryForm.name" placeholder="名称" />
+              <el-input
+                v-model="queryForm.name"
+                style="width: 150px"
+                prefix-icon="el-icon-search"
+                placeholder="名称"
+              />
             </el-form-item>
             <el-form-item>
               <el-button
@@ -43,6 +53,7 @@
           </el-form>
           <div style="overflow-y: auto; height: 450px">
             <el-table
+              ref="dictionaryTable"
               v-loading="tableLoading"
               :data="dictionaryData"
               element-loading-text="拼命加载中"
@@ -102,10 +113,20 @@
           </div>
           <el-form :inline="true" size="small">
             <el-form-item>
-              <el-input v-model="queryItemForm.code" placeholder="编码" />
+              <el-input
+                v-model="queryItemForm.code"
+                style="width: 150px"
+                prefix-icon="el-icon-search"
+                placeholder="编码"
+              />
             </el-form-item>
             <el-form-item>
-              <el-input v-model="queryItemForm.name" placeholder="名称" />
+              <el-input
+                v-model="queryItemForm.name"
+                style="width: 150px"
+                prefix-icon="el-icon-search"
+                placeholder="名称"
+              />
             </el-form-item>
             <el-form-item>
               <el-button
@@ -275,6 +296,8 @@
           this.dictionaryData = responseData.list
           if (this.dictionaryData.length > 0) {
             const dictionaryId = this.activeData.dictionaryId
+            this.currentRow = this.dictionaryData[0]
+            this.$refs.dictionaryTable.setCurrentRow(this.currentRow)
             this.activeData = {
               dictionaryId:
                 dictionaryId === 0 ? this.dictionaryData[0].id : dictionaryId,
