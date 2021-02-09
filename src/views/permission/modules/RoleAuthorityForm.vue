@@ -48,16 +48,7 @@
               :pagination="false"
               bordered
               @change="getMenuResourceList"
-            >
-              <span slot="action" slot-scope="action">
-                <a-tag
-                  :key="action.id"
-                  :color="action.id === -1 ? 'red' : 'blue'"
-                >
-                  {{ action.name }}
-                </a-tag>
-              </span>
-            </a-table>
+            ></a-table>
           </div>
         </el-card>
       </el-col>

@@ -15,7 +15,7 @@
       :type="routeChildren.meta.icon"
       class="vab-fas-icon"
     />
-    <span>{{ routeChildren.meta.title }}</span>
+    <span style="padding-left: 5px">{{ routeChildren.meta.title }}</span>
     <el-tag
       v-if="routeChildren.meta && routeChildren.meta.badge"
       type="danger"
