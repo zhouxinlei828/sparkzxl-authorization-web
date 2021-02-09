@@ -50,6 +50,24 @@
               <vab-icon :icon="['fas', 'eye']"></vab-icon>
             </span>
           </el-form-item>
+          <el-form-item prop="captchaCode">
+            <span class="svg-container">
+              <IconFont
+                slot="prefix"
+                type="icon-yanzhengma1"
+                :style="{ color: 'rgba(0,0,0,.25)' }"
+              />
+            </span>
+            <el-input
+              v-model.trim="form.captchaCode"
+              v-focus
+              placeholder="请输入验证码"
+              tabindex="3"
+              style="width: 50%"
+              type="text"
+            />
+            <img :src="captcha.data" @click="getOauthCaptcha" />
+          </el-form-item>
           <el-button
             :loading="loading"
             class="login-btn"
@@ -69,6 +87,7 @@
 
 <script>
   import { isPassword } from '@/utils/validate'
+  import { getCaptcha } from '@/api/login'
 
   export default {
     name: 'Login',
@@ -100,6 +119,12 @@
         form: {
           username: '',
           password: '',
+          captchaKey: '',
+          captchaCode: '',
+        },
+        captcha: {
+          key: '',
+          data: '',
         },
         rules: {
           username: [
@@ -115,6 +140,9 @@
               trigger: 'blur',
               validator: validatePassword,
             },
+          ],
+          captchaCode: [
+            { required: true, message: '验证码不能为空', trigger: 'blur' },
           ],
         },
         loading: false,
@@ -132,6 +160,7 @@
     },
     created() {
       document.body.style.overflow = 'hidden'
+      this.getOauthCaptcha()
     },
     beforeDestroy() {
       document.body.style.overflow = 'auto'
@@ -144,6 +173,11 @@
         this.$nextTick(() => {
           this.$refs.password.focus()
         })
+      },
+      async getOauthCaptcha() {
+        const { data } = await getCaptcha({ type: 'arithmetic' })
+        this.captcha = data
+        this.form.captchaKey = data.key
       },
       handleLogin() {
         this.$refs.form.validate((valid) => {

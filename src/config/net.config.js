@@ -14,5 +14,7 @@ const network = {
   invalidCode: 402,
   //无权限code
   noPermissionCode: 401,
+  jwtExpiredCode: 10010,
+  jwtValidCode: 10011,
 }
 module.exports = network

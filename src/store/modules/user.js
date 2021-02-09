@@ -8,11 +8,12 @@ import { getInfo, login } from '@/api/login'
 import {
   getAccessToken,
   removeAccessToken,
+  removeTokenType,
   setAccessToken,
   setTokenType,
 } from '@/utils/accessToken'
 import { resetRouter } from '@/router'
-import { title, tokenName } from '@/config'
+import { title, tokenHeaderKey } from '@/config'
 
 const state = () => ({
   tokenType: 'bearer ',
@@ -76,10 +77,7 @@ const actions = {
           : '晚上好'
       Vue.prototype.$baseNotify(`欢迎登录${title}`, `${thisTime}！`)
     } else {
-      Vue.prototype.$baseMessage(
-        `登录接口异常，未正确返回${tokenName}...`,
-        'error'
-      )
+      Vue.prototype.$baseMessage(`登录接口异常，未正确返回token...`, 'error')
     }
   },
   async getUserInfo({ commit }) {
@@ -104,10 +102,14 @@ const actions = {
     await dispatch('resetAccessToken')
     await resetRouter()
   },
-  resetAccessToken({ commit }) {
-    commit('setPermissions', [])
+  async resetAccessToken({ commit }) {
+    commit('SET_INFO', '')
+    commit('setUsername', '')
+    commit('setAvatar', '')
+    commit('SET_ROLES', '')
     commit('setAccessToken', '')
     removeAccessToken()
+    removeTokenType()
   },
 }
 export default { state, getters, mutations, actions }

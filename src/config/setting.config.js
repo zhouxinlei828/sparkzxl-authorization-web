@@ -35,10 +35,10 @@ const setting = {
   //加载时显示文字
   loadingText: '正在加载中...',
   //token名称
-  tokenName: 'Authorization',
+  tokenHeaderKey: 'Authorization',
   //token在localStorage、sessionStorage存储的key的名称
-  tokenTableName: 'accessToken',
-  tokenTypeName: 'tokenType',
+  tokenKeyName: 'accessToken',
+  tokenTypeKeyName: 'tokenType',
   //token存储位置localStorage sessionStorage
   storage: 'localStorage',
   //token失效回退到登录页时是否记录本次的路由

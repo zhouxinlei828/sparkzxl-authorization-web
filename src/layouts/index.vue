@@ -53,7 +53,7 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import { tokenName } from '@/config'
+  import { tokenHeaderKey } from '@/config'
   export default {
     name: 'Layout',
     data() {
@@ -106,8 +106,9 @@
         window.addEventListener(
           'storage',
           (e) => {
-            if (e.key === tokenName || e.key === null) window.location.reload()
-            if (e.key === tokenName && e.value === null)
+            if (e.key === tokenHeaderKey || e.key === null)
+              window.location.reload()
+            if (e.key === tokenHeaderKey && e.value === null)
               window.location.reload()
           },
           false

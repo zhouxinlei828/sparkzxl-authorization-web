@@ -5,9 +5,11 @@ import {
   debounce,
   invalidCode,
   noPermissionCode,
+  jwtExpiredCode,
+  jwtValidCode,
   requestTimeout,
   successCode,
-  tokenName,
+  tokenHeaderKey,
   loginInterception,
 } from '@/config'
 import store from '@/store'
@@ -28,6 +30,14 @@ const handleCode = (code, msg) => {
     case noPermissionCode:
       router.push({ path: '/401' }).catch(() => {})
       break
+    case jwtExpiredCode:
+      console.log(10010)
+      router.push({ path: '/login' }).catch(() => {})
+      break
+    case jwtValidCode:
+      console.log(10011)
+      router.push({ path: '/login' }).catch(() => {})
+      break
     default:
       Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
       break
@@ -45,7 +55,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     if (store.getters['user/accessToken']) {
-      config.headers[tokenName] = store.getters['user/tokenType'].concat(
+      config.headers[tokenHeaderKey] = store.getters['user/tokenType'].concat(
         store.getters['user/accessToken']
       )
     }
