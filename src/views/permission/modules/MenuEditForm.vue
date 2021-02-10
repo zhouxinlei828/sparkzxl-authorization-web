@@ -35,7 +35,7 @@
         <el-radio v-model="form.isEnable" label="1">启用</el-radio>
         <el-radio v-model="form.isEnable" label="2">禁用</el-radio>
       </el-form-item>
-      <el-form-item label="排序值:" prop="sortValue">
+      <el-form-item label="菜单排序:" prop="sortValue">
         <el-input-number v-model="form.sortValue" :min="1" :max="100" />
       </el-form-item>
       <el-form-item label="描述:" prop="workDescribe">
