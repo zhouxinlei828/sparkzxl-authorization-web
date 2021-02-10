@@ -5,6 +5,14 @@
         <el-card shadow="hover" style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
             <span>菜单</span>
+            <el-tag
+              size="mini"
+              type="danger"
+              style="float: right"
+              effect="plain"
+            >
+              {{ activeTitle }}
+            </el-tag>
           </div>
           <el-form :inline="true" size="small">
             <el-form-item>
@@ -16,6 +24,14 @@
                 >
               </el-input>
             </el-form-item>
+            <el-button
+              size="small"
+              style="margin-left: 8px"
+              type="primary"
+              @click="getMenuTree"
+            >
+              搜索
+            </el-button>
             <el-form-item>
               <el-button
                 size="small"
@@ -31,15 +47,6 @@
                 @click="() => (this.filterText = '')"
               >
                 重置
-              </el-button>
-              <el-button
-                size="small"
-                style="margin-left: 8px"
-                icon="el-icon-delete"
-                type="danger"
-                @click="handleDelete"
-              >
-                删除
               </el-button>
             </el-form-item>
           </el-form>
@@ -75,13 +82,13 @@
             <el-table-column label="操作" align="center" width="130">
               <template #default="{ row }">
                 <el-link type="primary">
-                  <IconFont type="icon-edit" @click="handleEditResource(row)" />
+                  <IconFont type="icon-edit" @click="handleEditMenu(row)" />
                 </el-link>
                 <el-divider direction="vertical"></el-divider>
                 <el-link type="primary">
                   <IconFont
                     type="icon-template_delete"
-                    @click="handleDeleteResource(row.id)"
+                    @click="handleDeleteMenu(row.id)"
                   />
                 </el-link>
               </template>
@@ -92,7 +99,7 @@
       <el-col :span="12">
         <el-card shadow="hover" style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
-            <span>资源</span>
+            <span>{{ resourceTitle }}</span>
           </div>
           <el-form :inline="true" size="small">
             <el-form-item>
@@ -175,6 +182,7 @@
       </el-col>
     </el-row>
     <resource-create-form ref="createForm" @fetch-data="getMenuResource" />
+    <menu-edit-form ref="createMenuForm" @fetch-data="getMenuTree" />
   </div>
 </template>
 
@@ -184,12 +192,12 @@
     deleteResource,
     getMenuResource,
     getMenuTree,
-    saveMenu,
-    updateMenu,
   } from '@/api/menu'
+  import MenuEditForm from '@/views/permission/modules/MenuEditForm'
   import ResourceCreateForm from '@/views/permission/modules/ResourceCreateForm'
   export default {
     components: {
+      MenuEditForm,
       ResourceCreateForm,
     },
     data() {
@@ -202,20 +210,10 @@
         tableLoading: false,
         menuLoading: false,
         filterText: '',
-        title: '新增菜单',
-        buttonName: '新增',
+        resourceTitle: '',
+        activeTitle: '',
         currentRow: null,
         parentId: 0,
-        form: {
-          id: null,
-          parentId: 0,
-          label: '',
-          path: '',
-          component: '',
-          isEnable: '1',
-          sortValue: 1,
-          describe: '',
-        },
         queryForm: {
           pageNum: 1,
           pageSize: 10,
@@ -240,7 +238,7 @@
         },
       }
     },
-    mounted() {
+    created() {
       this.getMenuTree()
     },
     methods: {
@@ -252,6 +250,10 @@
           if (this.menuData.length > 0) {
             this.menuId = this.menuId === 0 ? responseData[0].id : this.menuId
             this.currentRow = this.menuData[0]
+            this.resourceTitle = '资源（'
+              .concat(this.currentRow.label)
+              .concat('）')
+            this.activeTitle = this.currentRow.label
             this.$refs.menuTable.setCurrentRow(this.currentRow)
           }
           this.getMenuResource()
@@ -286,9 +288,7 @@
         })
       },
       handleAdd() {
-        this.title = '新增菜单'
-        this.buttonName = '新增'
-        this.form = {
+        const data = {
           id: null,
           parentId: this.parentId,
           label: '',
@@ -298,6 +298,20 @@
           sortValue: 1,
           describe: '',
         }
+        this.$refs['createMenuForm'].showDialog(data)
+      },
+      handleEditMenu(row) {
+        const data = {
+          id: row.id,
+          parentId: row.parentId,
+          label: row.label,
+          path: row.path,
+          component: row.component,
+          isEnable: row.isEnable === true ? '1' : '2',
+          sortValue: row.sortValue,
+          describe: row.describe,
+        }
+        this.$refs['createMenuForm'].showDialog(data)
       },
       handleAddResource() {
         const data = {
@@ -350,41 +364,9 @@
         }
         this.$refs['createForm'].showDialog(data)
       },
-      handleSave() {
-        this.$refs['ruleForm'].validate((valid) => {
-          if (valid) {
-            const submitData = this.form
-            submitData.isEnable = this.form.isEnable === '1'
-            if (submitData.id != null) {
-              updateMenu(submitData).then((response) => {
-                const responseData = response.data
-                if (responseData) {
-                  this.$message.success('修改菜单成功')
-                  this.getMenuTree()
-                } else {
-                  this.$message.error('修改菜单失败')
-                }
-              })
-            } else {
-              saveMenu(submitData).then((response) => {
-                const responseData = response.data
-                if (responseData) {
-                  this.$message.success('新增菜单成功')
-                  this.getMenuTree()
-                } else {
-                  this.$message.error('新增菜单失败')
-                }
-              })
-            }
-          } else {
-            return false
-          }
-        })
-      },
-      handleDelete() {
-        const checkedKeys = this.$refs['menu-tree'].getCheckedKeys()
+      handleDeleteMenu(id) {
         const data = {
-          ids: checkedKeys,
+          ids: id,
         }
         deleteMenu(data).then((response) => {
           const responseData = response.data
@@ -403,6 +385,9 @@
       handleCurrentTableChange(data) {
         this.currentRow = data
         this.menuId = data.id
+        this.parentId = data.id
+        this.resourceTitle = '资源（'.concat(data.label).concat('）')
+        this.activeTitle = data.label
         this.queryForm = {
           pageNum: 1,
           pageSize: 10,
@@ -410,11 +395,6 @@
           name: '',
         }
         this.getMenuResource()
-      },
-      resetForm() {
-        this.$refs['ruleForm'].resetFields()
-        this.title = '新增'
-        this.buttonName = '新增'
       },
     },
   }

@@ -59,17 +59,20 @@
 </template>
 
 <script>
-  import { saveRole, updateRole } from '@/api/role'
-
+  import { saveMenu, updateMenu } from '@/api/menu'
   export default {
     data() {
       return {
         title: '',
         dialogFormVisible: false,
         form: {
-          code: null,
-          name: null,
-          status: '1',
+          id: null,
+          parentId: 0,
+          label: null,
+          path: null,
+          component: null,
+          isEnable: '1',
+          sortValue: 1,
           describe: null,
         },
         rules: {
@@ -88,9 +91,9 @@
     methods: {
       showDialog(data) {
         if (data.id !== undefined) {
-          this.title = '修改角色'
+          this.title = '修改菜单'
         } else {
-          this.title = '新增角色'
+          this.title = '新增菜单'
         }
         this.dialogFormVisible = true
         this.form = data
@@ -98,27 +101,26 @@
       onSubmit() {
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            const status = parseInt(this.form.status) === 1
             const submitData = this.form
-            submitData.status = status
-            if (submitData.id !== undefined) {
-              updateRole(submitData).then((response) => {
+            submitData.isEnable = this.form.isEnable === '1'
+            if (submitData.id != null) {
+              updateMenu(submitData).then((response) => {
                 const responseData = response.data
                 if (responseData) {
-                  this.$message.success('修改角色成功')
+                  this.$message.success('修改菜单成功')
                   this.resetForm()
                 } else {
-                  this.$message.error('修改角色失败')
+                  this.$message.error('修改菜单失败')
                 }
               })
             } else {
-              saveRole(submitData).then((response) => {
+              saveMenu(submitData).then((response) => {
                 const responseData = response.data
                 if (responseData) {
-                  this.$message.success('新增角色成功')
+                  this.$message.success('新增菜单成功')
                   this.resetForm()
                 } else {
-                  this.$message.error('新增角色失败')
+                  this.$message.error('新增菜单失败')
                 }
               })
             }
