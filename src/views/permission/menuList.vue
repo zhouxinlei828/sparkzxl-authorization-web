@@ -366,7 +366,7 @@
       },
       handleDeleteMenu(id) {
         const data = {
-          ids: id,
+          ids: [id],
         }
         deleteMenu(data).then((response) => {
           const responseData = response.data
