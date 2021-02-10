@@ -13,10 +13,11 @@ const api = {
 
 export default api
 
-export function getMenuTree() {
+export function getMenuTree(parameter) {
   return request({
     url: api.menuTree,
     method: 'get',
+    params: parameter,
   })
 }
 

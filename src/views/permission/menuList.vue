@@ -6,6 +6,7 @@
           <div slot="header" class="clearfix">
             <span>菜单</span>
             <el-tag
+              v-show="activeTitle !== ''"
               size="mini"
               type="danger"
               style="float: right"
@@ -19,7 +20,7 @@
               <el-input
                 v-model="filterText"
                 prefix-icon="el-icon-search"
-                placeholder="输入关键字进行过滤"
+                placeholder="输入关键字"
               >
                 >
               </el-input>
@@ -99,7 +100,7 @@
       <el-col :span="12">
         <el-card shadow="hover" style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
-            <span>{{ resourceTitle }}</span>
+            <span>{{ resourceTitle === '' ? '资源' : resourceTitle }}</span>
           </div>
           <el-form :inline="true" size="small">
             <el-form-item>
@@ -243,8 +244,9 @@
     },
     methods: {
       getMenuTree() {
+        this.initAccessData()
         this.menuLoading = true
-        getMenuTree().then((response) => {
+        getMenuTree({ label: this.filterText }).then((response) => {
           const responseData = response.data
           this.menuData = responseData
           if (this.menuData.length > 0) {
@@ -259,6 +261,12 @@
           this.getMenuResource()
           this.menuLoading = false
         })
+      },
+      initAccessData() {
+        this.resourceTitle = ''
+        this.activeTitle = ''
+        this.menuId = 0
+        this.parentId = 0
       },
       handleSizeChange(val) {
         this.queryForm.pageSize = val
