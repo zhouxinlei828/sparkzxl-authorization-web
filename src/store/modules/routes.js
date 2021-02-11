@@ -40,7 +40,7 @@ const rootRouter = {
       component: '@/views/index/index',
       meta: {
         title: '首页',
-        icon: 'home',
+        icon: 'icon-home',
         affix: true,
         useVabIcon: true,
       },
