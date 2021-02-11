@@ -5,18 +5,8 @@
     :popper-append-to-body="false"
   >
     <template slot="title">
-      <vab-icon
-        v-if="item.meta && item.meta.icon && item.meta.useVabIcon === true"
-        :icon="['fas', item.meta.icon]"
-        class="vab-fas-icon"
-      />
-      <vab-remix-icon
-        v-if="item.meta && item.meta.remixIcon"
-        :icon-class="item.meta.remixIcon"
-        class="vab-remix-icon"
-      />
       <IconFont
-        v-if="item.meta && item.meta.icon && item.meta.useVabIcon === false"
+        v-if="item.meta && item.meta.icon"
         :type="item.meta.icon"
         class="vab-fas-icon"
       />

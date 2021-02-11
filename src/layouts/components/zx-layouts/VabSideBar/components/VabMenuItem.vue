@@ -1,17 +1,7 @@
 <template>
   <el-menu-item :index="handlePath(routeChildren.path)" @click="handleLink">
-    <vab-icon
-      v-if="routeChildren.meta.icon && routeChildren.meta.useVabIcon === true"
-      :icon="['fas', routeChildren.meta.icon]"
-      class="vab-fas-icon"
-    />
-    <vab-remix-icon
-      v-if="routeChildren.meta.remixIcon"
-      :icon-class="routeChildren.meta.remixIcon"
-      class="vab-remix-icon"
-    />
     <IconFont
-      v-if="routeChildren.meta.icon && routeChildren.meta.useVabIcon === false"
+      v-if="routeChildren.meta.icon"
       :type="routeChildren.meta.icon"
       class="vab-fas-icon"
     />

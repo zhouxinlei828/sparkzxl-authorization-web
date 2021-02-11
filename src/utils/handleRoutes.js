@@ -2,14 +2,16 @@ import { isUrl } from '@/utils/util'
 
 export function buildRouterJson(routeData, parent) {
   return routeData.map((item) => {
-    const { label, component, icon } = item || {}
+    const { label, redirect, component, componentName, icon, noKeepAlive } =
+      item || {}
     const currentRouter = {
       // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace
       path: item.path || `${(parent && parent.path) || ''}/${item.key}`,
+      name: componentName,
       // meta: 页面标题, 菜单图标, 页面权限(供指令权限用，可去掉)
       meta: {
         title: label,
-        noKeepAlive: true,
+        noKeepAlive: noKeepAlive,
       },
     }
     if (label !== undefined && label !== '') {
@@ -19,8 +21,7 @@ export function buildRouterJson(routeData, parent) {
       currentRouter.meta.title = item.name
       currentRouter.name = item.name
     }
-    if (icon !== undefined && icon !== '') {
-      currentRouter.meta.useVabIcon = icon.indexOf('icon') !== 0
+    if (icon !== null && icon !== '') {
       currentRouter.meta.icon = icon
     }
     // 为了防止出现后端返回结果不规范，处理有可能出现拼接出两个 反斜杠
@@ -35,8 +36,7 @@ export function buildRouterJson(routeData, parent) {
     if (item.children && item.children.length > 0) {
       currentRouter.children = buildRouterJson(item.children, currentRouter)
       currentRouter.alwaysShow = true
-      currentRouter.redirect =
-        item.redirect !== undefined ? item.redirect : 'noRedirect'
+      currentRouter.redirect = redirect !== null ? item.redirect : 'noRedirect'
     }
     return currentRouter
   })
