@@ -90,7 +90,7 @@
     },
     methods: {
       showDialog(data) {
-        if (data.id !== undefined) {
+        if (data.id !== null && data.id !== 0) {
           this.title = '修改菜单'
         } else {
           this.title = '新增菜单'

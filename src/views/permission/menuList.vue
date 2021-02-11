@@ -71,10 +71,10 @@
             ></el-table-column>
             <el-table-column prop="icon" label="图标" align="center" width="80">
               <template #default="{ row }">
-                <div v-show="row.icon !== '' && row.icon.indexOf('icon') === 0">
+                <div v-show="row.icon !== ''">
                   <IconFont :type="row.icon" />
                 </div>
-                <div v-show="row.icon !== '' && row.icon.indexOf('icon') !== 0">
+                <div v-show="row.icon !== ''">
                   <i :class="row.icon" />
                 </div>
               </template>
