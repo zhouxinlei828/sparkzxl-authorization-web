@@ -27,6 +27,78 @@
       <el-form-item label="菜单标题:" prop="label" required>
         <el-input v-model="form.label" class="edit-form-item" />
       </el-form-item>
+      <el-form-item
+        label="菜单图标:"
+        prop="label"
+        required
+        style="width: 300px"
+      >
+        <el-popover placement="bottom-start" width="330" trigger="click">
+          <el-table :data="iconData" border height="273" :show-header="false">
+            <el-table-column
+              property="key1"
+              width="60"
+              label="1"
+              align="center"
+            >
+              <template #default="{ row }">
+                <el-link>
+                  <IconFont :type="row.key1" />
+                </el-link>
+              </template>
+            </el-table-column>
+            <el-table-column
+              property="key2"
+              width="60"
+              label="2"
+              align="center"
+            >
+              <template #default="{ row }">
+                <el-link>
+                  <IconFont :type="row.key2" />
+                </el-link>
+              </template>
+            </el-table-column>
+            <el-table-column
+              property="key3"
+              width="61"
+              label="3"
+              align="center"
+            >
+              <template #default="{ row }">
+                <el-link>
+                  <IconFont :type="row.key3" />
+                </el-link>
+              </template>
+            </el-table-column>
+            <el-table-column
+              property="key4"
+              width="61"
+              label="4"
+              align="center"
+            >
+              <template #default="{ row }">
+                <el-link>
+                  <IconFont :type="row.key4" />
+                </el-link>
+              </template>
+            </el-table-column>
+            <el-table-column
+              property="key5"
+              width="61"
+              label="5"
+              align="center"
+            >
+              <template #default="{ row }">
+                <el-link>
+                  <IconFont :type="row.key5" />
+                </el-link>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button slot="reference">菜单图标</el-button>
+        </el-popover>
+      </el-form-item>
       <el-form-item label="菜单隐藏:" prop="hidden">
         <el-radio-group v-model="form.hidden" class="edit-form-item">
           <el-radio-button label="0">是</el-radio-button>
@@ -113,6 +185,85 @@
           children: null,
         },
         menuTree: [],
+        iconData: [
+          {
+            key1: 'icon-pengyouquan',
+            key2: 'icon-QQ',
+            key3: 'icon-doc',
+            key4: 'icon-PPT',
+            key5: 'icon-excel',
+          },
+          {
+            key1: 'icon-youhuiquan',
+            key2: 'icon-dianpu',
+            key3: 'icon-licai',
+            key4: 'icon-home',
+            key5: 'icon-guanggaoguanli',
+          },
+          {
+            key1: 'icon-jichu-copy',
+            key2: 'icon-home1',
+            key3: 'icon-lingyufenxi',
+            key4: 'icon-icon-test',
+            key5: 'icon-icon-test1',
+          },
+          {
+            key1: 'icon-icon-test2',
+            key2: 'icon-icon-test3',
+            key3: 'icon-icon-test4',
+            key4: 'icon-icon-test5',
+            key5: 'icon-icon-test6',
+          },
+          {
+            key1: 'icon-icon-test7',
+            key2: 'icon-dingtalk',
+            key3: 'icon-zuixing-80',
+            key4: 'icon-saoyisao',
+            key5: 'icon-link',
+          },
+          {
+            key1: 'icon-yanzhengma1',
+            key2: 'icon-manage-file',
+            key3: 'icon-kaifazhe',
+            key4: 'icon-process1',
+            key5: 'icon-process2',
+          },
+          {
+            key1: 'icon-permission',
+            key2: 'icon-daochu',
+            key3: 'icon-daoru',
+            key4: 'icon-liucheng',
+            key5: 'icon-yanzhengma',
+          },
+          {
+            key1: 'icon-2',
+            key2: 'icon-tupian',
+            key3: 'icon-16_10',
+            key4: 'icon-guize',
+            key5: 'icon-edit',
+          },
+          {
+            key1: 'icon-fenpei',
+            key2: 'icon-upload-demo',
+            key3: 'icon-template_delete',
+            key4: 'icon-chexiao',
+            key5: 'icon-fabu',
+          },
+          {
+            key1: 'icon-quanxian1',
+            key2: 'icon-alert-warning',
+            key3: 'icon-chenggong',
+            key4: 'icon-Error',
+            key5: 'icon-role',
+          },
+          {
+            key1: 'icon-shezhi',
+            key2: 'icon-yonghuguanli',
+            key3: 'icon-SysManagement',
+            key4: 'icon-quanxianguanli',
+            key5: 'icon-daojishi',
+          },
+        ],
         form: {
           id: null,
           parentId: 0,
