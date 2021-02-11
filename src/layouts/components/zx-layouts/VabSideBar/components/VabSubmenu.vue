@@ -10,7 +10,7 @@
         :type="item.meta.icon"
         class="vab-fas-icon"
       />
-      <span>{{ item.meta.title }}</span>
+      <span style="padding-left: 5px">{{ item.meta.title }}</span>
     </template>
     <slot />
   </el-submenu>
