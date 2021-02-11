@@ -71,10 +71,10 @@
             ></el-table-column>
             <el-table-column prop="icon" label="图标" align="center" width="80">
               <template #default="{ row }">
-                <div v-show="row.icon !== ''">
+                <div v-if="row.icon !== null && row.icon !== ''">
                   <IconFont :type="row.icon" />
                 </div>
-                <div v-show="row.icon !== ''">
+                <div v-if="row.icon !== null && row.icon !== ''">
                   <i :class="row.icon" />
                 </div>
               </template>
@@ -258,7 +258,6 @@
             this.activeTitle = this.currentRow.label
             this.$refs.menuTable.setCurrentRow(this.currentRow)
           }
-          this.getMenuResource()
           this.menuLoading = false
         })
       },
@@ -298,13 +297,18 @@
       handleAdd() {
         const data = {
           id: null,
-          parentId: this.parentId,
-          label: '',
-          path: '',
-          component: '',
+          parentId: 0,
+          hidden: 1,
+          noKeepAlive: 1,
+          redirect: null,
+          label: null,
+          path: null,
+          component: null,
+          componentName: null,
           isEnable: '1',
           sortValue: 1,
-          describe: '',
+          describe: null,
+          menuTree: this.menuData,
         }
         this.$refs['createMenuForm'].showDialog(data)
       },
@@ -312,12 +316,17 @@
         const data = {
           id: row.id,
           parentId: row.parentId,
+          hidden: row.hidden === true ? 0 : 1,
+          noKeepAlive: row.noKeepAlive === true ? 0 : 1,
+          redirect: row.redirect,
           label: row.label,
           path: row.path,
           component: row.component,
+          componentName: row.componentName,
           isEnable: row.isEnable === true ? '1' : '2',
           sortValue: row.sortValue,
           describe: row.describe,
+          menuTree: this.menuData,
         }
         this.$refs['createMenuForm'].showDialog(data)
       },

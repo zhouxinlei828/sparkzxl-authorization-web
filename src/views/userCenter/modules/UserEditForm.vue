@@ -2,7 +2,7 @@
   <el-dialog
     :title="title"
     :visible.sync="dialogFormVisible"
-    width="900"
+    width="800px"
     @close="closeDialog"
   >
     <el-form
@@ -126,7 +126,7 @@
         <el-input
           v-model="form.workDescribe"
           type="textarea"
-          style="width: 450px"
+          style="width: 530px"
         />
       </el-form-item>
     </el-form>
