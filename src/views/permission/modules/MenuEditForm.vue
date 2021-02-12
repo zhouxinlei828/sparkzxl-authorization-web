@@ -33,7 +33,12 @@
         required
         style="width: 300px"
       >
-        <el-popover placement="bottom-start" width="330" trigger="click">
+        <el-popover
+          v-model="iconVisible"
+          placement="bottom-start"
+          width="330"
+          trigger="manual"
+        >
           <el-table :data="iconData" border height="273" :show-header="false">
             <el-table-column
               property="key1"
@@ -43,7 +48,10 @@
             >
               <template #default="{ row }">
                 <el-link>
-                  <IconFont :type="row.key1" />
+                  <IconFont
+                    :type="row.key1"
+                    @click="handleIconSelect(row.key1)"
+                  />
                 </el-link>
               </template>
             </el-table-column>
@@ -55,7 +63,10 @@
             >
               <template #default="{ row }">
                 <el-link>
-                  <IconFont :type="row.key2" />
+                  <IconFont
+                    :type="row.key2"
+                    @click="handleIconSelect(row.key2)"
+                  />
                 </el-link>
               </template>
             </el-table-column>
@@ -67,7 +78,10 @@
             >
               <template #default="{ row }">
                 <el-link>
-                  <IconFont :type="row.key3" />
+                  <IconFont
+                    :type="row.key3"
+                    @click="handleIconSelect(row.key3)"
+                  />
                 </el-link>
               </template>
             </el-table-column>
@@ -79,7 +93,10 @@
             >
               <template #default="{ row }">
                 <el-link>
-                  <IconFont :type="row.key4" />
+                  <IconFont
+                    :type="row.key4"
+                    @click="handleIconSelect(row.key4)"
+                  />
                 </el-link>
               </template>
             </el-table-column>
@@ -91,12 +108,28 @@
             >
               <template #default="{ row }">
                 <el-link>
-                  <IconFont :type="row.key5" />
+                  <IconFont
+                    :type="row.key5"
+                    @click="handleIconSelect(row.key5)"
+                  />
                 </el-link>
               </template>
             </el-table-column>
           </el-table>
-          <el-button slot="reference">菜单图标</el-button>
+          <el-button slot="reference" @click="selectIcon">
+            <IconFont
+              v-if="form.icon !== null && form.icon !== ''"
+              :type="form.icon"
+            />
+            菜单图标
+          </el-button>
+          <el-button
+            v-if="form.icon !== null && form.icon !== ''"
+            slot="reference"
+            @click="clearIcon"
+          >
+            清除
+          </el-button>
         </el-popover>
       </el-form-item>
       <el-form-item label="菜单隐藏:" prop="hidden">
@@ -185,6 +218,7 @@
           children: null,
         },
         menuTree: [],
+        iconVisible: false,
         iconData: [
           {
             key1: 'icon-pengyouquan',
@@ -269,6 +303,7 @@
           parentId: 0,
           noKeepAlive: 1,
           redirect: null,
+          icon: null,
           hidden: 1,
           label: null,
           path: null,
@@ -306,6 +341,16 @@
         })
         delete data.menuTree
         this.form = data
+      },
+      handleIconSelect(key) {
+        this.iconVisible = !this.iconVisible
+        this.form.icon = key
+      },
+      selectIcon() {
+        this.iconVisible = !this.iconVisible
+      },
+      clearIcon() {
+        this.form.icon = null
       },
       onSubmit() {
         this.$refs['ruleForm'].validate((valid) => {
