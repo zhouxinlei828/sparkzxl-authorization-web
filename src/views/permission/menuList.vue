@@ -146,7 +146,7 @@
             element-loading-spinner="el-icon-loading"
             border
             style="width: 100%"
-            max-height="300"
+            max-height="350"
           >
             <el-table-column
               prop="code"
