@@ -66,7 +66,9 @@
               style="width: 50%"
               type="text"
             />
-            <img :src="captcha.data" @click="getOauthCaptcha" />
+            <el-link :underline="false">
+              <img :src="captcha.data" @click="getOauthCaptcha" />
+            </el-link>
           </el-form-item>
           <el-button
             :loading="loading"
