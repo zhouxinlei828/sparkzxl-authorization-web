@@ -246,7 +246,7 @@
         itemLayout: 'total, sizes, prev, pager, next, jumper',
         activeData: {
           activeDictionary: '',
-          dictionaryId: 0,
+          dictionaryId: null,
           dictionaryType: '',
           dictionaryItemTitle: '字典详情',
         },
@@ -300,7 +300,9 @@
             this.$refs.dictionaryTable.setCurrentRow(this.currentRow)
             this.activeData = {
               dictionaryId:
-                dictionaryId === 0 ? this.dictionaryData[0].id : dictionaryId,
+                dictionaryId === null
+                  ? this.dictionaryData[0].id
+                  : dictionaryId,
               dictionaryType: this.dictionaryData[0].type,
               dictionaryItemTitle: '字典详情（'
                 .concat(this.dictionaryData[0].name)
