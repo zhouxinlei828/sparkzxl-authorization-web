@@ -11,10 +11,9 @@ const network = {
   //操作正常code，支持String、Array、int多种类型
   successCode: [200, 0],
   //登录失效code
-  invalidCode: 402,
+  invalidCode: 10010,
   //无权限code
   noPermissionCode: 401,
-  jwtExpiredCode: 10010,
   jwtValidCode: 10011,
 }
 module.exports = network

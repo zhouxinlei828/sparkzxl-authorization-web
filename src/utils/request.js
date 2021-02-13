@@ -5,7 +5,6 @@ import {
   debounce,
   invalidCode,
   noPermissionCode,
-  jwtExpiredCode,
   jwtValidCode,
   requestTimeout,
   successCode,
@@ -20,6 +19,7 @@ import { isArray } from '@/utils/validate'
 let loadingInstance
 
 const handleCode = (code, msg) => {
+  debugger
   switch (code) {
     case invalidCode:
       Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
@@ -29,10 +29,6 @@ const handleCode = (code, msg) => {
       break
     case noPermissionCode:
       router.push({ path: '/401' }).catch(() => {})
-      break
-    case jwtExpiredCode:
-      console.log(10010)
-      router.push({ path: '/login' }).catch(() => {})
       break
     case jwtValidCode:
       console.log(10011)
@@ -55,7 +51,11 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     const accessToken = store.getters['user/accessToken']
-    if (accessToken !== undefined && accessToken !== null) {
+    if (
+      accessToken !== undefined &&
+      accessToken !== null &&
+      accessToken !== ''
+    ) {
       config.headers[tokenHeaderKey] = store.getters['user/tokenType'].concat(
         accessToken
       )
@@ -88,7 +88,6 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     if (loadingInstance) loadingInstance.close()
-
     const { data, config } = response
     const { code, msg } = data
     // 操作正常Code数组
