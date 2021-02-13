@@ -297,6 +297,9 @@
             key4: 'icon-quanxianguanli',
             key5: 'icon-daojishi',
           },
+          {
+            key1: 'icon-zuhu1',
+          },
         ],
         form: {
           id: null,

@@ -42,7 +42,7 @@ const mutations = {
     setAccessToken(accessToken)
   },
   setTokenType(state, tokenType) {
-    state.tokenType = tokenType.concat(' ')
+    state.tokenType = tokenType
     setTokenType(tokenType)
   },
   setTenant(state, tenant) {

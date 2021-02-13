@@ -9,7 +9,7 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { Table, Icon } from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
 const iconFont = Icon.createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_946821_td4txvh3zu.js',
+  scriptUrl: '//at.alicdn.com/t/font_946821_k59gjhsstm.js',
 })
 Vue.config.productionTip = false
 Vue.use(Table)

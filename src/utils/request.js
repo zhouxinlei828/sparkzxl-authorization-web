@@ -56,9 +56,9 @@ instance.interceptors.request.use(
       accessToken !== null &&
       accessToken !== ''
     ) {
-      config.headers[tokenHeaderKey] = store.getters['user/tokenType'].concat(
-        accessToken
-      )
+      config.headers[tokenHeaderKey] = store.getters['user/tokenType']
+        .concat(' ')
+        .concat(accessToken)
     }
     const tenant = store.getters['user/tenant']
     if (tenant !== undefined && tenant !== null) {
