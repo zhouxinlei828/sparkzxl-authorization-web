@@ -11,13 +11,17 @@ import {
   removeTokenType,
   setAccessToken,
   setTokenType,
+  setTenant,
+  getTenant,
+  getTokenType,
 } from '@/utils/accessToken'
 import { resetRouter } from '@/router'
-import { title, tokenHeaderKey } from '@/config'
+import { title } from '@/config'
 
 const state = () => ({
-  tokenType: 'bearer ',
+  tokenType: getTokenType(),
   accessToken: getAccessToken(),
+  tenant: getTenant(),
   username: '',
   avatar: '',
   roles: [],
@@ -26,6 +30,7 @@ const state = () => ({
 const getters = {
   tokenType: (state) => state.tokenType,
   accessToken: (state) => state.accessToken,
+  tenant: (state) => state.tenant,
   username: (state) => state.username,
   avatar: (state) => state.avatar,
   permissions: (state) => state.permissions,
@@ -39,6 +44,10 @@ const mutations = {
   setTokenType(state, tokenType) {
     state.tokenType = tokenType.concat(' ')
     setTokenType(tokenType)
+  },
+  setTenant(state, tenant) {
+    state.tenant = tenant
+    setTenant(tenant)
   },
   setUsername(state, username) {
     state.username = username
@@ -61,9 +70,11 @@ const actions = {
     const { data } = await login(userInfo)
     const accessToken = data['access_token']
     const tokenType = data['token_type']
+    const tenant = data['tenant']
     if (accessToken) {
       commit('setAccessToken', accessToken)
       commit('setTokenType', tokenType)
+      commit('setTenant', tenant)
       const hour = new Date().getHours()
       const thisTime =
         hour < 8

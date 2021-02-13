@@ -54,10 +54,15 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   (config) => {
-    if (store.getters['user/accessToken']) {
+    const accessToken = store.getters['user/accessToken']
+    if (accessToken !== undefined && accessToken !== null) {
       config.headers[tokenHeaderKey] = store.getters['user/tokenType'].concat(
-        store.getters['user/accessToken']
+        accessToken
       )
+    }
+    const tenant = store.getters['user/tenant']
+    if (tenant !== undefined && tenant !== null) {
+      config.headers['tenant'] = tenant
     }
     //这里会过滤所有为空、0、false的key，如果不需要请自行注释
     if (config.data)

@@ -14,13 +14,16 @@ const userApi = {
 
 export function login(parameter) {
   const data = { ...parameter }
+  const tenant = data.tenant
   data.grant_type = 'password'
   data.scope = 'all'
+  delete data.tenant
   return request({
     url: userApi.Login,
     method: 'post',
     data: data,
     headers: {
+      tenant: tenant,
       Authorization: 'Basic c3Bhcmt6eGw6MTIzNDU2',
       'Content-Type': 'application/json',
     },

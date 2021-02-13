@@ -14,7 +14,23 @@
         >
           <div class="title">hello !</div>
           <div class="title-tips">欢迎来到{{ title }}！</div>
-          <el-form-item style="margin-top: 40px" prop="username">
+          <el-form-item style="margin-top: 40px" prop="tenant">
+            <span class="svg-container">
+              <IconFont
+                slot="prefix"
+                type="icon-lingyufenxi"
+                :style="{ color: 'rgba(0,0,0,.25)' }"
+              />
+            </span>
+            <el-input
+              v-model.trim="form.tenant"
+              v-focus
+              placeholder="请输入租户编码"
+              tabindex="1"
+              type="text"
+            />
+          </el-form-item>
+          <el-form-item prop="username">
             <span class="svg-container svg-container-admin">
               <vab-icon :icon="['fas', 'user']" />
             </span>
@@ -119,6 +135,7 @@
         nodeEnv: process.env.NODE_ENV,
         title: this.$baseTitle,
         form: {
+          tenant: '0000',
           username: '',
           password: '',
           captchaKey: '',
@@ -244,7 +261,7 @@
     .login-form {
       position: relative;
       max-width: 100%;
-      margin: calc((100vh - 425px) / 2) 10% 10%;
+      margin: calc((100vh - 425px) / 3) 10% 10%;
       overflow: hidden;
 
       .forget-password {

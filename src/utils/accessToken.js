@@ -28,6 +28,20 @@ export function getTokenType() {
   }
 }
 
+export function getTenant() {
+  if (storage) {
+    if ('localStorage' === storage) {
+      return localStorage.getItem('tenant')
+    } else if ('sessionStorage' === storage) {
+      return sessionStorage.getItem('tenant')
+    } else {
+      return localStorage.getItem('tenant')
+    }
+  } else {
+    return localStorage.getItem('tenant')
+  }
+}
+
 export function setAccessToken(accessToken) {
   if (storage) {
     if ('localStorage' === storage) {
@@ -41,11 +55,10 @@ export function setAccessToken(accessToken) {
     return localStorage.setItem(tokenKeyName, accessToken)
   }
 }
-export function setTokenType(accessToken, tokenType) {
+export function setTokenType(tokenType) {
   if (storage) {
     if ('localStorage' === storage) {
-      localStorage.setItem(tokenTypeKeyName, tokenType)
-      return localStorage.setItem(tokenTypeKeyName, accessToken)
+      return localStorage.setItem(tokenTypeKeyName, tokenType)
     } else if ('sessionStorage' === storage) {
       return localStorage.setItem(tokenTypeKeyName, tokenType)
     } else {
@@ -53,6 +66,20 @@ export function setTokenType(accessToken, tokenType) {
     }
   } else {
     return localStorage.setItem(tokenTypeKeyName, tokenType)
+  }
+}
+
+export function setTenant(tenant) {
+  if (storage) {
+    if ('localStorage' === storage) {
+      return localStorage.setItem('tenant', tenant)
+    } else if ('sessionStorage' === storage) {
+      return localStorage.setItem('tenant', tenant)
+    } else {
+      return localStorage.setItem('tenant', tenant)
+    }
+  } else {
+    return localStorage.setItem('tenant', tenant)
   }
 }
 
