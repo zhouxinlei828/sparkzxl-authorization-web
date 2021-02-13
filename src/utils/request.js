@@ -23,6 +23,7 @@ const handleCode = (code, msg) => {
   switch (code) {
     case invalidCode:
       Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
+      store.dispatch('/user/logout')
       if (loginInterception) {
         location.reload()
       }
@@ -31,7 +32,6 @@ const handleCode = (code, msg) => {
       router.push({ path: '/401' }).catch(() => {})
       break
     case jwtValidCode:
-      console.log(10011)
       router.push({ path: '/login' }).catch(() => {})
       break
     default:
