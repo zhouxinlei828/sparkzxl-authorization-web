@@ -29,10 +29,10 @@ const handleCode = (code, msg) => {
       }
       break
     case noPermissionCode:
-      router.push({ path: '/401' }).catch(() => {})
+      Vue.prototype.$baseNotify(msg, '错误', 'error')
       break
     case jwtValidCode:
-      router.push({ path: '/login' }).catch(() => {})
+      Vue.prototype.$baseNotify(msg, '错误', 'error')
       break
     default:
       Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
