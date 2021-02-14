@@ -13,7 +13,6 @@ import {
 } from '@/config'
 import store from '@/store'
 import qs from 'qs'
-import router from '@/router'
 import { isArray } from '@/utils/validate'
 
 let loadingInstance
@@ -22,7 +21,7 @@ const handleCode = (code, msg) => {
   debugger
   switch (code) {
     case invalidCode:
-      Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
+      Vue.prototype.$baseNotify(msg, '错误', 'error')
       store.dispatch('/user/logout')
       if (loginInterception) {
         location.reload()
@@ -35,7 +34,7 @@ const handleCode = (code, msg) => {
       Vue.prototype.$baseNotify(msg, '错误', 'error')
       break
     default:
-      Vue.prototype.$baseMessage(msg || `后端接口${code}异常`, 'error')
+      Vue.prototype.$baseNotify(msg || `后端接口${code}异常`, '错误', 'error')
       break
   }
 }
@@ -60,9 +59,12 @@ instance.interceptors.request.use(
         .concat(' ')
         .concat(accessToken)
     }
-    const tenant = store.getters['user/tenant']
-    if (tenant !== undefined && tenant !== null) {
-      config.headers['tenant'] = tenant
+    const tenantHeader = config.headers['tenant']
+    if (tenantHeader !== null || tenantHeader !== '') {
+      const tenant = store.getters['user/tenant']
+      if (tenant !== undefined && tenant !== null) {
+        config.headers['tenant'] = tenant
+      }
     }
     //这里会过滤所有为空、0、false的key，如果不需要请自行注释
     if (config.data)
