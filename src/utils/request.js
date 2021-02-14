@@ -18,7 +18,6 @@ import { isArray } from '@/utils/validate'
 let loadingInstance
 
 const handleCode = (code, msg) => {
-  debugger
   switch (code) {
     case invalidCode:
       Vue.prototype.$baseNotify(msg, '错误', 'error')
