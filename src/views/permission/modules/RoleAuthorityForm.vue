@@ -7,7 +7,7 @@
   >
     <el-row :gutter="12">
       <el-col :span="10">
-        <el-card style="overflow-y: auto; height: 450px">
+        <el-card style="overflow-y: auto; height: 450px" shadow="never">
           <div slot="header" class="clearfix">
             <span>菜单</span>
           </div>
@@ -34,7 +34,7 @@
         </el-card>
       </el-col>
       <el-col :span="14">
-        <el-card style="overflow-y: auto; height: 450px">
+        <el-card style="overflow-y: auto; height: 450px" shadow="never">
           <div slot="header" class="clearfix">
             <span>资源</span>
           </div>
