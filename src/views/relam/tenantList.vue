@@ -95,7 +95,7 @@
             :type="row.status === true ? 'primary' : 'success'"
             disable-transitions
           >
-            {{ row.status === true ? '启用' : '停用' }}
+            {{ row.status === true ? '正常' : '禁用' }}
           </el-tag>
         </template>
       </el-table-column>

@@ -78,9 +78,9 @@
     methods: {
       showDialog(data) {
         if (data.id !== undefined) {
-          this.title = '修改岗位'
+          this.title = '修改租户'
         } else {
-          this.title = '新增岗位'
+          this.title = '新增租户'
         }
         this.orgData = data.orgData
         delete data.orgData
@@ -109,10 +109,10 @@
               saveStation(submitData).then((response) => {
                 const responseData = response.data
                 if (responseData) {
-                  this.$message.success('新增岗位成功')
+                  this.$message.success('新增租户成功')
                   this.resetForm()
                 } else {
-                  this.$message.error('新增岗位失败')
+                  this.$message.error('新增租户失败')
                 }
               })
             } else {
@@ -120,10 +120,10 @@
               updateStation(submitData).then((response) => {
                 const responseData = response.data
                 if (responseData) {
-                  this.$message.success('修改岗位成功')
+                  this.$message.success('修改租户成功')
                   this.resetForm()
                 } else {
-                  this.$message.error('修改岗位失败')
+                  this.$message.error('修改租户失败')
                 }
               })
             }
