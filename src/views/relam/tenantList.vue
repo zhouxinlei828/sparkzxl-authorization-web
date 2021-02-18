@@ -17,14 +17,22 @@
       class="filter-item button-item"
       icon="search"
       type="primary"
-      @click="getStationList()"
+      @click="getTenantList()"
     >
       查询
     </el-button>
     <el-button
       size="small"
       class="filter-item button-item"
-      @click="() => (this.queryParam = {})"
+      @click="
+        () =>
+          (this.queryParam = {
+            pageNum: 1,
+            pageSize: 10,
+            code: null,
+            name: null,
+          })
+      "
     >
       重置
     </el-button>
@@ -42,14 +50,14 @@
       max-height="450"
     >
       <el-table-column
-        prop="name"
+        prop="code"
         label="租户编码"
-        width="150"
+        width="100"
       ></el-table-column>
       <el-table-column
-        prop="describe"
+        prop="name"
         label="租户名称"
-        width="210"
+        width="150"
       ></el-table-column>
       <el-table-column prop="org" label="来源类型" width="80">
         <template #default="{ row }">
@@ -61,12 +69,22 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="logo" label="有效期" width="150"></el-table-column>
+      <el-table-column
+        prop="expirationTime"
+        label="有效期"
+        width="130"
+      ></el-table-column>
       <el-table-column
         prop="passwordExpire"
         label="密码有效期单位/天"
         width="150"
-      ></el-table-column>
+      >
+        <template #default="{ row }">
+          <el-tag type="primary" disable-transitions>
+            {{ row.passwordExpire === 0 ? '永久' : row.passwordExpire }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="passwordErrorNum"
         label="密码输错次数"
@@ -111,16 +129,17 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <tenant-edit-form ref="editForm" @fetch-data="getStationList" />
+    <tenant-edit-form ref="editForm" @fetch-data="getTenantList" />
   </div>
 </template>
 
 <script>
   import moment from 'moment'
   import { getOrgList } from '@/api/org'
-  import { getStationPageList, deleteStation } from '@/api/station'
+  import { deleteStation } from '@/api/station'
 
   import TenantEditForm from './modules/TenantEditForm'
+  import { getTenantPageList } from '@/api/tenant'
 
   export default {
     components: {
@@ -156,7 +175,7 @@
     },
     mounted() {
       this.getOrgList()
-      this.getStationList()
+      this.getTenantList()
     },
     methods: {
       getOrgList() {
@@ -172,27 +191,15 @@
       },
       handleSizeChange(val) {
         this.queryParam.pageSize = val
-        this.getStationList()
+        this.getTenantList()
       },
       handleCurrentChange(val) {
         this.queryParam.pageNum = val
-        this.getStationList()
+        this.getTenantList()
       },
-      async getStationList() {
+      async getTenantList() {
         this.tableLoading = true
-        const params = {
-          pageNum: this.queryParam.pageNum,
-          pageSize: this.queryParam.pageSize,
-          name: this.queryParam.name,
-          org:
-            this.queryParam.orgId === ''
-              ? null
-              : {
-                  key: this.queryParam.orgId,
-                  data: null,
-                },
-        }
-        getStationPageList(params).then((response) => {
+        getTenantPageList(this.queryParam).then((response) => {
           const result = response.data
           this.total = parseInt(result.total)
           this.stationData = result.list
@@ -200,6 +207,11 @@
             station.createTime = moment(station.createTime).format(
               'YYYY-MM-DD HH:mm:ss'
             )
+            if (station.expirationTime !== null) {
+              station.expirationTime = moment(station.expirationTime).format(
+                'YYYY-MM-DD HH:mm:ss'
+              )
+            }
           }
           this.tableLoading = false
         })
@@ -246,10 +258,10 @@
         deleteStation({ id: id }).then((response) => {
           const responseData = response.data
           if (responseData) {
-            this.$message.success('删除岗位成功')
-            this.getStationList()
+            this.$message.success('删除租户成功')
+            this.getTenantList()
           } else {
-            this.$message.error('删除岗位失败')
+            this.$message.error('删除租户失败')
           }
         })
       },
