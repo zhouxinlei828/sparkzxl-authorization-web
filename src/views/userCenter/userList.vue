@@ -312,6 +312,19 @@
       },
       handleAdd() {
         const createData = {
+          account: null,
+          name: null,
+          password: null,
+          org: null,
+          station: null,
+          email: null,
+          mobile: null,
+          sex: '1',
+          nation: null,
+          education: null,
+          positionStatus: null,
+          status: '1',
+          workDescribe: null,
           orgData: this.orgData,
         }
         this.$refs['editForm'].showDialog(createData)

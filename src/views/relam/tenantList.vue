@@ -59,16 +59,6 @@
         label="租户名称"
         width="150"
       ></el-table-column>
-      <el-table-column prop="org" label="来源类型" width="80">
-        <template #default="{ row }">
-          <el-tag
-            :type="row.type === 'CREATE' ? 'primary' : 'success'"
-            disable-transitions
-          >
-            {{ row.type === 'CREATE' ? '创建' : '注册' }}
-          </el-tag>
-        </template>
-      </el-table-column>
       <el-table-column
         prop="expirationTime"
         label="有效期"
@@ -135,11 +125,8 @@
 
 <script>
   import moment from 'moment'
-  import { getOrgList } from '@/api/org'
-  import { deleteStation } from '@/api/station'
-
   import TenantEditForm from './modules/TenantEditForm'
-  import { getTenantPageList } from '@/api/tenant'
+  import { getTenantPageList, deleteTenant } from '@/api/tenant'
 
   export default {
     components: {
@@ -174,21 +161,9 @@
       },
     },
     mounted() {
-      this.getOrgList()
       this.getTenantList()
     },
     methods: {
-      getOrgList() {
-        if (this.orgData.length === 0) {
-          const parameter = {
-            name: '',
-            status: true,
-          }
-          getOrgList(parameter).then((response) => {
-            this.orgData = response.data
-          })
-        }
-      },
       handleSizeChange(val) {
         this.queryParam.pageSize = val
         this.getTenantList()
@@ -221,8 +196,15 @@
       },
       handleAdd() {
         const createData = {
+          id: null,
+          name: null,
+          logo: null,
+          expirationTime: null,
+          passwordExpire: 0,
+          passwordErrorNum: 0,
+          passwordErrorLockTime: 30,
           status: '1',
-          orgData: this.orgData,
+          describe: null,
         }
         this.$refs['editForm'].showDialog(createData)
       },
@@ -230,10 +212,13 @@
         const data = {
           id: record.id,
           name: record.name,
-          org: record.org === null ? '' : record.org.key,
+          logo: record.logo,
+          expirationTime: record.expirationTime,
+          passwordExpire: record.passwordExpire,
+          passwordErrorNum: record.passwordErrorNum,
+          passwordErrorLockTime: record.passwordErrorLockTime,
           status: record.status === true ? '1' : '2',
           describe: record.describe,
-          orgData: this.orgData,
         }
         this.$refs['editForm'].showDialog(data)
       },
@@ -255,7 +240,7 @@
         return jsonArray
       },
       handleDelete(id) {
-        deleteStation({ id: id }).then((response) => {
+        deleteTenant({ ids: [id] }).then((response) => {
           const responseData = response.data
           if (responseData) {
             this.$message.success('删除租户成功')

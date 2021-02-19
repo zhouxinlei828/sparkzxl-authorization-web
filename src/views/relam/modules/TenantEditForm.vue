@@ -2,33 +2,81 @@
   <el-dialog
     :title="title"
     :visible.sync="dialogFormVisible"
-    width="450px"
+    width="800px"
     @close="closeDialog"
   >
-    <el-form ref="ruleForm" :model="form" :rules="rules" label-width="70px">
-      <el-form-item label="名称:" prop="name" required>
-        <el-input v-model="form.name" style="width: 300px" />
+    <el-form
+      ref="ruleForm"
+      :model="form"
+      :inline="true"
+      :rules="rules"
+      label-width="140px"
+    >
+      <el-form-item label="租户名称:" prop="name" required>
+        <el-input v-model="form.name" class="edit-form-item" />
       </el-form-item>
-      <el-form-item label="组织:" prop="org">
-        <TreeSelect
-          v-model="form.org"
-          style="width: 300px"
-          :load-options="loadListOptions"
-          :multiple="false"
-          :searchable="true"
-          placeholder="选择组织"
-          :options="orgData"
+      <el-form-item label="租户logo:" prop="logo">
+        <el-input v-model="form.logo" class="edit-form-item" />
+      </el-form-item>
+      <el-form-item label="有效期:" prop="expirationTime">
+        <el-date-picker
+          v-model="form.expirationTime"
+          style="width: 200px"
+          align="right"
+          type="date"
+          placeholder="选择日期"
+          :picker-options="pickerOptions"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item label="用户密码有效期:" prop="passwordExpire" required>
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="单位：秒"
+          placement="right"
+        >
+          <el-input-number
+            v-model="form.passwordExpire"
+            class="edit-form-item"
+            controls-position="right"
+            :min="0"
+            :max="100"
+          />
+        </el-tooltip>
+      </el-form-item>
+      <el-form-item label="密码输错次数:" prop="passwordErrorNum" required>
+        <el-input-number
+          v-model="form.passwordErrorNum"
+          class="edit-form-item"
+          controls-position="right"
+          :min="0"
+          :max="10"
         />
+      </el-form-item>
+      <el-form-item label="账号锁定时间:" prop="passwordErrorLockTime" required>
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="单位：秒"
+          placement="right"
+        >
+          <el-input-number
+            v-model="form.passwordErrorLockTime"
+            class="edit-form-item"
+            controls-position="right"
+            :min="30"
+          />
+        </el-tooltip>
       </el-form-item>
       <el-form-item label="状态:" prop="status">
         <el-radio v-model="form.status" label="1">启用</el-radio>
         <el-radio v-model="form.status" label="2">禁用</el-radio>
       </el-form-item>
-      <el-form-item label="描述:" prop="describe">
+      <el-form-item label="租户简介:" prop="describe">
         <el-input
           v-model="form.describe"
           type="textarea"
-          style="width: 300px"
+          style="width: 550px"
         />
       </el-form-item>
     </el-form>
@@ -49,7 +97,7 @@
 </template>
 
 <script>
-  import { updateStation, saveStation } from '@/api/station'
+  import { saveTenant, updateTenant } from '@/api/tenant'
 
   export default {
     data() {
@@ -57,10 +105,36 @@
         title: '',
         dialogFormVisible: false,
         form: {
+          id: null,
           name: null,
-          org: null,
+          logo: null,
+          expirationTime: null,
+          passwordExpire: 0,
+          passwordErrorNum: 0,
+          passwordErrorLockTime: 30,
           status: '1',
           describe: null,
+        },
+        pickerOptions: {
+          disabledDate(time) {
+            return time.getTime() < Date.now()
+          },
+          shortcuts: [
+            {
+              text: '今天',
+              onClick(picker) {
+                picker.$emit('pick', new Date())
+              },
+            },
+            {
+              text: '明天',
+              onClick(picker) {
+                const date = new Date()
+                date.setTime(date.getTime() + 3600 * 1000 * 24)
+                picker.$emit('pick', date)
+              },
+            },
+          ],
         },
         rules: {
           name: [
@@ -77,13 +151,11 @@
     created() {},
     methods: {
       showDialog(data) {
-        if (data.id !== undefined) {
+        if (data.id !== undefined && data.id !== null) {
           this.title = '修改租户'
         } else {
           this.title = '新增租户'
         }
-        this.orgData = data.orgData
-        delete data.orgData
         this.dialogFormVisible = true
         this.form = data
       },
@@ -98,15 +170,9 @@
           if (valid) {
             const status = parseInt(this.form.status) === 1
             const submitData = this.form
-            submitData.org =
-              this.form.org === null
-                ? null
-                : {
-                    key: this.form.org,
-                  }
             submitData.status = status
-            if (this.form.id === undefined) {
-              saveStation(submitData).then((response) => {
+            if (submitData.id !== null) {
+              saveTenant(submitData).then((response) => {
                 const responseData = response.data
                 if (responseData) {
                   this.$message.success('新增租户成功')
@@ -117,7 +183,7 @@
               })
             } else {
               submitData.id = this.form.id
-              updateStation(submitData).then((response) => {
+              updateTenant(submitData).then((response) => {
                 const responseData = response.data
                 if (responseData) {
                   this.$message.success('修改租户成功')
