@@ -40,7 +40,6 @@
             class="edit-form-item"
             controls-position="right"
             :min="0"
-            :max="100"
           />
         </el-tooltip>
       </el-form-item>
@@ -144,8 +143,6 @@
             { required: true, message: '状态不能为空', trigger: 'blur' },
           ],
         },
-        status: 1,
-        orgData: [],
       }
     },
     created() {},
@@ -171,7 +168,8 @@
             const status = parseInt(this.form.status) === 1
             const submitData = this.form
             submitData.status = status
-            if (submitData.id !== null) {
+            console.log(submitData)
+            if (submitData.id === null) {
               saveTenant(submitData).then((response) => {
                 const responseData = response.data
                 if (responseData) {

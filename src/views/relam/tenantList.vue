@@ -59,22 +59,18 @@
         label="租户名称"
         width="150"
       ></el-table-column>
-      <el-table-column
-        prop="expirationTime"
-        label="有效期"
-        width="130"
-      ></el-table-column>
-      <el-table-column
-        prop="passwordExpire"
-        label="密码有效期单位/天"
-        width="150"
-      >
+      <el-table-column prop="expirationTime" label="租户有效期" width="130">
         <template #default="{ row }">
           <el-tag type="primary" disable-transitions>
-            {{ row.passwordExpire === 0 ? '永久' : row.passwordExpire }}
+            {{ row.expirationTime === null ? '永久' : row.expirationTime }}
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column
+        prop="passwordExpire"
+        label="用户密码有效期/秒"
+        width="150"
+      ></el-table-column>
       <el-table-column
         prop="passwordErrorNum"
         label="密码输错次数"
@@ -200,7 +196,7 @@
           name: null,
           logo: null,
           expirationTime: null,
-          passwordExpire: 0,
+          passwordExpire: 7200,
           passwordErrorNum: 0,
           passwordErrorLockTime: 30,
           status: '1',
