@@ -197,7 +197,7 @@
           logo: null,
           expirationTime: null,
           passwordExpire: 7200,
-          passwordErrorNum: 0,
+          passwordErrorNum: 5,
           passwordErrorLockTime: 30,
           status: '1',
           describe: null,

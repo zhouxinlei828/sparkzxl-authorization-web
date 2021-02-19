@@ -137,7 +137,7 @@
         },
         rules: {
           name: [
-            { required: true, message: '岗位名称不能为空', trigger: 'blur' },
+            { required: true, message: '租户名称不能为空', trigger: 'blur' },
           ],
           status: [
             { required: true, message: '状态不能为空', trigger: 'blur' },

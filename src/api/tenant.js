@@ -32,6 +32,6 @@ export function deleteTenant(parameter) {
   return request({
     url: api.operateTenant,
     method: 'delete',
-    params: parameter,
+    data: parameter,
   })
 }
