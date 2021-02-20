@@ -97,10 +97,10 @@ const actions = {
       Vue.prototype.$baseMessage('验证失败，请重新登录...', 'error')
       return false
     }
-    let { username, avatar, roleBasicInfos } = data
+    let { name, avatar, roleBasicInfos } = data
     if (data) {
       commit('SET_INFO', data)
-      commit('setUsername', username)
+      commit('setUsername', name)
       commit('setAvatar', avatar)
       commit('SET_ROLES', roleBasicInfos)
       return data
