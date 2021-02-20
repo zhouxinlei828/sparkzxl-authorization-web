@@ -87,11 +87,6 @@
                 const responseData = response.data
                 if (responseData) {
                   this.$message.success('新增字典成功')
-                  this.$notification['success']({
-                    message: '提示',
-                    description: '新增字典成功',
-                    duration: 3,
-                  })
                   this.resetForm()
                 } else {
                   this.$message.error('新增字典失败')

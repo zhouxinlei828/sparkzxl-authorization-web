@@ -172,72 +172,11 @@
   import UserEditForm from './modules/UserEditForm'
   import { downloadFile } from '@/utils/util'
 
-  const columns = [
-    {
-      title: '账号',
-      dataIndex: 'account',
-      align: 'center',
-    },
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      align: 'center',
-    },
-    {
-      title: '性别',
-      dataIndex: 'sex',
-      align: 'center',
-      scopedSlots: { customRender: 'sex' },
-    },
-    {
-      title: '邮箱',
-      dataIndex: 'email',
-      align: 'center',
-    },
-    {
-      title: '职位状态',
-      dataIndex: 'positionStatus',
-      align: 'center',
-      scopedSlots: { customRender: 'positionStatus' },
-    },
-    {
-      title: '组织',
-      dataIndex: 'org',
-      align: 'center',
-      scopedSlots: { customRender: 'org' },
-    },
-    {
-      title: '岗位',
-      dataIndex: 'station',
-      align: 'center',
-      scopedSlots: { customRender: 'station' },
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      align: 'center',
-      scopedSlots: { customRender: 'status' },
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      align: 'center',
-    },
-    {
-      title: '操作',
-      dataIndex: 'action',
-      width: '150px',
-      align: 'center',
-      scopedSlots: { customRender: 'action' },
-    },
-  ]
-
   export default {
     components: {
       UserEditForm,
     },
     data() {
-      this.columns = columns
       return {
         showPagination: true,
         advanced: false,

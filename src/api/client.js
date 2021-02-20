@@ -2,7 +2,9 @@ import request from '@/utils/request'
 
 const api = {
   clientList: '/authorization/client/listPage',
-  operateTenant: '/authorization/tenant/tenant',
+  saveClient: '/authorization/client/saveClient',
+  updateClient: '/authorization/client/updateClient',
+  deleteClient: '/authorization/client/deleteClient',
 }
 export function getClientPageList(parameter) {
   return request({
@@ -12,25 +14,25 @@ export function getClientPageList(parameter) {
   })
 }
 
-export function saveTenant(parameter) {
+export function saveClient(parameter) {
   return request({
-    url: api.operateTenant,
+    url: api.saveClient,
     method: 'post',
     data: parameter,
   })
 }
 
-export function updateTenant(parameter) {
+export function updateClient(parameter) {
   return request({
-    url: api.operateTenant,
+    url: api.updateClient,
     method: 'put',
     data: parameter,
   })
 }
 
-export function deleteTenant(parameter) {
+export function deleteClient(parameter) {
   return request({
-    url: api.operateTenant,
+    url: api.deleteClient,
     method: 'delete',
     data: parameter,
   })

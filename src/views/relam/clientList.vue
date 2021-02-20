@@ -106,18 +106,18 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <tenant-edit-form ref="editForm" @fetch-data="getClientPageList" />
+    <client-edit-form ref="editForm" @fetch-data="getClientPageList" />
   </div>
 </template>
 
 <script>
   import moment from 'moment'
-  import TenantEditForm from './modules/TenantEditForm'
-  import { getClientPageList, deleteTenant } from '@/api/client'
+  import ClientEditForm from './modules/ClientEditForm'
+  import { getClientPageList, deleteClient } from '@/api/client'
 
   export default {
     components: {
-      TenantEditForm,
+      ClientEditForm,
     },
     data() {
       return {
@@ -183,28 +183,40 @@
       handleAdd() {
         const createData = {
           id: null,
-          name: null,
-          logo: null,
-          expirationTime: null,
-          passwordExpire: 7200,
-          passwordErrorNum: 5,
-          passwordErrorLockTime: 30,
-          status: '1',
-          describe: null,
+          clientId: null,
+          clientSecret: null,
+          authorizedGrantTypes: [],
+          authorities: null,
+          resourceIds: null,
+          accessTokenValidity: 7200,
+          refreshTokenValidity: 28800,
+          webServerRedirectUri: null,
+          autoApprove: 'true',
+          additionalInformation: null,
         }
         this.$refs['editForm'].showDialog(createData)
       },
       handleEdit(record) {
+        let authorizedGrantTypes = []
+        if (
+          record.authorizedGrantTypes !== null &&
+          record.authorizedGrantTypes !== ''
+        ) {
+          authorizedGrantTypes = record.authorizedGrantTypes.split(',')
+        }
         const data = {
           id: record.id,
-          name: record.name,
-          logo: record.logo,
-          expirationTime: record.expirationTime,
-          passwordExpire: record.passwordExpire,
-          passwordErrorNum: record.passwordErrorNum,
-          passwordErrorLockTime: record.passwordErrorLockTime,
-          status: record.status === true ? '1' : '2',
-          describe: record.describe,
+          clientId: record.clientId,
+          clientSecret: record.originalClientSecret,
+          authorizedGrantTypes: authorizedGrantTypes,
+          authorities: record.authorities,
+          resourceIds: record.resourceIds,
+          scope: record.scope,
+          accessTokenValidity: record.accessTokenValidity,
+          refreshTokenValidity: record.refreshTokenValidity,
+          webServerRedirectUri: record.webServerRedirectUri,
+          autoApprove: record.autoApprove,
+          additionalInformation: record.additionalInformation,
         }
         this.$refs['editForm'].showDialog(data)
       },
@@ -226,13 +238,13 @@
         return jsonArray
       },
       handleDelete(id) {
-        deleteTenant({ ids: [id] }).then((response) => {
+        deleteClient({ ids: [id] }).then((response) => {
           const responseData = response.data
           if (responseData) {
-            this.$message.success('删除租户成功')
+            this.$message.success('删除客户端成功')
             this.getClientPageList()
           } else {
-            this.$message.error('删除租户失败')
+            this.$message.error('删除客户端失败')
           }
         })
       },

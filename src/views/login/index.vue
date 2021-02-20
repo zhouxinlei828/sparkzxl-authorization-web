@@ -139,7 +139,7 @@
           username: '',
           password: '',
           captchaKey: '',
-          captchaCode: '',
+          captchaCode: null,
         },
         captcha: {
           key: '',
