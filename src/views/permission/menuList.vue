@@ -56,6 +56,7 @@
             v-loading="menuLoading"
             :data="menuData"
             style="width: 100%"
+            max-height="350"
             row-key="id"
             element-loading-text="拼命加载中"
             element-loading-spinner="el-icon-loading"
@@ -278,7 +279,7 @@
       getMenuResource() {
         this.tableLoading = true
         const params = {
-          pageNum: this.queryForm.current,
+          pageNum: this.queryForm.pageNum,
           pageSize: this.queryForm.pageSize,
           sort: 'id',
           model: {
