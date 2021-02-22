@@ -235,8 +235,8 @@
         }
         return jsonArray
       },
-      handleDelete(id) {
-        deleteTenant({ ids: [id] }).then((response) => {
+      handleDelete(tenantId) {
+        deleteTenant({ tenantId: tenantId }).then((response) => {
           const responseData = response.data
           if (responseData) {
             this.$message.success('删除租户成功')

@@ -6,6 +6,7 @@
           <div slot="header" class="clearfix">
             <span>字典列表</span>
             <el-tag
+              v-show="activeData.activeDictionary !== ''"
               size="mini"
               type="danger"
               style="float: right"

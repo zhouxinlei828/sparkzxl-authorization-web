@@ -87,9 +87,10 @@
     >
       <el-table-column prop="account" label="账号"></el-table-column>
       <el-table-column prop="name" label="姓名"></el-table-column>
-      <el-table-column prop="describe" label="性别" width="60">
+      <el-table-column prop="sex" label="性别" width="60">
         <template #default="{ row }">
           <el-tag
+            v-if="row.sex !== null"
             :type="row.sex.code === 1 ? 'primary' : 'success'"
             disable-transitions
           >
@@ -98,7 +99,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="email" width="200" label="邮箱"></el-table-column>
-      <el-table-column prop="email" width="80" label="职位状态">
+      <el-table-column prop="positionStatus" width="80" label="职位状态">
         <template #default="{ row }">
           <span v-if="row.positionStatus.data != null">
             {{

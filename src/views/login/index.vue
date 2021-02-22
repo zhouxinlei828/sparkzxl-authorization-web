@@ -106,7 +106,7 @@
 <script>
   import { isPassword } from '@/utils/validate'
   import { getCaptcha } from '@/api/login'
-
+  import { setTenant } from '@/utils/accessToken'
   export default {
     name: 'Login',
     directives: {
@@ -117,7 +117,7 @@
       },
     },
     data() {
-      const validateusername = (rule, value, callback) => {
+      const validateUsername = (rule, value, callback) => {
         if ('' === value) {
           callback(new Error('用户名不能为空'))
         } else {
@@ -150,7 +150,7 @@
             {
               required: true,
               trigger: 'blur',
-              validator: validateusername,
+              validator: validateUsername,
             },
           ],
           password: [
@@ -201,6 +201,7 @@
       handleLogin() {
         this.$refs.form.validate((valid) => {
           if (valid) {
+            setTenant(this.form.tenant)
             this.loading = true
             this.$store
               .dispatch('user/login', this.form)
