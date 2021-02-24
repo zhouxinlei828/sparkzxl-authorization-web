@@ -49,6 +49,22 @@
       style="width: 100%"
       max-height="450"
     >
+      <el-table-column type="expand" label="管理员" width="70">
+        <template slot-scope="props">
+          <el-form label-position="left" inline>
+            <el-form-item label="管理员账户:">
+              <el-tag type="success" disable-transitions>
+                {{ props.row.adminUser.account }}
+              </el-tag>
+            </el-form-item>
+            <el-form-item label="管理员密码:">
+              <el-tag type="warning" disable-transitions>
+                {{ props.row.adminUser.originalPassword }}
+              </el-tag>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="code"
         label="租户编码"
