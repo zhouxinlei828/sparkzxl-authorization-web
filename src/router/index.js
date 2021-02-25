@@ -33,6 +33,12 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true,
   },
+  {
+    path: '/jump',
+    name: 'Jump',
+    component: () => import('@/views/jump'),
+    hidden: true,
+  },
 ]
 
 export const asyncRoutes = [

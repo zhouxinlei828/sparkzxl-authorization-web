@@ -14,7 +14,7 @@ const userApi = {
 
 export function login(parameter) {
   const data = { ...parameter }
-  data.grant_type = 'password'
+  data.grantType = 'password'
   data.scope = 'all'
   delete data.tenant
   return request({
