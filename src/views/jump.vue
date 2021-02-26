@@ -35,7 +35,6 @@
 
 <script>
   import Vue from '_vue@2.6.12@vue'
-  import { title } from '@/config/setting.config'
   import store from '@/store'
   export default {
     name: 'Jump',
@@ -55,7 +54,7 @@
     },
     created() {
       this.authorizeState.code = this.$route.query.code
-      this.authorizeState.state = this.$route.query.code
+      this.authorizeState.state = this.$route.query.state
       this.initWebSocket()
     },
     destroyed() {
@@ -82,10 +81,19 @@
         if (data !== undefined || data !== '') {
           debugger
           const socketData = JSON.parse(data.data)
-          let success = store.dispatch('user/authorizationLogin', socketData)
-          console.log(success)
-          if (success) {
-            this.$router.push('/index')
+          if (socketData === null) {
+            this.$message.error('登录失效')
+          } else {
+            console.log(socketData)
+            const frontUrl = socketData.frontUrl
+            let success = store.dispatch('user/authorizationLogin', socketData)
+            console.log(success)
+            if (success) {
+              if (frontUrl !== undefined || frontUrl !== '') {
+                this.$router.push(frontUrl)
+              }
+              this.$router.push('/index')
+            }
           }
         }
       },
