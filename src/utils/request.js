@@ -94,7 +94,6 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
-    debugger
     if (loadingInstance) loadingInstance.close()
     const { data, config } = response
     const { code, msg } = data
@@ -114,7 +113,6 @@ instance.interceptors.response.use(
     }
   },
   (error) => {
-    debugger
     console.log(error)
     if (loadingInstance) loadingInstance.close()
     let { response, message } = error

@@ -94,7 +94,6 @@ const actions = {
       commit('setAccessToken', accessToken)
       commit('setTokenType', tokenType)
       commit('setTenant', tenant)
-      debugger
       const hour = new Date().getHours()
       const thisTime =
         hour < 8

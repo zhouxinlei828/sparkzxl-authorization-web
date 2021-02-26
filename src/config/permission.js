@@ -49,7 +49,6 @@ router.beforeResolve(async (to, from, next) => {
             }
           }
         } catch {
-          debugger
           await store.dispatch('user/logout', to.path)
         }
       }
@@ -58,7 +57,6 @@ router.beforeResolve(async (to, from, next) => {
     if (routesWhiteList.indexOf(to.path) !== -1) {
       next()
     } else {
-      debugger
       if (recordRoute) {
         await store.dispatch('user/logout', to.path)
       } else {

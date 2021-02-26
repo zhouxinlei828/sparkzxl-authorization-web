@@ -100,7 +100,7 @@
         setTimeout(() => {
           const message = JSON.stringify(this.authorizeState)
           this.webSocket.send(message)
-        }, 200)
+        }, 500)
       },
     },
   }
