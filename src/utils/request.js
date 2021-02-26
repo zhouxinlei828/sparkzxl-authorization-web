@@ -57,9 +57,12 @@ instance.interceptors.request.use(
       accessToken !== null &&
       accessToken !== ''
     ) {
-      config.headers[tokenHeaderKey] = getTokenType()
-        .concat(' ')
-        .concat(accessToken)
+      const token = getTokenType().concat(' ').concat(accessToken)
+      if (config.url === '/authorization/customLogout') {
+        config.headers['token'] = token
+      } else {
+        config.headers[tokenHeaderKey] = token
+      }
     }
     const tenantHeader = config.headers['tenant']
     if (tenantHeader === undefined || tenantHeader === '') {
@@ -81,8 +84,10 @@ instance.interceptors.request.use(
       config.data &&
       config.headers['Content-Type'] ===
         'application/x-www-form-urlencoded;charset=UTF-8'
-    )
+    ) {
       config.data = qs.stringify(config.data)
+    }
+
     if (debounce.some((item) => config.url.includes(item)))
       loadingInstance = Vue.prototype.$baseLoading()
     return config

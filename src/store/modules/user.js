@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { getAuthorizeUrl, getInfo, login } from '@/api/login'
+import { getAuthorizeUrl, getInfo, login, logout } from '@/api/login'
 import {
   getAccessToken,
   removeAccessToken,
@@ -124,20 +124,24 @@ const actions = {
     return data
   },
   async logout({ dispatch }, frontUrl) {
-    await dispatch('resetAccessToken')
-    await resetRouter()
-    let url = ''
-    if (frontUrl !== undefined) {
-      url = frontUrl
-    }
-    const { data } = await getAuthorizeUrl({ frontUrl: url })
+    const response = await logout()
     debugger
-    if (!data) {
-      Vue.prototype.$baseMessage('获取授权登录地址，请重新获取...', 'error')
-      return false
-    } else {
+    const responseData = response.data
+    if (responseData === 1) {
+      await dispatch('resetAccessToken')
+      await resetRouter()
+      let url = ''
+      if (frontUrl !== undefined) {
+        url = frontUrl
+      }
+      const { data } = await getAuthorizeUrl({ frontUrl: url })
+      if (!data) {
+        Vue.prototype.$baseMessage('获取授权登录地址，请重新获取...', 'error')
+        return false
+      } else {
+      }
+      window.location.href = data
     }
-    window.location.href = data
   },
 
   async resetAccessToken({ commit }) {

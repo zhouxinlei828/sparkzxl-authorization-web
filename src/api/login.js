@@ -7,7 +7,8 @@ const userApi = {
   Register: '/authorization/register',
   getCaptcha: '/authorization/oauth/captcha',
   SendSmsErr: '/account/sms_err',
-  UserInfo: '/authorization/user/currentUser',
+  userInfo: '/authorization/user/currentUser',
+  logout: '/authorization/customLogout',
   authorizeUrl: '/authorization/oauth/getAuthorizeUrl',
   UserMenu: '/authorization/user/routers',
 }
@@ -27,13 +28,20 @@ export function login(parameter) {
     },
   })
 }
-
-export function getInfo() {
+export function logout() {
   return request({
-    url: userApi.UserInfo,
+    url: userApi.logout,
     method: 'get',
   })
 }
+
+export function getInfo() {
+  return request({
+    url: userApi.userInfo,
+    method: 'get',
+  })
+}
+
 export function getAuthorizeUrl(parameter) {
   return request({
     url: userApi.authorizeUrl,

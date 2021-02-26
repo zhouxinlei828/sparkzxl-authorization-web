@@ -89,7 +89,7 @@
       async handleTabRemove(tabActive) {
         let view
         this.visitedRoutes.forEach((item, index) => {
-          if (tabActive == item.path) {
+          if (tabActive === item.path) {
             view = item
           }
         })
