@@ -91,6 +91,31 @@ const actions = {
       Vue.prototype.$baseMessage(`登录接口异常，未正确返回token...`, 'error')
     }
   },
+  async authorizationLogin({ commit }, tokenData) {
+    debugger
+    const accessToken = tokenData['access_token']
+    const tokenType = tokenData['token_type']
+    const tenant = tokenData['tenant']
+    if (accessToken) {
+      commit('setAccessToken', accessToken)
+      commit('setTokenType', tokenType)
+      commit('setTenant', tenant)
+      const hour = new Date().getHours()
+      const thisTime =
+        hour < 8
+          ? '早上好'
+          : hour <= 11
+          ? '上午好'
+          : hour <= 13
+          ? '中午好'
+          : hour < 18
+          ? '下午好'
+          : '晚上好'
+      Vue.prototype.$baseNotify(`欢迎登录${title}`, `${thisTime}！`)
+      return true
+    }
+    return false
+  },
   async getUserInfo({ commit }) {
     const { data } = await getInfo()
     if (!data) {

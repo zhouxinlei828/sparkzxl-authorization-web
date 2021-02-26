@@ -26,8 +26,6 @@
         <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
           <div class="bullshit">
             <div class="bullshit-oops">{{ oops }}</div>
-            <div class="bullshit-headline">{{ headline }}</div>
-            <div class="bullshit-info">{{ info }}</div>
           </div>
         </el-col>
       </el-row>
@@ -36,23 +34,66 @@
 </template>
 
 <script>
+  import Vue from '_vue@2.6.12@vue'
+  import { title } from '@/config/setting.config'
+  import store from '@/store'
   export default {
-    name: 'Page401',
+    name: 'Jump',
     data() {
       return {
-        jumpTime: 5,
-        oops: '登录成功!',
-        headline: '跳转中，请稍后...',
+        webSocket: null,
+        oops: '正在加载中，请稍后!',
+        url: 'ws://127.0.0.1:12345/ws',
+        message: null,
+        status: '',
+        btn: '返回',
+        code: '',
+        data: '',
       }
     },
-    mounted() {
-      this.timeChange()
+    created() {
+      this.code = this.$route.query.code
+      this.initWebSocket()
     },
-    beforeDestroy() {
-      clearInterval(this.timer)
+    destroyed() {
+      this.webSocket.close()
     },
     methods: {
-      timeChange() {},
+      initWebSocket() {
+        const wsuri = this.url
+        this.webSocket = new WebSocket(wsuri)
+        this.webSocket.onmessage = this.onmessage
+        this.webSocket.onopen = this.onopen
+        this.webSocket.onerror = this.onerror
+        this.webSocket.onclose = this.onclose
+        this.sendMessage()
+      },
+      onopen() {
+        this.status = '成功'
+      },
+      onerror() {
+        this.status = '失败'
+        this.initWebSocket()
+      },
+      onmessage(data) {
+        if (data !== undefined || data !== '') {
+          debugger
+          const socketData = JSON.parse(data.data)
+          let success = store.dispatch('user/authorizationLogin', socketData)
+          console.log(success)
+          if (success) {
+            this.$router.push('/index')
+          }
+        }
+      },
+      onclose(e) {
+        this.status = '断开'
+      },
+      sendMessage() {
+        setTimeout(() => {
+          this.webSocket.send(this.code)
+        }, 200)
+      },
     },
   }
 </script>
