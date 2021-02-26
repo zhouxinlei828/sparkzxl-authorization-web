@@ -34,7 +34,6 @@
 </template>
 
 <script>
-  import Vue from '_vue@2.6.12@vue'
   import store from '@/store'
   export default {
     name: 'Jump',
@@ -77,7 +76,7 @@
         this.status = '失败'
         this.initWebSocket()
       },
-      onmessage(data) {
+      async onmessage(data) {
         if (data !== undefined || data !== '') {
           debugger
           const socketData = JSON.parse(data.data)
@@ -86,14 +85,11 @@
           } else {
             console.log(socketData)
             const frontUrl = socketData.frontUrl
-            let success = store.dispatch('user/authorizationLogin', socketData)
-            console.log(success)
-            if (success) {
-              if (frontUrl !== undefined || frontUrl !== '') {
-                this.$router.push(frontUrl)
-              }
-              this.$router.push('/index')
+            await store.dispatch('user/authorizationLogin', socketData)
+            if (frontUrl !== undefined || frontUrl !== '') {
+              await this.$router.push(frontUrl)
             }
+            await this.$router.push('/index')
           }
         }
       },

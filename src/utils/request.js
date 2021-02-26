@@ -66,6 +66,9 @@ instance.interceptors.request.use(
         config.headers['tenant'] = tenant
       }
     }
+    config.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+    config.headers['Access-Control-Allow-Origin'] = '*'
+    config.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     //这里会过滤所有为空、0、false的key，如果不需要请自行注释
     if (config.data)
       config.data = Vue.prototype.$baseLodash.pickBy(
@@ -89,6 +92,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
+    debugger
     if (loadingInstance) loadingInstance.close()
     const { data, config } = response
     const { code, msg } = data
@@ -108,6 +112,8 @@ instance.interceptors.response.use(
     }
   },
   (error) => {
+    debugger
+    console.log(error)
     if (loadingInstance) loadingInstance.close()
     let { response, message } = error
     if (error.response && error.response.data) {

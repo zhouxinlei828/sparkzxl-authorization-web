@@ -1,7 +1,3 @@
-/**
- * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
- * @description 路由守卫，目前两种模式：all模式与intelligence模式
- */
 import router from '@/router'
 import store from '@/store'
 import VabProgress from 'nprogress'
@@ -15,6 +11,9 @@ import {
   routesWhiteList,
 } from '@/config'
 
+import { getAccessToken } from '@/utils/accessToken'
+
+const defaultRoutePath = '/index'
 VabProgress.configure({
   easing: 'ease',
   speed: 500,
@@ -23,28 +22,36 @@ VabProgress.configure({
 })
 router.beforeResolve(async (to, from, next) => {
   if (progressBar) VabProgress.start()
-  let hasToken = store.getters['user/accessToken']
+  let hasToken = getAccessToken()
   if (!loginInterception) hasToken = true
 
   if (hasToken) {
     if (to.path === '/login') {
-      next({ path: '/' })
+      next({ path: defaultRoutePath })
       if (progressBar) VabProgress.done()
     } else {
       const hasRoles = store.getters['user/roles']
       if (hasRoles.length > 0) {
         next()
       } else {
-        let userInfo = store.dispatch('user/getUserInfo')
-        if (userInfo) {
-          try {
-            let accessRoutes = store.dispatch('routes/setAllRoutes')
+        try {
+          let userInfo = store.dispatch('user/getUserInfo')
+          if (userInfo) {
+            let accessRoutes = await store.dispatch('routes/setAllRoutes')
             router.addRoutes(await accessRoutes)
             next({ ...to, replace: true })
-          } catch {
-            await store.dispatch('user/resetAccessToken')
-            if (progressBar) VabProgress.done()
+            // 请求带有 redirect 重定向时，登录自动重定向到该地址
+            const redirect = decodeURIComponent(from.query.redirect || to.path)
+            if (to.path === redirect) {
+              next({ ...to, replace: true })
+            } else {
+              // 跳转到目的路由
+              next({ path: redirect })
+            }
           }
+        } catch {
+          await store.dispatch('user/logout')
+          next(`/login?redirect=${to.path}`)
         }
       }
     }

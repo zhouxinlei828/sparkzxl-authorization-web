@@ -92,7 +92,6 @@ const actions = {
     }
   },
   async authorizationLogin({ commit }, tokenData) {
-    debugger
     const accessToken = tokenData['access_token']
     const tokenType = tokenData['token_type']
     const tenant = tokenData['tenant']
@@ -100,6 +99,7 @@ const actions = {
       commit('setAccessToken', accessToken)
       commit('setTokenType', tokenType)
       commit('setTenant', tenant)
+      debugger
       const hour = new Date().getHours()
       const thisTime =
         hour < 8
@@ -119,20 +119,15 @@ const actions = {
   async getUserInfo({ commit }) {
     const { data } = await getInfo()
     if (!data) {
-      Vue.prototype.$baseMessage('验证失败，请重新登录...', 'error')
+      Vue.prototype.$baseMessage('获取用户信息失败，请重新登录...', 'error')
       return false
     }
     let { name, avatar, roleBasicInfos } = data
-    if (data) {
-      commit('SET_INFO', data)
-      commit('setUsername', name)
-      commit('setAvatar', avatar)
-      commit('SET_ROLES', roleBasicInfos)
-      return data
-    } else {
-      Vue.prototype.$baseMessage('用户信息接口异常', 'error')
-      return false
-    }
+    commit('SET_INFO', data)
+    commit('setUsername', name)
+    commit('setAvatar', avatar)
+    commit('SET_ROLES', roleBasicInfos)
+    return data
   },
   async logout({ dispatch }) {
     await dispatch('resetAccessToken')
