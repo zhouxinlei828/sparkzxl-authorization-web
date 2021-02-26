@@ -55,6 +55,7 @@ export function setAccessToken(accessToken) {
     return localStorage.setItem(tokenKeyName, accessToken)
   }
 }
+
 export function setTokenType(tokenType) {
   if (storage) {
     if ('localStorage' === storage) {

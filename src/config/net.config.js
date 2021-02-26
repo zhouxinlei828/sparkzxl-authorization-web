@@ -10,10 +10,12 @@ const network = {
   requestTimeout: 5000,
   //操作正常code，支持String、Array、int多种类型
   successCode: [200, 0],
-  //登录失效code
-  invalidCode: 10010,
+  //token过期
+  tokenExpiredCode: 2001,
   //无权限code
-  noPermissionCode: 401,
-  jwtValidCode: 10011,
+  noAuthorizedCode: 401,
+  //禁止访问
+  noForbiddenCode: 403,
+  jwtValidCode: 2002,
 }
 module.exports = network

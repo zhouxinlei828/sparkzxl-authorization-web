@@ -24,7 +24,6 @@ router.beforeResolve(async (to, from, next) => {
   if (progressBar) VabProgress.start()
   let hasToken = getAccessToken()
   if (!loginInterception) hasToken = true
-
   if (hasToken) {
     if (to.path === '/login') {
       next({ path: defaultRoutePath })
@@ -50,8 +49,8 @@ router.beforeResolve(async (to, from, next) => {
             }
           }
         } catch {
-          await store.dispatch('user/logout')
-          next(`/login?redirect=${to.path}`)
+          debugger
+          await store.dispatch('user/logout', to.path)
         }
       }
     }
@@ -59,10 +58,11 @@ router.beforeResolve(async (to, from, next) => {
     if (routesWhiteList.indexOf(to.path) !== -1) {
       next()
     } else {
+      debugger
       if (recordRoute) {
-        next(`/login?redirect=${to.path}`)
+        await store.dispatch('user/logout', to.path)
       } else {
-        next('/login')
+        await store.dispatch('user/logout')
       }
 
       if (progressBar) VabProgress.done()

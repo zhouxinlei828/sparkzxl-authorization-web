@@ -1,10 +1,5 @@
-/**
- * @author chuzhixin 1204505056@qq.com （不想保留author可删除）
- * @description 登录、获取用户信息、退出登录、清除accessToken逻辑，不建议修改
- */
-
 import Vue from 'vue'
-import { getInfo, login } from '@/api/login'
+import { getAuthorizeUrl, getInfo, login } from '@/api/login'
 import {
   getAccessToken,
   removeAccessToken,
@@ -129,10 +124,23 @@ const actions = {
     commit('SET_ROLES', roleBasicInfos)
     return data
   },
-  async logout({ dispatch }) {
+  async logout({ dispatch }, frontUrl) {
     await dispatch('resetAccessToken')
     await resetRouter()
+    let url = ''
+    if (frontUrl !== undefined) {
+      url = frontUrl
+    }
+    const { data } = await getAuthorizeUrl({ frontUrl: url })
+    debugger
+    if (!data) {
+      Vue.prototype.$baseMessage('获取授权登录地址，请重新获取...', 'error')
+      return false
+    } else {
+    }
+    window.location.href = data
   },
+
   async resetAccessToken({ commit }) {
     commit('SET_INFO', '')
     commit('setUsername', '')

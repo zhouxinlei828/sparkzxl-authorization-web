@@ -3,9 +3,10 @@ import axios from 'axios'
 import {
   contentType,
   debounce,
-  invalidCode,
-  noPermissionCode,
+  tokenExpiredCode,
+  noAuthorizedCode,
   jwtValidCode,
+  noForbiddenCode,
   requestTimeout,
   successCode,
   tokenHeaderKey,
@@ -20,18 +21,19 @@ let loadingInstance
 
 const handleCode = (code, msg) => {
   switch (code) {
-    case invalidCode:
+    case tokenExpiredCode:
       Vue.prototype.$baseNotify(msg, '错误', 'error')
       store.dispatch('/user/logout')
-      if (loginInterception) {
-        location.reload()
-      }
       break
-    case noPermissionCode:
+    case noAuthorizedCode:
+      store.dispatch('/user/logout')
+      break
+    case noForbiddenCode:
       Vue.prototype.$baseNotify(msg, '错误', 'error')
       break
     case jwtValidCode:
       Vue.prototype.$baseNotify(msg, '错误', 'error')
+      store.dispatch('/user/logout')
       break
     default:
       Vue.prototype.$baseNotify(msg || `后端接口${code}异常`, '错误', 'error')

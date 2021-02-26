@@ -7,8 +7,8 @@ const userApi = {
   Register: '/authorization/register',
   getCaptcha: '/authorization/oauth/captcha',
   SendSmsErr: '/account/sms_err',
-  // get my info
   UserInfo: '/authorization/user/currentUser',
+  authorizeUrl: '/authorization/oauth/getAuthorizeUrl',
   UserMenu: '/authorization/user/routers',
 }
 
@@ -32,9 +32,13 @@ export function getInfo() {
   return request({
     url: userApi.UserInfo,
     method: 'get',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-    },
+  })
+}
+export function getAuthorizeUrl(parameter) {
+  return request({
+    url: userApi.authorizeUrl,
+    method: 'get',
+    params: parameter,
   })
 }
 
