@@ -47,12 +47,15 @@
         message: null,
         status: '',
         btn: '返回',
-        code: '',
-        data: '',
+        authorizeState: {
+          code: '',
+          state: '',
+        },
       }
     },
     created() {
-      this.code = this.$route.query.code
+      this.authorizeState.code = this.$route.query.code
+      this.authorizeState.state = this.$route.query.code
       this.initWebSocket()
     },
     destroyed() {
@@ -91,7 +94,8 @@
       },
       sendMessage() {
         setTimeout(() => {
-          this.webSocket.send(this.code)
+          const message = JSON.stringify(this.authorizeState)
+          this.webSocket.send(message)
         }, 200)
       },
     },
