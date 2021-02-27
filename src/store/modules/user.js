@@ -125,7 +125,6 @@ const actions = {
   },
   async logout({ dispatch }, frontUrl) {
     const response = await logout()
-    debugger
     const responseData = response.data
     if (responseData === 1) {
       await dispatch('resetAccessToken')

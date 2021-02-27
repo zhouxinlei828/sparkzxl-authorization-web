@@ -2,7 +2,7 @@
   <div class="error-container">
     <div class="error-content">
       <el-row :gutter="20">
-        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+        <el-col>
           <div class="pic-error">
             <img alt="401" src="@/assets/success.png" />
             <img
@@ -22,10 +22,13 @@
             />
           </div>
         </el-col>
-
-        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
-          <div class="bullshit">
-            <div class="bullshit-oops">{{ oops }}</div>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col>
+          <div class="pic-error">
+            <div class="bullshit">
+              <div class="bullshit-oops">{{ oops }}</div>
+            </div>
           </div>
         </el-col>
       </el-row>
@@ -35,6 +38,7 @@
 
 <script>
   import store from '@/store'
+
   export default {
     name: 'Jump',
     data() {
@@ -85,11 +89,16 @@
           } else {
             console.log(socketData)
             const frontUrl = socketData.frontUrl
-            await store.dispatch('user/authorizationLogin', socketData)
-            if (frontUrl !== undefined || frontUrl !== '') {
-              await this.$router.push(frontUrl)
+            let result = await store.dispatch(
+              'user/authorizationLogin',
+              socketData
+            )
+            if (result) {
+              if (frontUrl !== undefined || frontUrl !== '') {
+                await this.$router.push(frontUrl)
+              }
+              await this.$router.push('/index')
             }
-            await this.$router.push('/index')
           }
         }
       },
@@ -100,7 +109,7 @@
         setTimeout(() => {
           const message = JSON.stringify(this.authorizeState)
           this.webSocket.send(message)
-        }, 500)
+        }, 1000)
       },
     },
   }
@@ -109,7 +118,7 @@
 <style lang="scss" scoped>
   .error-container {
     position: absolute;
-    top: 40%;
+    top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
 
@@ -249,6 +258,7 @@
         width: 300px;
         padding: 30px 0;
         overflow: hidden;
+        margin-left: 35px;
 
         &-oops {
           margin-bottom: 20px;
