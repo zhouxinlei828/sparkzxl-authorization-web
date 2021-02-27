@@ -3,7 +3,7 @@
  */
 const setting = {
   // 开发以及部署时的URL
-  publicPath: '',
+  publicPath: '/',
   // 生产环境构建文件的目录名
   outputDir: 'dist',
   // 放置生成的静态资源 (js、css、img、fonts) 的 (相对于 outputDir 的) 目录。
@@ -15,7 +15,7 @@ const setting = {
   //标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）
   title: 'Sparkzxl Platform',
   //简写
-  abbreviation: 'vab',
+  abbreviation: 'sparkzxl',
   //开发环境端口号
   devPort: '3000',
   //版本号
