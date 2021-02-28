@@ -3,6 +3,8 @@ import { getAuthorizeUrl, getInfo, login, logout } from '@/api/login'
 import {
   getAccessToken,
   removeAccessToken,
+  setRefreshToken,
+  removeRefreshToken,
   removeTokenType,
   setAccessToken,
   setTokenType,
@@ -12,6 +14,7 @@ import {
 } from '@/utils/accessToken'
 import { resetRouter } from '@/router'
 import { title } from '@/config'
+import { timeFix } from '@/utils/util'
 
 const state = () => ({
   tokenType: getTokenType(),
@@ -64,23 +67,15 @@ const actions = {
   async login({ commit }, userInfo) {
     const { data } = await login(userInfo)
     const accessToken = data['access_token']
+    const refreshToken = data['refresh_token']
     const tokenType = data['token_type']
     const tenant = data['tenant']
     if (accessToken) {
       commit('setAccessToken', accessToken)
+      setRefreshToken(refreshToken)
       commit('setTokenType', tokenType)
       commit('setTenant', tenant)
-      const hour = new Date().getHours()
-      const thisTime =
-        hour < 8
-          ? '早上好'
-          : hour <= 11
-          ? '上午好'
-          : hour <= 13
-          ? '中午好'
-          : hour < 18
-          ? '下午好'
-          : '晚上好'
+      const thisTime = timeFix()
       Vue.prototype.$baseNotify(`欢迎登录${title}`, `${thisTime}！`)
     } else {
       Vue.prototype.$baseMessage(`登录接口异常，未正确返回token...`, 'error')
@@ -88,23 +83,15 @@ const actions = {
   },
   async authorizationLogin({ commit }, tokenData) {
     const accessToken = tokenData['access_token']
+    const refreshToken = tokenData['refresh_token']
     const tokenType = tokenData['token_type']
     const tenant = tokenData['tenant']
     if (accessToken) {
       commit('setAccessToken', accessToken)
+      setRefreshToken(refreshToken)
       commit('setTokenType', tokenType)
       commit('setTenant', tenant)
-      const hour = new Date().getHours()
-      const thisTime =
-        hour < 8
-          ? '早上好'
-          : hour <= 11
-          ? '上午好'
-          : hour <= 13
-          ? '中午好'
-          : hour < 18
-          ? '下午好'
-          : '晚上好'
+      const thisTime = timeFix()
       Vue.prototype.$baseNotify(`欢迎登录${title}`, `${thisTime}！`)
       return true
     }
@@ -151,6 +138,24 @@ const actions = {
     commit('setAccessToken', '')
     removeAccessToken()
     removeTokenType()
+    removeRefreshToken()
+  },
+
+  async refreshToken({ commit }) {
+    const response = await refreshToken()
+    const responseData = response.data
+    const accessToken = responseData['access_token']
+    const refreshToken = responseData['refresh_token']
+    const tokenType = responseData['token_type']
+    const tenant = responseData['tenant']
+    if (accessToken) {
+      commit('setAccessToken', accessToken)
+      setRefreshToken(refreshToken)
+      commit('setTokenType', tokenType)
+      commit('setTenant', tenant)
+      return true
+    }
+    return false
   },
 }
 export default { state, getters, mutations, actions }

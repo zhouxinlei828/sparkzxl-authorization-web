@@ -13,7 +13,6 @@ import {
 
 import { getAccessToken } from '@/utils/accessToken'
 
-const defaultRoutePath = '/index'
 VabProgress.configure({
   easing: 'ease',
   speed: 500,
@@ -26,7 +25,7 @@ router.beforeResolve(async (to, from, next) => {
   if (!loginInterception) hasToken = true
   if (hasToken) {
     if (to.path === '/login') {
-      next({ path: defaultRoutePath })
+      await store.dispatch('user/logout', to.path)
       if (progressBar) VabProgress.done()
     } else {
       const hasRoles = store.getters['user/roles']

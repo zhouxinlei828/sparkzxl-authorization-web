@@ -10,7 +10,6 @@ import {
   requestTimeout,
   successCode,
   tokenHeaderKey,
-  loginInterception,
 } from '@/config'
 import store from '@/store'
 import qs from 'qs'
@@ -20,20 +19,21 @@ import { isArray } from '@/utils/validate'
 let loadingInstance
 
 const handleCode = (code, msg) => {
+  debugger
   switch (code) {
     case tokenExpiredCode:
       Vue.prototype.$baseNotify(msg, '错误', 'error')
-      store.dispatch('/user/logout')
+      store.dispatch('user/logout')
       break
     case noAuthorizedCode:
-      store.dispatch('/user/logout')
+      store.dispatch('user/logout')
       break
     case noForbiddenCode:
       Vue.prototype.$baseNotify(msg, '错误', 'error')
       break
     case jwtValidCode:
       Vue.prototype.$baseNotify(msg, '错误', 'error')
-      store.dispatch('/user/logout')
+      store.dispatch('user/logout')
       break
     default:
       Vue.prototype.$baseNotify(msg || `后端接口${code}异常`, '错误', 'error')
@@ -122,8 +122,8 @@ instance.interceptors.response.use(
     if (loadingInstance) loadingInstance.close()
     let { response, message } = error
     if (error.response && error.response.data) {
-      const { status, data } = response
-      handleCode(status, data.msg || message)
+      const { data } = response
+      handleCode(data.code, data.msg || message)
       return Promise.reject(error)
     } else {
       let { message } = error
