@@ -48,6 +48,7 @@ router.beforeResolve(async (to, from, next) => {
             }
           }
         } catch {
+          console.log(11111)
           await store.dispatch('user/logout', to.path)
         }
       }
