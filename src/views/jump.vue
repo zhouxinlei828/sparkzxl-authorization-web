@@ -38,16 +38,12 @@
 
 <script>
   import store from '@/store'
-
+  import { authorizeCodeBack } from '@/api/login'
   export default {
     name: 'Jump',
     data() {
       return {
-        webSocket: null,
         oops: '正在加载中，请稍后!',
-        url: 'ws://127.0.0.1:12345/ws',
-        message: null,
-        status: '',
         btn: '返回',
         authorizeState: {
           code: '',
@@ -58,58 +54,34 @@
     created() {
       this.authorizeState.code = this.$route.query.code
       this.authorizeState.state = this.$route.query.state
-      this.initWebSocket()
-    },
-    destroyed() {
-      this.webSocket.close()
+      if (
+        this.authorizeState.code !== null ||
+        this.authorizeState.code !== ''
+      ) {
+        this.getTokenBack(this.authorizeState)
+      }
     },
     methods: {
-      initWebSocket() {
-        const wsuri = this.url
-        this.webSocket = new WebSocket(wsuri)
-        this.webSocket.onmessage = this.onmessage
-        this.webSocket.onopen = this.onopen
-        this.webSocket.onerror = this.onerror
-        this.webSocket.onclose = this.onclose
-        this.sendMessage()
-      },
-      onopen() {
-        this.status = '成功'
-      },
-      onerror() {
-        this.status = '失败'
-        this.initWebSocket()
-      },
-      async onmessage(data) {
-        if (data !== undefined || data !== '') {
-          debugger
-          const socketData = JSON.parse(data.data)
-          if (socketData === null) {
-            this.$message.error('登录失效')
-          } else {
-            console.log(socketData)
-            const frontUrl = socketData.frontUrl
-            let result = await store.dispatch(
-              'user/authorizationLogin',
-              socketData
-            )
-            if (result) {
-              if (frontUrl !== undefined || frontUrl !== '') {
-                await this.$router.push(frontUrl)
-              }
-              await this.$router.push('/index')
+      async getTokenBack(authorizeState) {
+        const response = await authorizeCodeBack(authorizeState)
+        debugger
+        const responseData = response.data
+        if (responseData === null) {
+          this.$message.error('登录失效')
+        } else {
+          console.log(responseData)
+          const frontUrl = responseData.frontUrl
+          let result = await store.dispatch(
+            'user/authorizationLogin',
+            responseData
+          )
+          if (result) {
+            if (frontUrl !== undefined || frontUrl !== '') {
+              await this.$router.push(frontUrl)
             }
+            await this.$router.push('/index')
           }
         }
-      },
-      onclose(e) {
-        this.status = '断开'
-      },
-      sendMessage() {
-        setTimeout(() => {
-          const message = JSON.stringify(this.authorizeState)
-          this.webSocket.send(message)
-        }, 1000)
       },
     },
   }

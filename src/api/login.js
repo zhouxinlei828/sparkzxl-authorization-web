@@ -6,6 +6,7 @@ const userApi = {
   ForgePassword: '/authorization/forge-password',
   Register: '/authorization/register',
   getCaptcha: '/authorization/oauth/captcha',
+  authorizeCodeBack: '/authorization/oauth/callBack',
   SendSmsErr: '/account/sms_err',
   userInfo: '/authorization/user/currentUser',
   logout: '/authorization/customLogout',
@@ -72,6 +73,14 @@ export function getCurrentUserNav() {
 export function getCaptcha(parameter) {
   return request({
     url: userApi.getCaptcha,
+    method: 'get',
+    params: parameter,
+  })
+}
+
+export function authorizeCodeBack(parameter) {
+  return request({
+    url: userApi.authorizeCodeBack,
     method: 'get',
     params: parameter,
   })
