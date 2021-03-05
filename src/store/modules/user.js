@@ -108,7 +108,7 @@ const actions = {
     commit('setUsername', name)
     commit('setAvatar', avatar)
     commit('SET_ROLES', roleBasicInfos)
-    return data
+    return true
   },
   async logout({ dispatch }, frontUrl) {
     const response = await logout()

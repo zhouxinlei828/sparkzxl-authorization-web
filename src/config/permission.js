@@ -36,7 +36,7 @@ router.beforeResolve(async (to, from, next) => {
           let userInfo = store.dispatch('user/getUserInfo')
           if (userInfo) {
             let accessRoutes = await store.dispatch('routes/setAllRoutes')
-            router.addRoutes(await accessRoutes)
+            router.addRoutes(accessRoutes)
             next({ ...to, replace: true })
             // 请求带有 redirect 重定向时，登录自动重定向到该地址
             const redirect = decodeURIComponent(from.query.redirect || to.path)
