@@ -11,7 +11,7 @@
       class="filter-item button-item"
       icon="search"
       type="primary"
-      @click="getClientPageList"
+      @click="getApplicationPageList"
     >
       查询
     </el-button>
@@ -47,40 +47,22 @@
         label="租户"
         width="100"
       ></el-table-column>
-      <el-table-column prop="clientId" label="客户端id"></el-table-column>
-      <el-table-column
-        prop="originalClientSecret"
-        label="客户端密钥"
-      ></el-table-column>
-      <el-table-column prop="autoApprove" label="自动放行" width="80">
+      <el-table-column prop="name" label="应用"></el-table-column>
+      <el-table-column prop="appTypeName" label="应用类型"></el-table-column>
+      <el-table-column prop="icon" label="应用logo"></el-table-column>
+      <el-table-column prop="website" label="应用访问地址"></el-table-column>
+      <el-table-column prop="healthStatus" label="应用健康状态">
         <template #default="{ row }">
           <el-tag
-            :type="row.autoApprove === 'true' ? 'primary' : 'success'"
+            :type="row.healthStatus === true ? 'success' : 'danger'"
             disable-transitions
           >
-            {{ row.autoApprove === 'true' ? '是' : '否' }}
+            {{ row.healthStatus === true ? '健康' : '下线' }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="authorizedGrantTypes"
-        label="授权模式"
-        width="160"
-        show-overflow-tooltip
-      ></el-table-column>
-      <el-table-column
-        prop="scope"
-        label="授权范围"
-        show-overflow-tooltip
-      ></el-table-column>
-      <el-table-column
-        prop="accessTokenValidity"
-        label="令牌时效/秒"
-      ></el-table-column>
-      <el-table-column
-        prop="refreshTokenValidity"
-        label="刷新时效/秒"
-      ></el-table-column>
+      <el-table-column prop="clientId" label="客户端"></el-table-column>
+      <el-table-column prop="createTime" label="创建时间"></el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="{ row }">
           <el-link type="primary">
@@ -106,14 +88,14 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <client-edit-form ref="editForm" @fetch-data="getClientPageList" />
+    <client-edit-form ref="editForm" @fetch-data="getApplicationPageList" />
   </div>
 </template>
 
 <script>
   import moment from 'moment'
   import ClientEditForm from './modules/ClientEditForm'
-  import { getClientPageList, deleteClient } from '@/api/client'
+  import { getApplicationPageList, deleteClient } from '@/api/client'
 
   export default {
     components: {
@@ -147,20 +129,20 @@
       },
     },
     mounted() {
-      this.getClientPageList()
+      this.getApplicationPageList()
     },
     methods: {
       handleSizeChange(val) {
         this.queryParam.pageSize = val
-        this.getClientPageList()
+        this.getApplicationPageList()
       },
       handleCurrentChange(val) {
         this.queryParam.pageNum = val
-        this.getClientPageList()
+        this.getApplicationPageList()
       },
-      async getClientPageList() {
+      getApplicationPageList() {
         this.tableLoading = true
-        getClientPageList(this.queryParam).then((response) => {
+        getApplicationPageList(this.queryParam).then((response) => {
           const result = response.data
           this.total = parseInt(result.total)
           this.stationData = result.list
@@ -183,6 +165,12 @@
       handleAdd() {
         const createData = {
           id: null,
+          appName: null,
+          website: null,
+          icon: null,
+          appType: null,
+          healthCheck: null,
+          describe: null,
           clientId: null,
           clientSecret: null,
           authorizedGrantTypes: [],
@@ -242,7 +230,7 @@
           const responseData = response.data
           if (responseData) {
             this.$message.success('删除客户端成功')
-            this.getClientPageList()
+            this.getApplicationPageList()
           } else {
             this.$message.error('删除客户端失败')
           }

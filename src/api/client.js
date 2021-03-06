@@ -1,14 +1,14 @@
 import request from '@/utils/request'
 
 const api = {
-  clientList: '/authorization/client/listPage',
+  applicationList: '/authorization/application/listPage',
   saveClient: '/authorization/client/saveClient',
   updateClient: '/authorization/client/updateClient',
   deleteClient: '/authorization/client/deleteClient',
 }
-export function getClientPageList(parameter) {
+export function getApplicationPageList(parameter) {
   return request({
-    url: api.clientList,
+    url: api.applicationList,
     method: 'post',
     data: parameter,
   })
