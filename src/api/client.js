@@ -2,9 +2,9 @@ import request from '@/utils/request'
 
 const api = {
   applicationList: '/authorization/application/listPage',
-  saveClient: '/authorization/client/saveClient',
-  updateClient: '/authorization/client/updateClient',
-  deleteClient: '/authorization/client/deleteClient',
+  saveApplication: '/authorization/application/saveApplication',
+  updateApplication: '/authorization/application/updateApplication',
+  deleteApplication: '/authorization/application/deleteApplication',
 }
 export function getApplicationPageList(parameter) {
   return request({
@@ -14,25 +14,25 @@ export function getApplicationPageList(parameter) {
   })
 }
 
-export function saveClient(parameter) {
+export function saveApplication(parameter) {
   return request({
-    url: api.saveClient,
+    url: api.saveApplication,
     method: 'post',
     data: parameter,
   })
 }
 
-export function updateClient(parameter) {
+export function updateApplication(parameter) {
   return request({
-    url: api.updateClient,
+    url: api.updateApplication,
     method: 'put',
     data: parameter,
   })
 }
 
-export function deleteClient(parameter) {
+export function deleteApplication(parameter) {
   return request({
-    url: api.deleteClient,
+    url: api.deleteApplication,
     method: 'delete',
     data: parameter,
   })

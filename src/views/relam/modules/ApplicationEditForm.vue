@@ -12,8 +12,8 @@
       :rules="rules"
       label-width="140px"
     >
-      <el-form-item label="应用名称:" prop="appName" required>
-        <el-input v-model="form.appName" class="edit-form-item" />
+      <el-form-item label="应用名称:" prop="name" required>
+        <el-input v-model="form.name" class="edit-form-item" />
       </el-form-item>
       <el-form-item label="应用访问地址:" prop="website" required>
         <el-input v-model="form.website" class="edit-form-item" />
@@ -35,7 +35,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="健康检查地址:" prop="healthCheck" required>
+      <el-form-item label="健康检查地址:" prop="healthCheck">
         <el-input v-model="form.healthCheck" class="edit-form-item" />
       </el-form-item>
       <el-form-item label="应用简介:" prop="describe">
@@ -147,7 +147,7 @@
 </template>
 
 <script>
-  import { saveClient, updateClient } from '@/api/client'
+  import { saveApplication, updateApplication } from '@/api/client'
   import { getDictionaryItemList } from '@/api/dictionary'
 
   export default {
@@ -155,10 +155,9 @@
       return {
         title: '',
         dialogFormVisible: false,
-        activeNames: ['1'],
         form: {
           id: null,
-          appName: null,
+          name: null,
           website: null,
           icon: null,
           appType: null,
@@ -169,9 +168,8 @@
           authorizedGrantTypes: [],
           authorities: null,
           resourceIds: null,
-          scope: null,
           accessTokenValidity: 7200,
-          refreshTokenValidity: 28800,
+          refreshTokenValidity: 864000,
           webServerRedirectUri: null,
           autoApprove: 'true',
           additionalInformation: null,
@@ -179,6 +177,19 @@
         authorizedGrantTypeList: [],
         applicationTypeList: [],
         rules: {
+          name: [
+            { required: true, message: '应用名称不能为空', trigger: 'blur' },
+          ],
+          website: [
+            {
+              required: true,
+              message: '应用访问地址不能为空',
+              trigger: 'blur',
+            },
+          ],
+          appType: [
+            { required: true, message: '应用类型不能为空', trigger: 'blur' },
+          ],
           clientId: [
             { required: true, message: '客户端id不能为空', trigger: 'blur' },
           ],
@@ -210,6 +221,7 @@
         }
         this.dialogFormVisible = true
         this.form = data
+        console.log(data)
       },
       getAuthorizedGrantTypeList() {
         const data = {
@@ -233,13 +245,30 @@
       onSubmit() {
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            const submitData = this.form
-            submitData.authorizedGrantTypes = this.form.authorizedGrantTypes.join(
-              ','
-            )
+            const submitData = {
+              id: this.form.id,
+              name: this.form.name,
+              website: this.form.website,
+              icon: this.form.icon,
+              appType: this.form.appType,
+              healthCheck: this.form.healthCheck,
+              describe: this.form.describe,
+              oauthClientDetail: {
+                clientId: this.form.clientId,
+                clientSecret: this.form.clientSecret,
+                authorizedGrantTypes: this.form.authorizedGrantTypes.join(','),
+                authorities: this.form.authorities,
+                resourceIds: this.form.resourceIds,
+                accessTokenValidity: this.form.accessTokenValidity,
+                refreshTokenValidity: this.form.refreshTokenValidity,
+                webServerRedirectUri: this.form.webServerRedirectUri,
+                autoApprove: this.form.autoApprove,
+                additionalInformation: this.form.additionalInformation,
+              },
+            }
             console.log(submitData)
             if (submitData.id === null) {
-              saveClient(submitData).then((response) => {
+              saveApplication(submitData).then((response) => {
                 const responseData = response.data
                 if (responseData) {
                   this.$message.success('新增应用成功')
@@ -250,7 +279,7 @@
               })
             } else {
               submitData.id = this.form.id
-              updateClient(submitData).then((response) => {
+              updateApplication(submitData).then((response) => {
                 const responseData = response.data
                 if (responseData) {
                   this.$message.success('修改应用成功')

@@ -1,6 +1,12 @@
 <template>
   <div class="filter-container" style="padding-bottom: 0">
     <el-input
+      v-model="queryParam.appName"
+      size="small"
+      class="filter-item search-item"
+      placeholder="应用名称"
+    />
+    <el-input
       v-model="queryParam.clientId"
       size="small"
       class="filter-item search-item"
@@ -24,6 +30,7 @@
             pageNum: 1,
             pageSize: 10,
             clientId: null,
+            appName: null,
           })
       "
     >
@@ -88,18 +95,21 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     ></el-pagination>
-    <client-edit-form ref="editForm" @fetch-data="getApplicationPageList" />
+    <application-edit-form
+      ref="editForm"
+      @fetch-data="getApplicationPageList"
+    />
   </div>
 </template>
 
 <script>
   import moment from 'moment'
-  import ClientEditForm from './modules/ClientEditForm'
-  import { getApplicationPageList, deleteClient } from '@/api/client'
+  import ApplicationEditForm from './modules/ApplicationEditForm'
+  import { getApplicationPageList, deleteApplication } from '@/api/client'
 
   export default {
     components: {
-      ClientEditForm,
+      ApplicationEditForm,
     },
     data() {
       return {
@@ -111,6 +121,7 @@
           pageNum: 1,
           pageSize: 10,
           clientId: null,
+          appName: null,
         },
         layout: 'total, sizes, prev, pager, next, jumper',
         orgData: [],
@@ -165,7 +176,7 @@
       handleAdd() {
         const createData = {
           id: null,
-          appName: null,
+          name: null,
           website: null,
           icon: null,
           appType: null,
@@ -177,7 +188,7 @@
           authorities: null,
           resourceIds: null,
           accessTokenValidity: 7200,
-          refreshTokenValidity: 28800,
+          refreshTokenValidity: 864000,
           webServerRedirectUri: null,
           autoApprove: 'true',
           additionalInformation: null,
@@ -186,25 +197,33 @@
       },
       handleEdit(record) {
         let authorizedGrantTypes = []
+        const oauthClientDetail = record.oauthClientDetail
         if (
           record.authorizedGrantTypes !== null &&
           record.authorizedGrantTypes !== ''
         ) {
-          authorizedGrantTypes = record.authorizedGrantTypes.split(',')
+          authorizedGrantTypes = oauthClientDetail.authorizedGrantTypes.split(
+            ','
+          )
         }
         const data = {
           id: record.id,
-          clientId: record.clientId,
+          name: record.name,
+          website: record.website,
+          icon: record.icon,
+          appType: record.appType,
+          healthCheck: record.healthCheck,
+          describe: record.describe,
+          clientId: oauthClientDetail.clientId,
           clientSecret: record.originalClientSecret,
           authorizedGrantTypes: authorizedGrantTypes,
-          authorities: record.authorities,
-          resourceIds: record.resourceIds,
-          scope: record.scope,
-          accessTokenValidity: record.accessTokenValidity,
-          refreshTokenValidity: record.refreshTokenValidity,
-          webServerRedirectUri: record.webServerRedirectUri,
-          autoApprove: record.autoApprove,
-          additionalInformation: record.additionalInformation,
+          authorities: oauthClientDetail.authorities,
+          resourceIds: oauthClientDetail.resourceIds,
+          accessTokenValidity: oauthClientDetail.accessTokenValidity,
+          refreshTokenValidity: oauthClientDetail.refreshTokenValidity,
+          webServerRedirectUri: oauthClientDetail.webServerRedirectUri,
+          autoApprove: oauthClientDetail.autoApprove,
+          additionalInformation: oauthClientDetail.additionalInformation,
         }
         this.$refs['editForm'].showDialog(data)
       },
@@ -226,7 +245,7 @@
         return jsonArray
       },
       handleDelete(id) {
-        deleteClient({ ids: [id] }).then((response) => {
+        deleteApplication({ ids: [id] }).then((response) => {
           const responseData = response.data
           if (responseData) {
             this.$message.success('删除客户端成功')
