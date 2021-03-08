@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-row :gutter="12">
-      <el-col :span="12">
-        <el-card style="overflow-y: auto; height: 550px">
+      <el-col :span="14">
+        <el-card shadow="hover" style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
             <span>组织</span>
           </div>
@@ -13,6 +13,14 @@
               </el-input>
             </el-form-item>
             <el-form-item>
+              <el-button
+                size="small"
+                style="margin-left: 12px"
+                type="primary"
+                @click="handleAdd"
+              >
+                搜索
+              </el-button>
               <el-button
                 size="small"
                 style="margin-left: 12px"
@@ -39,23 +47,48 @@
               </el-button>
             </el-form-item>
           </el-form>
-          <el-tree
-            ref="tree"
+          <el-table
+            ref="menuTable"
             v-loading="treeLoading"
-            style="overflow-y: auto; max-height: 380px"
+            :data="orgData"
+            default-expand-all
+            max-height="400"
+            style="width: 100%"
+            row-key="id"
+            row-class-name="table-row"
             element-loading-text="拼命加载中"
             element-loading-spinner="el-icon-loading"
-            :data="orgData"
-            node-key="id"
-            default-expand-all
-            highlight-current
-            :filter-node-method="filterNode"
-            @node-click="handleNodeClick"
-          ></el-tree>
+            border
+            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+            highlight-current-row
+            @current-change="handleCurrentTableChange"
+          >
+            <el-table-column
+              prop="label"
+              label="组织名称"
+              show-overflow-tooltip
+              width="250"
+            ></el-table-column>
+            <el-table-column
+              prop="abbreviation"
+              label="组织简称"
+              align="center"
+            ></el-table-column>
+            <el-table-column label="操作" align="center">
+              <template #default="{ row }">
+                <el-link type="primary">
+                  <IconFont
+                    type="icon-template_delete"
+                    @click="handleDelete(row.id)"
+                  />
+                </el-link>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-card>
       </el-col>
-      <el-col :span="12">
-        <el-card style="overflow-y: auto; height: 550px">
+      <el-col :span="10">
+        <el-card shadow="hover" style="overflow-y: auto; height: 550px">
           <div slot="header" class="clearfix">
             <span>{{ title }}</span>
           </div>
@@ -66,16 +99,16 @@
             label-width="120px"
           >
             <el-form-item label="上级ID:" prop="parentId" required>
-              <el-input v-model="form.parentId" style="width: 300px" />
+              <el-input v-model="form.parentId" class="edit-form-item" />
             </el-form-item>
             <el-form-item label="组织名称:" prop="label" required>
-              <el-input v-model="form.label" style="width: 300px" />
+              <el-input v-model="form.label" class="edit-form-item" />
             </el-form-item>
             <el-form-item label="简称:" prop="abbreviation">
-              <el-input v-model="form.abbreviation" style="width: 300px" />
+              <el-input v-model="form.abbreviation" class="edit-form-item" />
             </el-form-item>
             <el-form-item label="描述:" prop="describe">
-              <el-input v-model="form.describe" style="width: 300px" />
+              <el-input v-model="form.describe" class="edit-form-item" />
             </el-form-item>
             <el-form-item label="状态:" prop="status" required>
               <el-radio v-model="form.status" label="1">启用</el-radio>
@@ -218,8 +251,8 @@
           }
         })
       },
-      handleDelete() {
-        deleteOrg(this.$refs.tree.getCheckedKeys()).then((response) => {
+      handleDelete(id) {
+        deleteOrg({ ids: [id] }).then((response) => {
           const responseData = response.data
           if (responseData) {
             this.$message.success('删除组织成功')
@@ -233,8 +266,8 @@
         if (!value) return true
         return data.label.indexOf(value) !== -1
       },
-      handleNodeClick(data) {
-        this.title = '修改'
+      handleCurrentTableChange(data) {
+        this.title = '修改组织'
         this.buttonName = '修改'
         this.parentId = data.id
         this.form = {

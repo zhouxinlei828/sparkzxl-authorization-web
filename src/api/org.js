@@ -3,7 +3,7 @@ import request from '@/utils/request'
 const api = {
   orgList: '/authorization/org/orgs',
   operateOrg: '/authorization/org/org',
-  deleteOrg: '/authorization/org/org/batch?ids=',
+  deleteOrg: '/authorization/org/org/batch',
 }
 
 export default api
@@ -33,7 +33,8 @@ export function updateOrg(parameter) {
 }
 export function deleteOrg(parameter) {
   return request({
-    url: api.deleteOrg.concat(parameter),
+    url: api.deleteOrg,
     method: 'delete',
+    data: parameter,
   })
 }

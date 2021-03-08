@@ -69,6 +69,7 @@
             <el-table-column
               prop="label"
               label="菜单标题"
+              show-overflow-tooltip
               width="190"
             ></el-table-column>
             <el-table-column prop="icon" label="图标" align="center">
