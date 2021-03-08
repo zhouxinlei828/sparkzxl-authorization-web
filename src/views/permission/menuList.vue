@@ -55,8 +55,8 @@
             ref="menuTable"
             v-loading="menuLoading"
             :data="menuData"
-            style="width: 100%"
             max-height="350"
+            style="width: 100%"
             row-key="id"
             row-class-name="table-row"
             element-loading-text="拼命加载中"
@@ -69,9 +69,9 @@
             <el-table-column
               prop="label"
               label="菜单标题"
-              width="180"
+              width="190"
             ></el-table-column>
-            <el-table-column prop="icon" label="图标" align="center" width="80">
+            <el-table-column prop="icon" label="图标" align="center">
               <template #default="{ row }">
                 <div v-if="row.icon !== null && row.icon !== ''">
                   <IconFont :type="row.icon" />
@@ -82,7 +82,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="sortValue" label="排序" />
-            <el-table-column label="操作" align="center" width="130">
+            <el-table-column label="操作" align="center">
               <template #default="{ row }">
                 <el-link type="primary">
                   <IconFont type="icon-edit" @click="handleEditMenu(row)" />
