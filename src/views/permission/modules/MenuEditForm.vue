@@ -299,6 +299,7 @@
           },
           {
             key1: 'icon-zuhu1',
+            key2: 'icon-dingshirenwu',
           },
         ],
         form: {
