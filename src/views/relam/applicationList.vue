@@ -61,11 +61,13 @@
       <el-table-column prop="healthStatus" label="应用健康状态">
         <template #default="{ row }">
           <el-tag
+            v-if="row.healthCheck !== null"
             :type="row.healthStatus === true ? 'success' : 'danger'"
             disable-transitions
           >
             {{ row.healthStatus === true ? '健康' : '下线' }}
           </el-tag>
+          <el-tag v-else type="success" disable-transitions>未注册</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="clientId" label="客户端"></el-table-column>
