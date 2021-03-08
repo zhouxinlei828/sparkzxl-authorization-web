@@ -100,22 +100,31 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     if (loadingInstance) loadingInstance.close()
-    const { data, config } = response
-    const { code, msg } = data
-    // 操作正常Code数组
-    const codeVerificationArray = isArray(successCode)
-      ? [...successCode]
-      : [...[successCode]]
-    // 是否操作正常
-    if (codeVerificationArray.includes(code)) {
-      return data
-    } else {
-      handleCode(code, msg)
-      return Promise.reject(
-        'vue-admin-beautiful请求异常拦截:' +
-          JSON.stringify({ url: config.url, code, msg }) || 'Error'
-      )
+    const contentType = response.headers['content-type']
+    const contentTypeList = [
+      'application/json; charset=UTF-8',
+      'application/json',
+      'application/json;charset=UTF-8',
+    ]
+    if (contentTypeList.includes(contentType)) {
+      const { data, config } = response
+      const { code, msg } = data
+      // 操作正常Code数组
+      const codeVerificationArray = isArray(successCode)
+        ? [...successCode]
+        : [...[successCode]]
+      // 是否操作正常
+      if (codeVerificationArray.includes(code)) {
+        return data
+      } else {
+        handleCode(code, msg)
+        return Promise.reject(
+          'vue-admin-beautiful请求异常拦截:' +
+            JSON.stringify({ url: config.url, code, msg }) || 'Error'
+        )
+      }
     }
+    return response
   },
   (error) => {
     console.log(error)
