@@ -86,7 +86,15 @@
             label-width="120px"
           >
             <el-form-item label="上级ID:" prop="parentId" required>
-              <el-input v-model="form.parentId" class="edit-form-item" />
+              <TreeSelect
+                v-model="form.parentId"
+                class="edit-form-item"
+                :load-options="loadListOptions"
+                :multiple="false"
+                :searchable="true"
+                placeholder="上级组织"
+                :options="orgTreeData"
+              />
             </el-form-item>
             <el-form-item label="组织名称:" prop="label" required>
               <el-input v-model="form.label" class="edit-form-item" />
@@ -135,11 +143,19 @@
     data() {
       return {
         orgData: [],
-        filterText: '',
+        orgTreeData: [],
+        filterText: null,
         title: '新增组织',
         buttonName: '新增',
         parentId: 0,
         treeLoading: false,
+        parentMenu: {
+          id: '0',
+          label: '顶级菜单',
+          parentId: null,
+          sortValue: 1,
+          children: null,
+        },
         form: {
           id: null,
           parentId: 0,
@@ -151,10 +167,10 @@
         },
         rules: {
           parentId: [
-            { required: true, message: '上级ID不能为空', trigger: 'blur' },
+            { required: true, message: '上级组织不能为空', trigger: 'blur' },
           ],
           label: [
-            { required: true, message: '部门名称不能为空', trigger: 'blur' },
+            { required: true, message: '组织名称不能为空', trigger: 'blur' },
           ],
           status: [
             { required: true, message: '状态不能为空', trigger: 'blur' },
@@ -164,6 +180,7 @@
     },
     created() {
       this.getOrgList()
+      this.getOrgTreeList()
     },
     methods: {
       getOrgList() {
@@ -177,12 +194,25 @@
           this.treeLoading = false
         })
       },
+      getOrgTreeList() {
+        const parameter = {
+          name: null,
+          status: true,
+        }
+        getOrgList(parameter).then((response) => {
+          this.orgTreeData.push(this.parentMenu)
+          const tree = response.data
+          tree.forEach((item) => {
+            this.orgTreeData.push(item)
+          })
+        })
+      },
       handleAdd() {
         this.title = '新增组织'
         this.buttonName = '新增'
         this.form = {
           id: null,
-          parentId: this.parentId,
+          parentId: '0',
           label: '',
           abbreviation: '',
           describe: '',
@@ -236,10 +266,12 @@
         if (!value) return true
         return data.label.indexOf(value) !== -1
       },
+      loadListOptions({ callback }) {
+        callback()
+      },
       handleCurrentTableChange(data) {
         this.title = '修改组织'
         this.buttonName = '修改'
-        this.parentId = data.id
         this.form = {
           id: data.id,
           parentId: data.parentId,
