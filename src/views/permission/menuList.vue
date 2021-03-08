@@ -21,18 +21,11 @@
                 v-model="filterText"
                 prefix-icon="el-icon-search"
                 placeholder="输入关键字"
+                @change="getMenuTree"
               >
                 >
               </el-input>
             </el-form-item>
-            <el-button
-              size="small"
-              style="margin-left: 8px"
-              type="primary"
-              @click="getMenuTree"
-            >
-              搜索
-            </el-button>
             <el-form-item>
               <el-button
                 size="small"

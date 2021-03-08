@@ -8,19 +8,15 @@
           </div>
           <el-form :inline="true" size="small">
             <el-form-item>
-              <el-input v-model="filterText" placeholder="输入关键字进行过滤">
+              <el-input
+                v-model="filterText"
+                placeholder="输入关键字进行过滤"
+                @change="getOrgList"
+              >
                 >
               </el-input>
             </el-form-item>
             <el-form-item>
-              <el-button
-                size="small"
-                style="margin-left: 12px"
-                type="primary"
-                @click="handleAdd"
-              >
-                搜索
-              </el-button>
               <el-button
                 size="small"
                 style="margin-left: 12px"
@@ -36,19 +32,10 @@
               >
                 重置
               </el-button>
-              <el-button
-                size="small"
-                style="margin-left: 12px"
-                icon="el-icon-delete"
-                type="danger"
-                @click="handleDelete"
-              >
-                删除
-              </el-button>
             </el-form-item>
           </el-form>
           <el-table
-            ref="menuTable"
+            ref="orgTable"
             v-loading="treeLoading"
             :data="orgData"
             default-expand-all
@@ -148,12 +135,8 @@
     data() {
       return {
         orgData: [],
-        defaultProps: {
-          children: 'children',
-          label: 'label',
-        },
         filterText: '',
-        title: '新增',
+        title: '新增组织',
         buttonName: '新增',
         parentId: 0,
         treeLoading: false,
@@ -179,27 +162,14 @@
         },
       }
     },
-    computed: {
-      rowSelection() {
-        return {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange,
-        }
-      },
-    },
-    watch: {
-      filterText(val) {
-        this.$refs.tree.filter(val)
-      },
-    },
-    mounted() {
+    created() {
       this.getOrgList()
     },
     methods: {
       getOrgList() {
         this.treeLoading = true
         const parameter = {
-          name: '',
+          name: this.filterText,
           status: true,
         }
         getOrgList(parameter).then((response) => {
@@ -208,7 +178,7 @@
         })
       },
       handleAdd() {
-        this.title = '新增'
+        this.title = '新增组织'
         this.buttonName = '新增'
         this.form = {
           id: null,
