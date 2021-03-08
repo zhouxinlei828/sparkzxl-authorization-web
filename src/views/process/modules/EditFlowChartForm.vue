@@ -3,6 +3,7 @@
     title="设计流程图"
     :visible.sync="dialogFormVisible"
     :width="this.getWindowInfo.width"
+    fullscreen
     @close="closeDialog"
   >
     <iframe

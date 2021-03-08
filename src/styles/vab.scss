@@ -2,6 +2,7 @@
 @import './normalize.scss';
 @import './transition.scss';
 @import './loading.scss';
+
 $base: '.vab';
 
 @mixin scrollbar {
@@ -64,8 +65,10 @@ a {
 * {
   transition: $base-transition;
 }
+
 svg {
   transition: none;
+
   * {
     transition: none;
   }
@@ -152,6 +155,7 @@ html {
           * {
             transition: none;
           }
+
           padding: $base-padding;
           background: $base-color-white;
         }
@@ -286,6 +290,7 @@ html {
 
     /* 下拉树样式-----------结束 */
   }
+
   // 数据列表 操作
   .table-operator {
     margin-bottom: 18px;
@@ -294,10 +299,16 @@ html {
       margin-right: 8px;
     }
   }
-  .edit-form-item{
+
+  .edit-form-item {
     width: 200px;
   }
+
   .button-item {
     margin-right: 10px;
   }
+}
+
+.table-row:hover {
+  cursor: pointer;
 }

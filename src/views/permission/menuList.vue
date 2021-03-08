@@ -58,6 +58,7 @@
             style="width: 100%"
             max-height="350"
             row-key="id"
+            row-class-name="table-row"
             element-loading-text="拼命加载中"
             element-loading-spinner="el-icon-loading"
             border
