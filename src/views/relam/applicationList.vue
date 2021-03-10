@@ -200,14 +200,25 @@
       },
       handleEdit(record) {
         let authorizedGrantTypes = []
-        const oauthClientDetail = record.oauthClientDetail
-        if (
-          record.authorizedGrantTypes !== null &&
-          record.authorizedGrantTypes !== ''
-        ) {
+        let oauthClientDetail = record.oauthClientDetail
+        if (oauthClientDetail !== null) {
           authorizedGrantTypes = oauthClientDetail.authorizedGrantTypes.split(
             ','
           )
+        } else {
+          oauthClientDetail = {
+            clientId: null,
+            clientSecret: null,
+            authorizedGrantTypes: [],
+            authorities: null,
+            resourceIds: null,
+            scope: null,
+            accessTokenValidity: 7200,
+            refreshTokenValidity: 864000,
+            webServerRedirectUri: null,
+            autoApprove: 'true',
+            additionalInformation: null,
+          }
         }
         const data = {
           id: record.id,

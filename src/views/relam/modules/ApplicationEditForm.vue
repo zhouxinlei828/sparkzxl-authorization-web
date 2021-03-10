@@ -246,6 +246,7 @@
       onSubmit() {
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
+            const appType = this.form.appType
             const submitData = {
               id: this.form.id,
               name: this.form.name,
@@ -254,7 +255,9 @@
               appType: this.form.appType,
               healthCheck: this.form.healthCheck,
               describe: this.form.describe,
-              oauthClientDetail: {
+            }
+            if (appType === 'SERVER') {
+              submitData.oauthClientDetail = {
                 clientId: this.form.clientId,
                 clientSecret: this.form.clientSecret,
                 authorizedGrantTypes: this.form.authorizedGrantTypes.join(','),
@@ -266,7 +269,7 @@
                 webServerRedirectUri: this.form.webServerRedirectUri,
                 autoApprove: this.form.autoApprove,
                 additionalInformation: this.form.additionalInformation,
-              },
+              }
             }
             console.log(submitData)
             if (submitData.id === null) {
