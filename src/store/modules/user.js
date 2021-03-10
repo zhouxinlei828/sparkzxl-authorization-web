@@ -113,7 +113,7 @@ const actions = {
   async logout({ dispatch }, frontUrl) {
     const response = await logout()
     const responseData = response.data
-    if (responseData === 1) {
+    if (responseData === true) {
       await dispatch('resetAccessToken')
       await resetRouter()
       let url = ''
