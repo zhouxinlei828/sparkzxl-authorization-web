@@ -49,7 +49,7 @@ router.beforeResolve(async (to, from, next) => {
           }
         } catch {
           console.log(11111)
-          await store.dispatch('user/logout', to.path)
+          await store.dispatch('user/logout')
         }
       }
     }
@@ -58,7 +58,7 @@ router.beforeResolve(async (to, from, next) => {
       next()
     } else {
       if (recordRoute) {
-        await store.dispatch('user/logout', to.path)
+        await store.dispatch('user/logout')
       } else {
         await store.dispatch('user/logout')
       }

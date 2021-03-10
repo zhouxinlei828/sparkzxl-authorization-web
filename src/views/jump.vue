@@ -38,47 +38,37 @@
 
 <script>
   import store from '@/store'
-  import { authorizeCodeBack } from '@/api/login'
+  import { exchangeToken } from '@/api/login'
   export default {
     name: 'Jump',
     data() {
       return {
         oops: '正在加载中，请稍后!',
         btn: '返回',
-        authorizeState: {
-          code: '',
-          state: '',
-        },
+        tokenState: null,
       }
     },
     created() {
-      this.authorizeState.code = this.$route.query.code
-      this.authorizeState.state = this.$route.query.state
-      if (
-        this.authorizeState.code !== null ||
-        this.authorizeState.code !== ''
-      ) {
-        this.getTokenBack(this.authorizeState)
+      debugger
+      this.tokenState = this.$route.query.tokenState
+      if (this.tokenState !== null || this.tokenState !== '') {
+        this.getTokenBack(this.tokenState)
       }
     },
     methods: {
-      async getTokenBack(authorizeState) {
-        const response = await authorizeCodeBack(authorizeState)
-        debugger
+      async getTokenBack(tokenState) {
+        const response = await exchangeToken({ tokenState: tokenState })
         const responseData = response.data
         if (responseData === null) {
           this.$message.error('登录失效')
+          await store.dispatch('user/logout')
         } else {
           console.log(responseData)
-          const frontUrl = responseData.frontUrl
           let result = await store.dispatch(
             'user/authorizationLogin',
             responseData
           )
           if (result) {
-            if (frontUrl !== undefined || frontUrl !== '') {
-              await this.$router.push(frontUrl)
-            }
             await this.$router.push('/index')
           }
         }

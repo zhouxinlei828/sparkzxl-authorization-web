@@ -82,9 +82,9 @@ const actions = {
     }
   },
   async authorizationLogin({ commit }, tokenData) {
-    const accessToken = tokenData['access_token']
-    const refreshToken = tokenData['refresh_token']
-    const tokenType = tokenData['token_type']
+    const accessToken = tokenData['accessToken']
+    const refreshToken = tokenData['refreshToken']
+    const tokenType = tokenData['tokenType']
     const tenant = tokenData['tenant']
     if (accessToken) {
       commit('setAccessToken', accessToken)

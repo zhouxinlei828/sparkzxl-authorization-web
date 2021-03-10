@@ -6,7 +6,7 @@ const userApi = {
   ForgePassword: '/authorization/forge-password',
   Register: '/authorization/register',
   getCaptcha: '/authorization/oauth/captcha',
-  authorizeCodeBack: '/authorization/oauth/callBack',
+  authorizeCodeBack: '/authorization/oauth/exchangeToken',
   SendSmsErr: '/account/sms_err',
   userInfo: '/authorization/user/currentUser',
   logout: '/authorization/customLogout',
@@ -78,7 +78,7 @@ export function getCaptcha(parameter) {
   })
 }
 
-export function authorizeCodeBack(parameter) {
+export function exchangeToken(parameter) {
   return request({
     url: userApi.authorizeCodeBack,
     method: 'get',
