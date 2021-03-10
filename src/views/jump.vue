@@ -38,26 +38,33 @@
 
 <script>
   import store from '@/store'
-  import { exchangeToken } from '@/api/login'
+  import { authorizeCodeBack } from '@/api/login'
   export default {
     name: 'Jump',
     data() {
       return {
         oops: '正在加载中，请稍后!',
         btn: '返回',
-        tokenState: null,
+        authorizeState: {
+          code: '',
+          state: '',
+        },
       }
     },
     created() {
-      debugger
-      this.tokenState = this.$route.query.tokenState
-      if (this.tokenState !== null || this.tokenState !== '') {
-        this.getTokenBack(this.tokenState)
+      this.authorizeState.code = this.$route.query.code
+      this.authorizeState.state = this.$route.query.state
+      if (
+        this.authorizeState.code !== null ||
+        this.authorizeState.code !== ''
+      ) {
+        this.getTokenBack(this.authorizeState)
       }
     },
     methods: {
-      async getTokenBack(tokenState) {
-        const response = await exchangeToken({ tokenState: tokenState })
+      async getTokenBack(authorizeState) {
+        const response = await authorizeCodeBack(authorizeState)
+        debugger
         const responseData = response.data
         if (responseData === null) {
           this.$message.error('登录失效')
