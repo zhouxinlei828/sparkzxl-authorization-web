@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="分配菜单资源"
+    title="分配权限资源"
     :visible.sync="dialogFormVisible"
     width="800px"
     @close="closeDialog"
