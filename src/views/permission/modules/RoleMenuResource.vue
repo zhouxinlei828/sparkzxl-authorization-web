@@ -51,7 +51,12 @@
       <el-button size="small" class="button-item" @click="closeDialog">
         取 消
       </el-button>
-      <el-button size="small" class="button-item" type="primary">
+      <el-button
+        size="small"
+        class="button-item"
+        type="primary"
+        @click="onSubmit"
+      >
         确 定
       </el-button>
     </div>
@@ -60,7 +65,7 @@
 
 <script>
   import { getMenuTree } from '@/api/menu'
-  import { getRoleResource } from '@/api/role'
+  import { getRoleResource, saveRoleAuthority } from '@/api/role'
 
   export default {
     data() {
@@ -283,6 +288,22 @@
           }
           if (this.resourceIdList !== null) {
             this.toggleChecked(this.menuData, this.resourceIdList)
+          }
+        })
+      },
+      onSubmit() {
+        const submitData = {
+          roleId: this.roleId,
+          menuIds: this.menuIds,
+          resourceIds: this.resourceIdList,
+        }
+        saveRoleAuthority(submitData).then((response) => {
+          const responseData = response.data
+          if (responseData) {
+            this.$message.success('分配菜单资源成功')
+            this.closeDialog()
+          } else {
+            this.$message.error('分配菜单资源失败')
           }
         })
       },
