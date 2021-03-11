@@ -77,15 +77,11 @@
         menuLoading: false,
       }
     },
-    created() {
-      this.getMenuTree()
-    },
     methods: {
       showDialog(data) {
         console.log(data)
         this.roleId = data.roleId
         this.getMenuTree()
-        this.getRoleResource(data.roleId)
         this.dialogFormVisible = true
       },
       getMenuTree() {
@@ -94,6 +90,7 @@
           this.initResourceChecked(response.data)
           this.menuData = response.data
           this.menuLoading = false
+          this.getRoleResource(this.roleId)
         })
       },
       initResourceChecked(menuData) {
@@ -128,12 +125,19 @@
           })
         }
       },
-      toggleUnSelection(rows) {
+      toggleUnSelection(rows, menuIds) {
         if (rows) {
           rows.forEach((row) => {
             this.$refs.menuTable.toggleRowSelection(row, false)
+            Array.prototype.remove = function (val) {
+              const index = this.indexOf(val)
+              if (index > -1) {
+                return this.splice(index, 1)
+              }
+            }
+            menuIds.remove(row.id)
             if (row.children !== null) {
-              this.toggleUnSelection(row.children)
+              this.toggleUnSelection(row.children, menuIds)
             }
           })
         }
@@ -157,28 +161,15 @@
         if (rows) {
           rows.forEach((row) => {
             this.$refs.menuTable.toggleRowSelection(row, true)
+            this.menuIds.push(row.id)
             if (row.resourceList !== null) {
               row.resourceList.forEach((resource) => {
                 resource.checked = true
-              })
-            }
-            if (row.children !== null) {
-              this.toggleAllSelection(row.children)
-            }
-          })
-        }
-      },
-      toggleAllSelectionResource(rows) {
-        if (rows) {
-          rows.forEach((row) => {
-            this.$refs.menuTable.toggleRowSelection(row, true)
-            if (row.resourceList !== null) {
-              row.resourceList.forEach((resource) => {
                 this.resourceIdList.push(resource.id)
               })
             }
             if (row.children !== null) {
-              this.toggleAllSelectionResource(row.children)
+              this.toggleAllSelection(row.children)
             }
           })
         }
@@ -202,31 +193,26 @@
         }
       },
       toggleUnCheck(menuData, val) {
-        if (val && val.resourceIdList !== null) {
-          menuData.forEach((row) => {
-            if (row.resourceList !== null) {
-              if (row.id === val.id) {
-                row.resourceList.forEach((resource) => {
-                  resource.checked = false
-                })
-              }
-            }
-            if (row.children !== null) {
-              this.toggleUnAllCheck(row.children, val)
-            }
-          })
-        }
-      },
-      toggleUnAllCheck(menuData, val) {
-        if (val && val.resourceIdList !== null) {
+        if (val) {
           menuData.forEach((row) => {
             if (row.resourceList !== null) {
               row.resourceList.forEach((resource) => {
                 resource.checked = false
+                Array.prototype.remove = function (val) {
+                  const index = this.indexOf(val)
+                  if (index > -1) {
+                    return this.splice(index, 1)
+                  }
+                }
+                this.resourceIdList.remove(resource.id)
               })
-            }
-            if (row.children !== null) {
-              this.toggleUnAllCheck(row.children, val)
+              if (row.children !== null) {
+                this.toggleUnCheck(row.children, val)
+              }
+            } else {
+              if (row.children !== null) {
+                this.toggleUnCheck(row.children, val)
+              }
             }
           })
         }
@@ -234,11 +220,14 @@
       handleSelection(selection, val) {
         const menuIds = this.menuIds
         let toggleSelection = false
+        if (selection.length === 0) {
+          this.toggleUnCheck([val], val)
+          this.toggleUnSelection([val], menuIds)
+        }
         for (let i = 0; i < selection.length; i++) {
           if (selection[i].id !== val.id && i === selection.length - 1) {
-            this.toggleUnCheck(this.menuData, val)
-            this.toggleUnSelection([val])
-            delete menuIds[val.id]
+            this.toggleUnCheck([val], val)
+            this.toggleUnSelection([val], menuIds)
           } else if (selection[i].id === val.id) {
             toggleSelection = true
             menuIds.push(val.id)
@@ -257,15 +246,21 @@
               const resourceIdList = []
               resourceList.forEach((resource) => {
                 resourceIdList.push(resource.id)
+                this.resourceIdList.push(resource.id)
               })
+              this.unique(resourceIdList)
+              this.unique(this.resourceIdList)
               this.toggleChecked([val], resourceIdList)
             }
           }
         }
+        this.unique(menuIds)
         this.menuIds = menuIds
         if (toggleSelection) {
-          this.toggleSelection(this.menuData, this.menuIds)
+          this.toggleSelection([val], this.menuIds)
         }
+        console.log(this.menuIds)
+        console.log(this.resourceIdList)
       },
       handleSelectionAll(selection) {
         this.resourceIdList = []
@@ -273,13 +268,10 @@
           this.menuIds = []
           this.toggleUnAllSelection(this.menuData)
         } else {
-          for (const data of selection) {
-            this.menuIds.push(data.id)
-          }
-          this.toggleAllSelectionResource(this.menuData)
           this.toggleAllSelection(this.menuData)
         }
         console.log(this.resourceIdList)
+        console.log(this.menuIds)
       },
       getRoleResource(roleId) {
         getRoleResource(roleId).then((response) => {
@@ -294,20 +286,19 @@
           }
         })
       },
-      getSelectTableRow(menuIds) {
-        const rows = []
-        if (menuIds.length === 0) {
-          return rows
-        }
-        let menuData = this.menuData
-        for (const data of menuData) {
-          for (const menuId of menuIds) {
-            if (menuId === data.id) {
-              rows.push(data)
+      unique(data) {
+        if (data.length > 0) {
+          //去掉重复选取的数据
+          for (let i = 0; i < data.length; i++) {
+            for (let j = i + 1; j < data.length; ) {
+              if (data[i] === data[j]) {
+                data.splice(j, 1) //去除重复的对象；
+              } else {
+                j++
+              }
             }
           }
         }
-        return rows
       },
     },
   }
