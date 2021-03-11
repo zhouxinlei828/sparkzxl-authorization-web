@@ -84,7 +84,6 @@
     },
     methods: {
       showDialog(data) {
-        console.log(data)
         this.roleId = data.roleId
         this.getMenuTree()
         this.dialogFormVisible = true
@@ -264,8 +263,6 @@
         if (toggleSelection) {
           this.toggleSelection([val], this.menuIds)
         }
-        console.log(this.menuIds)
-        console.log(this.resourceIdList)
       },
       handleSelectionAll(selection) {
         this.resourceIdList = []
@@ -275,8 +272,6 @@
         } else {
           this.toggleAllSelection(this.menuData)
         }
-        console.log(this.resourceIdList)
-        console.log(this.menuIds)
       },
       getRoleResource(roleId) {
         getRoleResource(roleId).then((response) => {
