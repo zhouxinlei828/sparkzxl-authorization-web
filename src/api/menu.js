@@ -2,6 +2,7 @@ import request from '@/utils/request'
 
 const api = {
   menuTree: '/authorization/menu/tree',
+  menuList: '/authorization/menu/list',
   menuResource: '/authorization/resource/list',
   saveMenu: '/authorization/menu/saveMenu',
   updateMenu: '/authorization/menu/update',
@@ -18,6 +19,14 @@ export function getMenuTree(parameter) {
     url: api.menuTree,
     method: 'get',
     params: parameter,
+  })
+}
+
+export function getMenuList(parameter) {
+  return request({
+    url: api.menuList,
+    method: 'post',
+    data: parameter,
   })
 }
 

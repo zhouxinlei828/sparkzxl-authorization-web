@@ -97,7 +97,7 @@
     ></el-pagination>
     <role-edit-form ref="editForm" @fetch-data="getRoleList" />
     <role-user-form ref="roleUserForm" @fetch-data="getRoleList" />
-    <role-authority-form ref="roleAuthorityForm" @fetch-data="getRoleList" />
+    <role-menu-resource ref="roleMenuResource" @fetch-data="getRoleList" />
   </div>
 </template>
 
@@ -105,7 +105,7 @@
   import { deleteRole, getRoleList } from '@/api/role'
   import RoleEditForm from './modules/RoleEditForm'
   import RoleUserForm from './modules/RoleUserForm'
-  import RoleAuthorityForm from './modules/RoleAuthorityForm'
+  import RoleMenuResource from './modules/RoleMenuResource'
   import { getUserList } from '@/api/user'
   import moment from 'moment'
 
@@ -113,7 +113,7 @@
     components: {
       RoleEditForm,
       RoleUserForm,
-      RoleAuthorityForm,
+      RoleMenuResource,
     },
     data() {
       return {
@@ -216,9 +216,9 @@
       },
       handleRoleAuthority(id) {
         const data = {
-          id: id,
+          roleId: id,
         }
-        this.$refs['roleAuthorityForm'].showDialog(data)
+        this.$refs['roleMenuResource'].showDialog(data)
       },
       getUserList() {
         if (this.userList.length === 0) {

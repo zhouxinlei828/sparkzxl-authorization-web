@@ -117,7 +117,6 @@
           label: 'label',
         },
         resourceList: [],
-        tableLoading: false,
         menuLoading: false,
         filterText: '',
       }
