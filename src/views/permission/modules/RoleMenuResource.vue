@@ -2,7 +2,7 @@
   <el-dialog
     title="分配菜单资源"
     :visible.sync="dialogFormVisible"
-    width="700px"
+    width="800px"
     @close="closeDialog"
   >
     <div class="filter-container" style="padding-bottom: 0">
@@ -34,20 +34,13 @@
         <el-table-column prop="resourceList" label="菜单资源">
           <template #default="{ row }">
             <div v-if="row.resourceList !== null">
-              <el-checkbox-group v-model="resourceIdList">
-                <el-checkbox
-                  v-for="resource in row.resourceList"
-                  :key="resource.id"
-                  :label="resource.id"
-                  :checked="
-                    resource.checked === undefined || resource.checked === null
-                      ? false
-                      : resource.checked
-                  "
-                >
-                  {{ resource.name }}
-                </el-checkbox>
-              </el-checkbox-group>
+              <el-checkbox
+                v-for="resource in row.resourceList"
+                :key="resource.id"
+                v-model="resource.checked"
+              >
+                {{ resource.name }}
+              </el-checkbox>
             </div>
             <div v-else>暂无菜单资源</div>
           </template>
@@ -66,14 +59,13 @@
 </template>
 
 <script>
-  import { getMenuTree, getMenuList } from '@/api/menu'
+  import { getMenuTree } from '@/api/menu'
   import { getRoleResource } from '@/api/role'
 
   export default {
     data() {
       return {
         menuData: [],
-        menuList: [],
         defaultProps: {
           children: 'children',
           label: 'label',
@@ -81,40 +73,45 @@
         roleId: null,
         menuIds: [],
         dialogFormVisible: false,
-        resourceModelList: [],
-        checked: false,
         resourceIdList: [],
         menuLoading: false,
       }
     },
     created() {
       this.getMenuTree()
-      this.getMenuList()
     },
     methods: {
       showDialog(data) {
         console.log(data)
         this.roleId = data.roleId
+        this.getMenuTree()
         this.getRoleResource(data.roleId)
         this.dialogFormVisible = true
       },
       getMenuTree() {
         this.menuLoading = true
         getMenuTree().then((response) => {
+          this.initResourceChecked(response.data)
           this.menuData = response.data
           this.menuLoading = false
         })
       },
-      getMenuList() {
-        getMenuList({}).then((response) => {
-          this.menuList = response.data
+      initResourceChecked(menuData) {
+        menuData.forEach((row) => {
+          if (row.resourceList !== null) {
+            row.resourceList.forEach((resource) => {
+              resource.checked = false
+            })
+          }
+          if (row.children !== null) {
+            this.initResourceChecked(row.children)
+          }
         })
       },
       closeDialog() {
-        this.menuId = null
         this.roleId = null
         this.menuIds = []
-        this.resourceIds = []
+        this.resourceIdList = []
         this.dialogFormVisible = false
       },
       toggleSelection(rows, menuIds) {
@@ -122,11 +119,66 @@
           rows.forEach((row) => {
             for (const menuId of menuIds) {
               if (menuId === row.id) {
-                this.$refs.menuTable.toggleRowSelection(row)
+                this.$refs.menuTable.toggleRowSelection(row, true)
               }
             }
             if (row.children !== null) {
               this.toggleSelection(row.children, menuIds)
+            }
+          })
+        }
+      },
+      toggleUnSelection(rows) {
+        if (rows) {
+          rows.forEach((row) => {
+            this.$refs.menuTable.toggleRowSelection(row, false)
+            if (row.children !== null) {
+              this.toggleUnSelection(row.children)
+            }
+          })
+        }
+      },
+      toggleUnAllSelection(rows) {
+        if (rows) {
+          rows.forEach((row) => {
+            this.$refs.menuTable.toggleRowSelection(row, false)
+            if (row.resourceList !== null) {
+              row.resourceList.forEach((resource) => {
+                resource.checked = false
+              })
+            }
+            if (row.children !== null) {
+              this.toggleUnAllSelection(row.children)
+            }
+          })
+        }
+      },
+      toggleAllSelection(rows) {
+        if (rows) {
+          rows.forEach((row) => {
+            this.$refs.menuTable.toggleRowSelection(row, true)
+            if (row.resourceList !== null) {
+              row.resourceList.forEach((resource) => {
+                resource.checked = true
+              })
+            }
+            if (row.children !== null) {
+              this.toggleAllSelection(row.children)
+            }
+          })
+        }
+      },
+      toggleAllSelectionResource(rows) {
+        if (rows) {
+          rows.forEach((row) => {
+            this.$refs.menuTable.toggleRowSelection(row, true)
+            if (row.resourceList !== null) {
+              row.resourceList.forEach((resource) => {
+                this.resourceIdList.push(resource.id)
+              })
+            }
+            if (row.children !== null) {
+              this.toggleAllSelectionResource(row.children)
             }
           })
         }
@@ -160,41 +212,86 @@
               }
             }
             if (row.children !== null) {
-              this.toggleUnCheck(row.children, val)
+              this.toggleUnAllCheck(row.children, val)
+            }
+          })
+        }
+      },
+      toggleUnAllCheck(menuData, val) {
+        if (val && val.resourceIdList !== null) {
+          menuData.forEach((row) => {
+            if (row.resourceList !== null) {
+              row.resourceList.forEach((resource) => {
+                resource.checked = false
+              })
+            }
+            if (row.children !== null) {
+              this.toggleUnAllCheck(row.children, val)
             }
           })
         }
       },
       handleSelection(selection, val) {
         const menuIds = this.menuIds
-        selection.forEach((row) => {
-          if (row.id !== val.id) {
+        let toggleSelection = false
+        for (let i = 0; i < selection.length; i++) {
+          if (selection[i].id !== val.id && i === selection.length - 1) {
             this.toggleUnCheck(this.menuData, val)
+            this.toggleUnSelection([val])
             delete menuIds[val.id]
-          } else if (row.id === val.id) {
+          } else if (selection[i].id === val.id) {
+            toggleSelection = true
             menuIds.push(val.id)
+            let resourceList = val.resourceList === null ? [] : val.resourceList
+            if (val.children != null) {
+              val.children.forEach((menu) => {
+                menuIds.push(menu.id)
+                if (menu.resourceList != null) {
+                  menu.resourceList.forEach((resource) => {
+                    resourceList.push(resource)
+                  })
+                }
+              })
+            }
+            if (resourceList != null) {
+              const resourceIdList = []
+              resourceList.forEach((resource) => {
+                resourceIdList.push(resource.id)
+              })
+              this.toggleChecked([val], resourceIdList)
+            }
           }
-        })
-        console.log(this.menuData)
+        }
         this.menuIds = menuIds
+        if (toggleSelection) {
+          this.toggleSelection(this.menuData, this.menuIds)
+        }
       },
       handleSelectionAll(selection) {
-        console.log(selection)
-        if (selection.length === 0) {
+        this.resourceIdList = []
+        if (selection.length !== this.menuData.length) {
           this.menuIds = []
+          this.toggleUnAllSelection(this.menuData)
         } else {
           for (const data of selection) {
             this.menuIds.push(data.id)
           }
+          this.toggleAllSelectionResource(this.menuData)
+          this.toggleAllSelection(this.menuData)
         }
+        console.log(this.resourceIdList)
       },
       getRoleResource(roleId) {
         getRoleResource(roleId).then((response) => {
           const responseData = response.data
           this.menuIds = responseData.authMenus
           this.resourceIdList = responseData.authResources
-          this.toggleSelection(this.menuData, this.menuIds)
-          this.toggleChecked(this.menuData, this.resourceIdList)
+          if (this.menuIds !== null) {
+            this.toggleSelection(this.menuData, this.menuIds)
+          }
+          if (this.resourceIdList !== null) {
+            this.toggleChecked(this.menuData, this.resourceIdList)
+          }
         })
       },
       getSelectTableRow(menuIds) {
