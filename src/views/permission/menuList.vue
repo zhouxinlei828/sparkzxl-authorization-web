@@ -191,7 +191,7 @@
     getMenuTree,
   } from '@/api/menu'
   import MenuEditForm from '@/views/permission/modules/MenuEditForm'
-  import ResourceCreateForm from '@/views/permission/modules/ResourceCreateForm'
+  import ResourceCreateForm from '@/views/permission/modules/MenuResourceForm'
   export default {
     components: {
       MenuEditForm,

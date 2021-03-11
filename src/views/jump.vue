@@ -64,7 +64,6 @@
     methods: {
       async getTokenBack(authorizeState) {
         const response = await authorizeCodeBack(authorizeState)
-        debugger
         const responseData = response.data
         if (responseData === null) {
           this.$message.error('登录失效')

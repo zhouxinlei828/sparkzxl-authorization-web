@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 const api = {
   menuTree: '/authorization/menu/tree',
-  menuResource: '/authorization/resource/page',
+  menuResource: '/authorization/resource/list',
   saveMenu: '/authorization/menu/saveMenu',
   updateMenu: '/authorization/menu/update',
   deleteMenu: '/authorization/menu/deleteMenu',
