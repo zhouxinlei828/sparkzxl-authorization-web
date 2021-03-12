@@ -35,15 +35,23 @@
     >
       重置
     </el-button>
-    <el-divider content-position="left">结果列表</el-divider>
-    <div class="filter-container">
+    <div class="filter-container" style="padding-top: 10px">
       <el-button
         size="small"
-        class="filter-item button-item"
+        class="filter-item"
+        icon="el-icon-plus"
         type="primary"
         @click="handleAdd"
       >
         新建
+      </el-button>
+      <el-button
+        class="filter-item button-item"
+        icon="el-icon-delete"
+        type="danger"
+        @click="handleBatchDelete"
+      >
+        批量删除
       </el-button>
       <el-link
         class="filter-item button-item"
@@ -84,7 +92,13 @@
       border
       style="width: 100%"
       max-height="450"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column
+        show-overflow-tooltip
+        type="selection"
+        width="40"
+      ></el-table-column>
       <el-table-column prop="account" label="账号"></el-table-column>
       <el-table-column prop="name" label="姓名"></el-table-column>
       <el-table-column prop="sex" label="性别" width="60">
@@ -197,7 +211,6 @@
         uploadAccept: '.xls,.xlsx',
         orgData: [],
         tableLoading: false,
-        selectedRowKeys: [],
         excelTemplate: 'https://oss.sparksys.top/images/用户导入模板.xlsx',
         selectedRows: [],
       }
@@ -207,6 +220,9 @@
       this.getOrgList()
     },
     methods: {
+      handleSelectionChange(val) {
+        this.selectedRows = val
+      },
       handleSizeChange(val) {
         this.queryParam.pageSize = val
         this.getUserPage()
@@ -305,6 +321,27 @@
             this.$message.error('删除用户失败')
           }
         })
+      },
+      handleBatchDelete() {
+        if (this.selectedRows.length > 0) {
+          const ids = this.selectedRows.map((item) => item.id).join()
+          this.$baseConfirm('你确定要删除选中项吗', null, async () => {
+            const parameter = {
+              'ids[]': ids,
+            }
+            deleteUser(parameter).then((response) => {
+              const responseData = response.data
+              if (responseData) {
+                this.$message.success('删除用户成功')
+                this.getUserPage()
+              } else {
+                this.$message.error('删除用户失败')
+              }
+            })
+          })
+        } else {
+          this.$message.error('未选中任何行')
+        }
       },
       handleImportUserData(data) {
         const formData = new FormData()

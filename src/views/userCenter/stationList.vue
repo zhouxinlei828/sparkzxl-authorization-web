@@ -32,8 +32,7 @@
     >
       重置
     </el-button>
-    <el-divider content-position="left">结果列表</el-divider>
-    <div class="table-operator">
+    <div class="filter-container" style="padding-top: 10px">
       <el-button size="small" type="primary" @click="handleAdd">新建</el-button>
     </div>
     <el-table
