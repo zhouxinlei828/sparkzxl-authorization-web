@@ -310,7 +310,7 @@
       },
       handleDelete(id) {
         const parameter = {
-          'ids[]': id,
+          ids: [id],
         }
         deleteUser(parameter).then((response) => {
           const responseData = response.data
@@ -327,7 +327,7 @@
           const ids = this.selectedRows.map((item) => item.id).join()
           this.$baseConfirm('你确定要删除选中项吗', null, async () => {
             const parameter = {
-              'ids[]': ids,
+              ids: ids,
             }
             deleteUser(parameter).then((response) => {
               const responseData = response.data
