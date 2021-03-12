@@ -8,7 +8,7 @@ const userApi = {
   getCaptcha: '/authorization/oauth/captcha',
   authorizeCodeBack: '/authorization/oauth/callBack',
   SendSmsErr: '/account/sms_err',
-  userInfo: '/authorization/user/currentUser',
+  userInfo: '/authorization/user/userinfo',
   logout: '/authorization/customLogout',
   authorizeUrl: '/authorization/oauth/getAuthorizeUrl',
   UserMenu: '/authorization/user/routers',

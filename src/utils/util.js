@@ -82,6 +82,7 @@ export function removeLoadingAnimate(id = '', timeout = 1500) {
 
 /* eslint no-useless-escape:0 */
 const reg = /(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/
+
 export function isUrl(path) {
   return reg.test(path)
 }
@@ -136,4 +137,30 @@ export const downloadFile = (response) => {
     link.click()
     window.URL.revokeObjectURL(link.href)
   }
+}
+
+/**
+ * 判断数组中是否包含某个元素
+ * @param array
+ * @param str
+ * @returns {*}
+ */
+export function arrayContain(array, str) {
+  const index = array.findIndex((item) => item === str)
+  return index !== -1
+}
+
+/**
+ * 删除数组中的元素
+ * @param array
+ * @param value
+ */
+export function arrayRemove(array, value) {
+  Array.prototype.remove = function (val) {
+    const index = this.indexOf(val)
+    if (index > -1) {
+      return this.splice(index, 1)
+    }
+  }
+  array.remove(value)
 }

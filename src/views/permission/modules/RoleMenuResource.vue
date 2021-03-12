@@ -38,6 +38,7 @@
                 v-for="resource in row.resourceList"
                 :key="resource.id"
                 v-model="resource.checked"
+                @change="(checked) => changeCheckBox(checked, resource.id, row)"
               >
                 {{ resource.name }}
               </el-checkbox>
@@ -66,7 +67,7 @@
 <script>
   import { getMenuTree } from '@/api/menu'
   import { getRoleResource, saveRoleAuthority } from '@/api/role'
-
+  import { arrayRemove, arrayContain } from '@/utils/util'
   export default {
     data() {
       return {
@@ -91,21 +92,25 @@
       getMenuTree() {
         this.menuLoading = true
         getMenuTree().then((response) => {
-          this.initResourceChecked(response.data)
+          this.initHandleMenuData(response.data)
           this.menuData = response.data
           this.menuLoading = false
+          console.log(this.menuData)
           this.getRoleResource(this.roleId)
         })
       },
-      initResourceChecked(menuData) {
+      initHandleMenuData(menuData) {
         menuData.forEach((row) => {
+          const resourceIdList = []
           if (row.resourceList !== null) {
             row.resourceList.forEach((resource) => {
               resource.checked = false
+              resourceIdList.push(resource.id)
             })
           }
+          row.resourceIdList = resourceIdList
           if (row.children !== null) {
-            this.initResourceChecked(row.children)
+            this.initHandleMenuData(row.children)
           }
         })
       },
@@ -114,6 +119,27 @@
         this.menuIds = []
         this.resourceIdList = []
         this.dialogFormVisible = false
+      },
+      changeCheckBox(checked, resourceId, row) {
+        console.log(checked)
+        if (checked) {
+          this.$refs.menuTable.toggleRowSelection(row, true)
+          this.resourceIdList.push(resourceId)
+          this.unique(this.resourceIdList)
+        } else {
+          arrayRemove(this.resourceIdList, resourceId)
+          let needToggleRowUnSelection = false
+          for (let i = 0; i < row.resourceIdList.length; i++) {
+            if (arrayContain(this.resourceIdList, row.resourceIdList[i])) {
+              break
+            } else if (i === row.resourceIdList.length - 1) {
+              needToggleRowUnSelection = true
+            }
+          }
+          if (needToggleRowUnSelection) {
+            this.$refs.menuTable.toggleRowSelection(row, false)
+          }
+        }
       },
       toggleSelection(rows, menuIds) {
         if (rows) {
@@ -133,13 +159,7 @@
         if (rows) {
           rows.forEach((row) => {
             this.$refs.menuTable.toggleRowSelection(row, false)
-            Array.prototype.remove = function (val) {
-              const index = this.indexOf(val)
-              if (index > -1) {
-                return this.splice(index, 1)
-              }
-            }
-            menuIds.remove(row.id)
+            arrayRemove(menuIds, row.id)
             if (row.children !== null) {
               this.toggleUnSelection(row.children, menuIds)
             }
@@ -202,13 +222,7 @@
             if (row.resourceList !== null) {
               row.resourceList.forEach((resource) => {
                 resource.checked = false
-                Array.prototype.remove = function (val) {
-                  const index = this.indexOf(val)
-                  if (index > -1) {
-                    return this.splice(index, 1)
-                  }
-                }
-                this.resourceIdList.remove(resource.id)
+                arrayRemove(this.resourceIdList, resource.id)
               })
               if (row.children !== null) {
                 this.toggleUnCheck(row.children, val)
