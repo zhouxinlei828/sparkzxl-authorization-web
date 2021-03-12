@@ -137,6 +137,7 @@
             }
           }
           if (needToggleRowUnSelection) {
+            arrayRemove(this.menuIds, row.id)
             this.$refs.menuTable.toggleRowSelection(row, false)
           }
         }
