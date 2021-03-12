@@ -1,20 +1,20 @@
 <template>
   <div>
-    <iframe
-      id="iframe"
-      frameborder="no"
-      allowfullscreen
-      width="100%"
-      style="overflow-y: auto"
-      height="500"
-      src="http://172.34.67.112:8080/xxl-job-admin/joblog"
-    ></iframe>
+    <JobFrame :url="url" />
   </div>
 </template>
+<style></style>
 <script>
+  import JobFrame from './modules/jobFrame'
   export default {
-    data() {
-      return {}
+    components: {
+      JobFrame,
     },
+    data() {
+      return {
+        url: `${process.env.VUE_APP_JOB_IFRAME_URL}/xxl-job-admin/joblog`,
+      }
+    },
+    methods: {},
   }
 </script>
