@@ -95,7 +95,6 @@
           this.initHandleMenuData(response.data)
           this.menuData = response.data
           this.menuLoading = false
-          console.log(this.menuData)
           this.getRoleResource(this.roleId)
         })
       },
@@ -121,7 +120,6 @@
         this.dialogFormVisible = false
       },
       changeCheckBox(checked, resourceId, row) {
-        console.log(checked)
         if (checked) {
           this.$refs.menuTable.toggleRowSelection(row, true)
           this.resourceIdList.push(resourceId)
@@ -249,18 +247,8 @@
             this.toggleUnSelection([val], menuIds)
           } else if (selection[i].id === val.id) {
             toggleSelection = true
-            menuIds.push(val.id)
-            let resourceList = val.resourceList === null ? [] : val.resourceList
-            if (val.children != null) {
-              val.children.forEach((menu) => {
-                menuIds.push(menu.id)
-                if (menu.resourceList != null) {
-                  menu.resourceList.forEach((resource) => {
-                    resourceList.push(resource)
-                  })
-                }
-              })
-            }
+            let resourceList = []
+            this.handleNodeResource([val], menuIds, resourceList)
             if (resourceList != null) {
               const resourceIdList = []
               resourceList.forEach((resource) => {
@@ -275,9 +263,24 @@
         }
         this.unique(menuIds)
         this.menuIds = menuIds
+        console.log(this.menuIds)
+        console.log(this.resourceIdList)
         if (toggleSelection) {
           this.toggleSelection([val], this.menuIds)
         }
+      },
+      handleNodeResource(menuData, menuIds, resourceList) {
+        menuData.forEach((menu) => {
+          menuIds.push(menu.id)
+          if (menu.resourceList != null) {
+            menu.resourceList.forEach((resource) => {
+              resourceList.push(resource)
+            })
+          }
+          if (menu.children != null) {
+            this.handleNodeResource(menu.children, menuIds, resourceList)
+          }
+        })
       },
       handleSelectionAll(selection) {
         this.resourceIdList = []
