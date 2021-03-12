@@ -11,7 +11,7 @@ const userApi = {
   userInfo: '/authorization/user/userinfo',
   logout: '/authorization/customLogout',
   authorizeUrl: '/authorization/oauth/getAuthorizeUrl',
-  UserMenu: '/authorization/user/routers',
+  userRouters: '/authorization/user/routers',
 }
 
 export function login(parameter) {
@@ -44,7 +44,7 @@ export function logout() {
   })
 }
 
-export function getInfo() {
+export function userInfo() {
   return request({
     url: userApi.userInfo,
     method: 'get',
@@ -59,9 +59,9 @@ export function getAuthorizeUrl(parameter) {
   })
 }
 
-export function getCurrentUserNav() {
+export function serRouters() {
   return request({
-    url: userApi.UserMenu,
+    url: userApi.userRouters,
     method: 'get',
   })
 }

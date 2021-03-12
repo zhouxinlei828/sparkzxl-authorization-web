@@ -9,6 +9,12 @@
     </span>
 
     <el-dropdown-menu slot="dropdown">
+      <el-dropdown-item command="refreshAuthority" divided>
+        刷新权限
+      </el-dropdown-item>
+      <el-dropdown-item command="personalCenter" divided>
+        个人中心
+      </el-dropdown-item>
       <el-dropdown-item command="logout" divided>退出登录</el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
@@ -16,7 +22,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { recordRoute } from '@/config'
+  import { refreshAuthority } from '@/api/role'
 
   export default {
     name: 'VabAvatar',
@@ -35,10 +41,24 @@
           case 'personalCenter':
             this.personalCenter()
             break
+          case 'refreshAuthority':
+            this.refreshAuthority()
+            break
         }
       },
       personalCenter() {
         this.$router.push('/personalCenter/personalCenter')
+      },
+      refreshAuthority() {
+        refreshAuthority().then((response) => {
+          const responseData = response.data
+          if (responseData) {
+            this.$message.success('刷新权限成功')
+            this.resetForm()
+          } else {
+            this.$message.error('刷新权限失败')
+          }
+        })
       },
       logout() {
         this.$baseConfirm(

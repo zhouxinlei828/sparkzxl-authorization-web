@@ -27,7 +27,6 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <el-divider content-position="left">结果列表</el-divider>
     <div class="table-operator">
       <el-button size="small" type="primary" @click="handleAdd">新建</el-button>
     </div>

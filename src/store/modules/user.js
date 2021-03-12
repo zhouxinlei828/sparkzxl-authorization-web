@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { getAuthorizeUrl, getInfo, login, logout } from '@/api/login'
+import { getAuthorizeUrl, userInfo, login, logout } from '@/api/login'
 import {
   getAccessToken,
   removeAccessToken,
@@ -98,7 +98,8 @@ const actions = {
     return false
   },
   async getUserInfo({ commit }) {
-    const { data } = await getInfo()
+    debugger
+    const { data } = await userInfo()
     if (!data) {
       Vue.prototype.$baseMessage('获取用户信息失败，请重新登录...', 'error')
       return false

@@ -2,7 +2,7 @@
   <div>
     <el-row :gutter="12">
       <el-col :span="14">
-        <el-card shadow="hover" style="overflow-y: auto; height: 550px">
+        <el-card shadow="hover" style="overflow-y: auto; height: 560px">
           <div slot="header" class="clearfix">
             <span>组织</span>
           </div>
@@ -75,7 +75,7 @@
         </el-card>
       </el-col>
       <el-col :span="10">
-        <el-card shadow="hover" style="overflow-y: auto; height: 550px">
+        <el-card shadow="hover" style="overflow-y: auto; height: 560px">
           <div slot="header" class="clearfix">
             <span>{{ title }}</span>
           </div>
@@ -84,6 +84,7 @@
             :model="form"
             :rules="rules"
             label-width="120px"
+            :label-position="labelPosition"
           >
             <el-form-item label="上级ID:" prop="parentId" required>
               <TreeSelect
@@ -165,6 +166,7 @@
           status: '1',
           sortValue: 1,
         },
+        labelPosition: 'right',
         rules: {
           parentId: [
             { required: true, message: '上级组织不能为空', trigger: 'blur' },

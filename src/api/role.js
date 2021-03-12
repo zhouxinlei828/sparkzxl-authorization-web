@@ -10,6 +10,7 @@ const api = {
   getResourceList: '/authorization/resource/list',
   getRoleResource: '/authorization/role/getRoleResource',
   saveRoleAuthority: '/authorization/role/authority/batch',
+  refreshAuthority: '',
 }
 
 export default api
@@ -82,5 +83,12 @@ export function saveRoleAuthority(parameter) {
     url: api.saveRoleAuthority,
     method: 'post',
     data: parameter,
+  })
+}
+
+export function refreshAuthority() {
+  return request({
+    url: api.refreshAuthority,
+    method: 'get',
   })
 }

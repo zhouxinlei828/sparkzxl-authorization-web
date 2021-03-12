@@ -28,7 +28,6 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <el-divider content-position="left">结果列表</el-divider>
     <el-table
       v-loading="tableLoading"
       element-loading-text="拼命加载中"

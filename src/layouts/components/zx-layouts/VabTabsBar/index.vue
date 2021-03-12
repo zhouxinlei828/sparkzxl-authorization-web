@@ -22,10 +22,6 @@
         <i class="el-icon-arrow-down el-icon--right"></i>
       </span>
       <el-dropdown-menu slot="dropdown" class="tabs-more">
-        <!-- <el-dropdown-item command="refreshRoute">
-          <vab-icon :icon="['fas', 'circle-notch']" />
-          刷新
-        </el-dropdown-item> -->
         <el-dropdown-item command="closeOtherstabs">
           <vab-icon :icon="['fas', 'times-circle']" />
           关闭其他
