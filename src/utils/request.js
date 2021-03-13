@@ -71,9 +71,6 @@ instance.interceptors.request.use(
         config.headers['tenant'] = tenant
       }
     }
-    config.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
-    config.headers['Access-Control-Allow-Origin'] = '*'
-    config.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     //这里会过滤所有为空、0、false的key，如果不需要请自行注释
     if (config.data)
       config.data = Vue.prototype.$baseLodash.pickBy(

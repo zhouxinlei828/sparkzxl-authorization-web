@@ -1,12 +1,14 @@
 import request from '@/utils/request'
 
 const api = {
-  tenantList: '/authorization/tenant/tenants',
-  operateTenant: '/authorization/tenant/tenant',
+  tenantPageList: '/authorization/tenant/page',
+  saveTenant: '/authorization/tenant/save',
+  updateTenant: '/authorization/tenant/update',
+  deleteTenant: '/authorization/tenant/delete',
 }
 export function getTenantPageList(parameter) {
   return request({
-    url: api.tenantList,
+    url: api.tenantPageList,
     method: 'post',
     data: parameter,
   })
@@ -14,7 +16,7 @@ export function getTenantPageList(parameter) {
 
 export function saveTenant(parameter) {
   return request({
-    url: api.operateTenant,
+    url: api.saveTenant,
     method: 'post',
     data: parameter,
   })
@@ -22,7 +24,7 @@ export function saveTenant(parameter) {
 
 export function updateTenant(parameter) {
   return request({
-    url: api.operateTenant,
+    url: api.updateTenant,
     method: 'put',
     data: parameter,
   })
@@ -30,8 +32,8 @@ export function updateTenant(parameter) {
 
 export function deleteTenant(parameter) {
   return request({
-    url: api.operateTenant,
+    url: api.deleteTenant,
     method: 'delete',
-    params: parameter,
+    data: parameter,
   })
 }

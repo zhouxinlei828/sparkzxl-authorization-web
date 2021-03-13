@@ -4,12 +4,12 @@ const api = {
   menuTree: '/authorization/menu/tree',
   menuList: '/authorization/menu/list',
   menuResource: '/authorization/resource/list',
-  saveMenu: '/authorization/menu/saveMenu',
+  saveMenu: '/authorization/menu/save',
   updateMenu: '/authorization/menu/update',
-  deleteMenu: '/authorization/menu/deleteMenu',
+  deleteMenu: '/authorization/menu/delete',
   saveResource: '/authorization/resource/save',
   updateResource: '/authorization/resource/update',
-  deleteResource: '/authorization/resource/deleteResource',
+  deleteResource: '/authorization/resource/delete',
 }
 
 export default api
@@ -58,7 +58,7 @@ export function deleteMenu(parameter) {
   return request({
     url: api.deleteMenu,
     method: 'delete',
-    data: parameter,
+    params: parameter,
   })
 }
 

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 const api = {
-  dictionaryItem: '/authorization/common/dictionaryItem/dictionaryItemList',
+  dictionaryItemList: '/authorization/common/dictionaryItem/list',
   dictionaryPage: '/authorization/common/dictionary/page',
   dictionaryItemPage: '/authorization/common/dictionaryItem/page',
   saveDictionary: '/authorization/common/dictionary/save',
@@ -14,7 +14,7 @@ const api = {
 
 export function getDictionaryItemList(parameter) {
   return request({
-    url: api.dictionaryItem,
+    url: api.dictionaryItemList,
     method: 'get',
     params: parameter,
   })

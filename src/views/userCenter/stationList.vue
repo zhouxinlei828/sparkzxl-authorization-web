@@ -229,7 +229,7 @@
         return jsonArray
       },
       handleDelete(id) {
-        deleteStation({ id: id }).then((response) => {
+        deleteStation({ ids: [id] }).then((response) => {
           const responseData = response.data
           if (responseData) {
             this.$message.success('删除岗位成功')

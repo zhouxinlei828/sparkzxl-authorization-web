@@ -236,9 +236,11 @@
         const params = {
           pageNum: this.queryParam.pageNum,
           pageSize: this.queryParam.pageSize,
-          account: this.queryParam.account,
-          name: this.queryParam.name,
-          orgId: this.queryParam.org,
+          model: {
+            account: this.queryParam.account,
+            name: this.queryParam.name,
+            orgId: this.queryParam.org,
+          },
         }
         getUserPage(params).then((response) => {
           const result = response.data

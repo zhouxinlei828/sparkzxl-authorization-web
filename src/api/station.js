@@ -1,9 +1,11 @@
 import request from '@/utils/request'
 
 const api = {
-  stationList: '/authorization/station/stationList',
-  stationPageList: '/authorization/station/stations',
-  operateStation: '/authorization/station/station',
+  stationList: '/authorization/station/list',
+  stationPageList: '/authorization/station/page',
+  saveStation: '/authorization/station/save',
+  updateStation: '/authorization/station/update',
+  deleteStation: '/authorization/station/delete',
 }
 
 export default api
@@ -25,7 +27,7 @@ export function getStationPageList(parameter) {
 
 export function saveStation(parameter) {
   return request({
-    url: api.operateStation,
+    url: api.saveStation,
     method: 'post',
     data: parameter,
   })
@@ -33,7 +35,7 @@ export function saveStation(parameter) {
 
 export function updateStation(parameter) {
   return request({
-    url: api.operateStation,
+    url: api.updateStation,
     method: 'put',
     data: parameter,
   })
@@ -41,8 +43,8 @@ export function updateStation(parameter) {
 
 export function deleteStation(parameter) {
   return request({
-    url: api.operateStation,
+    url: api.deleteStation,
     method: 'delete',
-    params: parameter,
+    data: parameter,
   })
 }

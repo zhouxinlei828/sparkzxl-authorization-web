@@ -1,8 +1,9 @@
 import request from '@/utils/request'
 
 const api = {
-  orgList: '/authorization/org/orgs',
-  operateOrg: '/authorization/org/org',
+  orgTree: '/authorization/org/tree',
+  saveOrg: '/authorization/org/save',
+  updateOrg: '/authorization/org/update',
   deleteOrg: '/authorization/org/org/batch',
 }
 
@@ -10,7 +11,7 @@ export default api
 
 export function getOrgList(parameter) {
   return request({
-    url: api.orgList,
+    url: api.orgTree,
     method: 'get',
     params: parameter,
   })
@@ -18,7 +19,7 @@ export function getOrgList(parameter) {
 
 export function saveOrg(parameter) {
   return request({
-    url: api.operateOrg,
+    url: api.saveOrg,
     method: 'post',
     data: parameter,
   })
@@ -26,7 +27,7 @@ export function saveOrg(parameter) {
 
 export function updateOrg(parameter) {
   return request({
-    url: api.operateOrg,
+    url: api.updateOrg,
     method: 'put',
     data: parameter,
   })

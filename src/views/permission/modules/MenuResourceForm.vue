@@ -177,7 +177,8 @@
         this.form.describe = record.describe
       },
       handleDeleteResource(id) {
-        deleteResource({ id: id }).then((response) => {
+        debugger
+        deleteResource({ ids: [id] }).then((response) => {
           const responseData = response.data
           if (responseData) {
             this.$message.success('删除菜单资源成功')

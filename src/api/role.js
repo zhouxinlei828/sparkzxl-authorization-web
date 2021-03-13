@@ -5,12 +5,12 @@ const api = {
   saveRole: '/authorization/role/save',
   updateRole: '/authorization/role/update',
   deleteRole: '/authorization/role/delete',
-  roleUserList: '/authorization/role/roleUserList',
-  saveAuthRoleUser: '/authorization/role/saveRoleUser',
+  roleUserList: '/authorization/role/user/list',
+  saveAuthRoleUser: '/authorization/role/user/save',
   getResourceList: '/authorization/resource/list',
-  getRoleResource: '/authorization/role/getRoleResource',
+  getRoleResource: '/authorization/role/resource',
   saveRoleAuthority: '/authorization/role/authority/batch',
-  refreshAuthority: '',
+  refreshAuthority: '/authorization/role/authority/refresh',
 }
 
 export default api
