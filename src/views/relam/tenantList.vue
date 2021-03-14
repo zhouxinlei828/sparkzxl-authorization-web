@@ -36,8 +36,25 @@
     >
       重置
     </el-button>
-    <div class="table-operator">
-      <el-button size="small" type="primary" @click="handleAdd">新建</el-button>
+    <el-divider content-position="left">租户列表</el-divider>
+    <div class="filter-container">
+      <el-button
+        size="small"
+        class="filter-item"
+        icon="el-icon-plus"
+        type="primary"
+        @click="handleAdd"
+      >
+        新建
+      </el-button>
+      <el-button
+        class="filter-item button-item"
+        icon="el-icon-delete"
+        type="danger"
+        @click="handleBatchDelete"
+      >
+        批量删除
+      </el-button>
     </div>
     <el-table
       v-loading="tableLoading"
@@ -47,7 +64,13 @@
       border
       style="width: 100%"
       max-height="450"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column
+        show-overflow-tooltip
+        type="selection"
+        width="40"
+      ></el-table-column>
       <el-table-column type="expand" label="管理员" width="70">
         <template slot-scope="props">
           <el-form label-position="left" inline>
@@ -145,8 +168,6 @@
     },
     data() {
       return {
-        showPagination: true,
-        advanced: false,
         total: 0,
         // 查询参数
         queryParam: {
@@ -159,22 +180,16 @@
         orgData: [],
         stationData: [],
         tableLoading: false,
-        selectedRowKeys: [],
         selectedRows: [],
       }
-    },
-    computed: {
-      rowSelection() {
-        return {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange,
-        }
-      },
     },
     mounted() {
       this.getTenantList()
     },
     methods: {
+      handleSelectionChange(val) {
+        this.selectedRows = val
+      },
       handleSizeChange(val) {
         this.queryParam.pageSize = val
         this.getTenantList()
@@ -269,13 +284,26 @@
           }
         })
       },
-      onSelectChange(selectedRowKeys, selectedRows) {
-        this.selectedRowKeys = selectedRowKeys
-        this.selectedRows = selectedRows
-      },
-      resetSearchForm() {
-        this.queryParam = {
-          date: moment(new Date()),
+      handleBatchDelete() {
+        if (this.selectedRows.length > 0) {
+          const ids = []
+          this.selectedRows.map((item) => ids.push(item.id))
+          this.$baseConfirm('你确定要删除选中项吗', null, async () => {
+            const parameter = {
+              ids: ids,
+            }
+            deleteTenant(parameter).then((response) => {
+              const responseData = response.data
+              if (responseData) {
+                this.$message.success('删除租户成功')
+                this.getTenantList()
+              } else {
+                this.$message.error('删除租户失败')
+              }
+            })
+          })
+        } else {
+          this.$message.error('未选中任何行')
         }
       },
     },

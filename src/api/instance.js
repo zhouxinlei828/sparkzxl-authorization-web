@@ -47,7 +47,7 @@ export function deleteProcessInstance(parameter) {
   return request({
     url: api.deleteProcessInstance,
     method: 'delete',
-    params: parameter,
+    data: parameter,
   })
 }
 

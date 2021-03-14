@@ -32,8 +32,25 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <div class="table-operator">
-      <el-button size="small" type="primary" @click="handleAdd">新建</el-button>
+    <el-divider content-position="left">流程列表</el-divider>
+    <div class="filter-container">
+      <el-button
+        size="small"
+        class="filter-item"
+        icon="el-icon-plus"
+        type="primary"
+        @click="handleAdd"
+      >
+        新建
+      </el-button>
+      <el-button
+        class="filter-item button-item"
+        icon="el-icon-delete"
+        type="danger"
+        @click="handleBatchDelete"
+      >
+        批量删除
+      </el-button>
     </div>
     <el-table
       v-loading="tableLoading"
@@ -43,7 +60,13 @@
       border
       style="width: 100%"
       max-height="450"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column
+        show-overflow-tooltip
+        type="selection"
+        width="40"
+      ></el-table-column>
       <el-table-column prop="name" label="流程名称"></el-table-column>
       <el-table-column prop="key" label="流程key" width="180"></el-table-column>
       <el-table-column
@@ -117,6 +140,7 @@
   import EditFlowChartForm from './modules/EditFlowChartForm'
   import CreateModelForm from './modules/CreateModelForm'
   import CreateRuleForm from './modules/CreateRuleForm'
+  import { deleteApplication } from '@/api/client'
 
   export default {
     name: 'TableList',
@@ -137,6 +161,7 @@
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         modelData: [],
+        selectedRows: [],
         tableLoading: false,
       }
     },
@@ -144,6 +169,9 @@
       this.getModelList()
     },
     methods: {
+      handleSelectionChange(val) {
+        this.selectedRows = val
+      },
       handleSizeChange(val) {
         this.queryParam.pageSize = val
         this.getModelList()
@@ -207,9 +235,26 @@
           }
         })
       },
-      resetSearchForm() {
-        this.queryParam = {
-          date: moment(new Date()),
+      handleBatchDelete() {
+        if (this.selectedRows.length > 0) {
+          const ids = []
+          this.selectedRows.map((item) => ids.push(item.id))
+          this.$baseConfirm('你确定要删除选中项吗', null, async () => {
+            const parameter = {
+              ids: ids,
+            }
+            deleteModel(parameter).then((response) => {
+              const responseData = response.data
+              if (responseData) {
+                this.$message.success('删除流程成功')
+                this.getModelList()
+              } else {
+                this.$message.error('删除流程失败')
+              }
+            })
+          })
+        } else {
+          this.$message.error('未选中任何行')
         }
       },
     },

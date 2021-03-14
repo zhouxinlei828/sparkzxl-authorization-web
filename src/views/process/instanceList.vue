@@ -28,6 +28,17 @@
         </el-button>
       </el-form-item>
     </el-form>
+    <el-divider content-position="left">流程列表</el-divider>
+    <div class="filter-container">
+      <el-button
+        class="filter-item button-item"
+        icon="el-icon-delete"
+        type="danger"
+        @click="handleBatchDelete"
+      >
+        批量删除
+      </el-button>
+    </div>
     <el-table
       v-loading="tableLoading"
       element-loading-text="拼命加载中"
@@ -36,10 +47,16 @@
       border
       style="width: 100%"
       max-height="450"
+      @selection-change="handleSelectionChange"
     >
       <el-table-column
+        show-overflow-tooltip
+        type="selection"
+        width="40"
+      ></el-table-column>
+      <el-table-column
         prop="processInstanceId"
-        label="流程实例id"
+        label="实例id"
       ></el-table-column>
       <el-table-column prop="businessKey" label="业务主键"></el-table-column>
       <el-table-column prop="processName" label="流程名称"></el-table-column>
@@ -127,6 +144,7 @@
 
   import ViewFlowChartForm from './modules/ViewFlowChartForm'
   import ProcessHistoryForm from './modules/ProcessHistoryForm'
+  import { deleteModel } from '@/api/model'
 
   export default {
     components: {
@@ -144,6 +162,7 @@
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         modelData: [],
+        selectedRows: [],
         tableLoading: false,
       }
     },
@@ -151,6 +170,9 @@
       this.getProcessInstanceList()
     },
     methods: {
+      handleSelectionChange(val) {
+        this.selectedRows = val
+      },
       handleSizeChange(val) {
         this.queryParam.pageSize = val
         this.getProcessInstanceList()
@@ -213,8 +235,7 @@
       },
       handlerDeleteProcess(processInstanceId) {
         const requestData = {
-          processInstanceId: processInstanceId,
-          deleteReason: '删除流程',
+          ids: [processInstanceId],
         }
         deleteProcessInstance(requestData).then((response) => {
           const responseData = response.data
@@ -225,6 +246,28 @@
             this.$message.error('删除流程实例失败')
           }
         })
+      },
+      handleBatchDelete() {
+        if (this.selectedRows.length > 0) {
+          const ids = []
+          this.selectedRows.map((item) => ids.push(item.id))
+          this.$baseConfirm('你确定要删除选中项吗', null, async () => {
+            const requestData = {
+              ids: ids,
+            }
+            deleteProcessInstance(requestData).then((response) => {
+              const responseData = response.data
+              if (responseData) {
+                this.$message.success('删除流程实例成功')
+                this.getProcessInstanceList()
+              } else {
+                this.$message.error('删除流程实例失败')
+              }
+            })
+          })
+        } else {
+          this.$message.error('未选中任何行')
+        }
       },
       getProcessHistory(processInstanceId) {
         this.$refs['processHistoryForm'].showDialog(processInstanceId)

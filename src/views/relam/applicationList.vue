@@ -36,8 +36,25 @@
     >
       重置
     </el-button>
-    <div class="table-operator">
-      <el-button size="small" type="primary" @click="handleAdd">新建</el-button>
+    <el-divider content-position="left">应用列表</el-divider>
+    <div class="filter-container">
+      <el-button
+        size="small"
+        class="filter-item"
+        icon="el-icon-plus"
+        type="primary"
+        @click="handleAdd"
+      >
+        新建
+      </el-button>
+      <el-button
+        class="filter-item button-item"
+        icon="el-icon-delete"
+        type="danger"
+        @click="handleBatchDelete"
+      >
+        批量删除
+      </el-button>
     </div>
     <el-table
       v-loading="tableLoading"
@@ -47,7 +64,13 @@
       border
       style="width: 100%"
       max-height="450"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column
+        show-overflow-tooltip
+        type="selection"
+        width="40"
+      ></el-table-column>
       <el-table-column
         prop="tenantName"
         label="租户"
@@ -114,8 +137,6 @@
     },
     data() {
       return {
-        showPagination: true,
-        advanced: false,
         total: 0,
         // 查询参数
         queryParam: {
@@ -128,22 +149,16 @@
         orgData: [],
         stationData: [],
         tableLoading: false,
-        selectedRowKeys: [],
         selectedRows: [],
       }
-    },
-    computed: {
-      rowSelection() {
-        return {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange,
-        }
-      },
     },
     mounted() {
       this.getApplicationPageList()
     },
     methods: {
+      handleSelectionChange(val) {
+        this.selectedRows = val
+      },
       handleSizeChange(val) {
         this.queryParam.pageSize = val
         this.getApplicationPageList()
@@ -270,20 +285,33 @@
         deleteApplication({ ids: [id] }).then((response) => {
           const responseData = response.data
           if (responseData) {
-            this.$message.success('删除客户端成功')
+            this.$message.success('删除应用成功')
             this.getApplicationPageList()
           } else {
-            this.$message.error('删除客户端失败')
+            this.$message.error('删除应用失败')
           }
         })
       },
-      onSelectChange(selectedRowKeys, selectedRows) {
-        this.selectedRowKeys = selectedRowKeys
-        this.selectedRows = selectedRows
-      },
-      resetSearchForm() {
-        this.queryParam = {
-          date: moment(new Date()),
+      handleBatchDelete() {
+        if (this.selectedRows.length > 0) {
+          const ids = []
+          this.selectedRows.map((item) => ids.push(item.id))
+          this.$baseConfirm('你确定要删除选中项吗', null, async () => {
+            const parameter = {
+              ids: ids,
+            }
+            deleteApplication(parameter).then((response) => {
+              const responseData = response.data
+              if (responseData) {
+                this.$message.success('删除应用成功')
+                this.getApplicationPageList()
+              } else {
+                this.$message.error('删除应用失败')
+              }
+            })
+          })
+        } else {
+          this.$message.error('未选中任何行')
         }
       },
     },
