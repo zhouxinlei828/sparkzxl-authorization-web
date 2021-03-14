@@ -35,7 +35,8 @@
     >
       重置
     </el-button>
-    <div class="filter-container" style="padding-top: 10px">
+    <el-divider content-position="left">用户列表</el-divider>
+    <div class="filter-container">
       <el-button
         size="small"
         class="filter-item"
@@ -59,7 +60,9 @@
         :href="excelTemplate"
         :underline="false"
       >
-        <el-button size="small" icon="cloud-download">下载EXCEL模板</el-button>
+        <el-button size="small" icon="el-icon-download">
+          下载EXCEL模板
+        </el-button>
       </el-link>
       <el-upload
         ref="upload"
@@ -72,7 +75,7 @@
       >
         <el-button size="small">
           <IconFont type="icon-daoru" />
-          导入用户
+          <span style="margin-left: 5px">导入</span>
         </el-button>
       </el-upload>
       <el-button
@@ -81,7 +84,7 @@
         @click="exportExcelUserData"
       >
         <IconFont type="icon-daochu" />
-        导出
+        <span style="margin-left: 5px">导出</span>
       </el-button>
     </div>
     <el-table
