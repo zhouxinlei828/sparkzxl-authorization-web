@@ -32,8 +32,57 @@
     >
       重置
     </el-button>
-    <div class="filter-container" style="padding-top: 10px">
-      <el-button size="small" type="primary" @click="handleAdd">新建</el-button>
+    <el-divider content-position="left">岗位列表</el-divider>
+    <div class="filter-container">
+      <el-button
+        size="small"
+        class="filter-item"
+        icon="el-icon-plus"
+        type="primary"
+        @click="handleAdd"
+      >
+        新建
+      </el-button>
+      <el-button
+        class="filter-item button-item"
+        icon="el-icon-delete"
+        type="danger"
+        @click="handleBatchDelete"
+      >
+        批量删除
+      </el-button>
+      <el-link
+        class="filter-item button-item"
+        target="_blank"
+        :href="excelTemplate"
+        :underline="false"
+      >
+        <el-button size="small" icon="el-icon-download">
+          下载EXCEL模板
+        </el-button>
+      </el-link>
+      <el-upload
+        ref="upload"
+        class="filter-item button-item"
+        :accept="uploadAccept"
+        action=""
+        :http-request="handleImportData"
+        :limit="1"
+        :show-file-list="false"
+      >
+        <el-button size="small">
+          <IconFont type="icon-daoru" />
+          <span style="margin-left: 5px">导入</span>
+        </el-button>
+      </el-upload>
+      <el-button
+        size="small"
+        class="filter-item button-item"
+        @click="handleExportExcelData"
+      >
+        <IconFont type="icon-daochu" />
+        <span style="margin-left: 5px">导出</span>
+      </el-button>
     </div>
     <el-table
       v-loading="tableLoading"
@@ -43,7 +92,13 @@
       border
       style="width: 100%"
       max-height="450"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column
+        show-overflow-tooltip
+        type="selection"
+        width="40"
+      ></el-table-column>
       <el-table-column prop="name" label="岗位名称"></el-table-column>
       <el-table-column
         prop="describe"
@@ -104,9 +159,15 @@
 <script>
   import moment from 'moment'
   import { getOrgList } from '@/api/org'
-  import { getStationPageList, deleteStation } from '@/api/station'
+  import {
+    getStationPageList,
+    deleteStation,
+    importStationData,
+    exportStationExcelData,
+  } from '@/api/station'
 
   import StationEditForm from './modules/StationEditForm'
+  import { downloadFile } from '@/utils/util'
 
   export default {
     components: {
@@ -114,8 +175,8 @@
     },
     data() {
       return {
-        showPagination: true,
-        advanced: false,
+        uploadAccept: '.xls,.xlsx',
+        excelTemplate: 'https://oss.sparksys.top/template/岗位导入模板.xlsx',
         total: 0,
         // 查询参数
         queryParam: {
@@ -131,14 +192,6 @@
         selectedRowKeys: [],
         selectedRows: [],
       }
-    },
-    computed: {
-      rowSelection() {
-        return {
-          selectedRowKeys: this.selectedRowKeys,
-          onChange: this.onSelectChange,
-        }
-      },
     },
     mounted() {
       this.getOrgList()
@@ -241,14 +294,59 @@
           }
         })
       },
-      onSelectChange(selectedRowKeys, selectedRows) {
-        this.selectedRowKeys = selectedRowKeys
-        this.selectedRows = selectedRows
-      },
-      resetSearchForm() {
-        this.queryParam = {
-          date: moment(new Date()),
+      handleBatchDelete() {
+        if (this.selectedRows.length > 0) {
+          const ids = []
+          this.selectedRows.map((item) => ids.push(item.id))
+          this.$baseConfirm('你确定要删除选中项吗', null, async () => {
+            const parameter = {
+              ids: ids,
+            }
+            debugger
+            deleteStation(parameter).then((response) => {
+              const responseData = response.data
+              if (responseData) {
+                this.$message.success('删除岗位成功')
+                this.getStationList()
+              } else {
+                this.$message.error('删除岗位失败')
+              }
+            })
+          })
+        } else {
+          this.$message.error('未选中任何行')
         }
+      },
+      handleImportData(data) {
+        const formData = new FormData()
+        formData.append('file', data.file)
+        importStationData(formData).then((response) => {
+          const responseData = response.data
+          if (responseData > 0) {
+            this.$message.success('导入岗位' + responseData + '条记录')
+            this.getUserPage()
+          } else {
+            this.$message.error('导入岗位失败')
+          }
+        })
+      },
+      async handleExportExcelData() {
+        const params = {
+          name: this.queryParam.name,
+          org:
+            this.queryParam.orgId === null
+              ? null
+              : {
+                  key: this.queryParam.orgId,
+                  data: null,
+                },
+        }
+        exportStationExcelData(params).then((response) => {
+          downloadFile(response)
+        })
+      },
+      handleSelectionChange(val) {
+        this.selectedRows = val
       },
     },
   }

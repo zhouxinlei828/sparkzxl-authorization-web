@@ -69,7 +69,7 @@
         class="filter-item button-item"
         :accept="uploadAccept"
         action=""
-        :http-request="handleImportUserData"
+        :http-request="handleImportData"
         :limit="1"
         :show-file-list="false"
       >
@@ -81,7 +81,7 @@
       <el-button
         size="small"
         class="filter-item button-item"
-        @click="exportExcelUserData"
+        @click="handleExportExcelData"
       >
         <IconFont type="icon-daochu" />
         <span style="margin-left: 5px">导出</span>
@@ -214,7 +214,7 @@
         uploadAccept: '.xls,.xlsx',
         orgData: [],
         tableLoading: false,
-        excelTemplate: 'https://oss.sparksys.top/images/用户导入模板.xlsx',
+        excelTemplate: 'https://oss.sparksys.top/template/用户导入模板.xlsx',
         selectedRows: [],
       }
     },
@@ -329,7 +329,8 @@
       },
       handleBatchDelete() {
         if (this.selectedRows.length > 0) {
-          const ids = this.selectedRows.map((item) => item.id).join()
+          const ids = []
+          this.selectedRows.map((item) => ids.push(item.id))
           this.$baseConfirm('你确定要删除选中项吗', null, async () => {
             const parameter = {
               ids: ids,
@@ -348,7 +349,7 @@
           this.$message.error('未选中任何行')
         }
       },
-      handleImportUserData(data) {
+      handleImportData(data) {
         const formData = new FormData()
         formData.append('file', data.file)
         importUserData(formData).then((response) => {
@@ -361,7 +362,7 @@
           }
         })
       },
-      async exportExcelUserData() {
+      async handleExportExcelData() {
         const params = {
           account: this.queryParam.account,
           name: this.queryParam.name,
@@ -375,12 +376,6 @@
         this.queryParam = {
           date: moment(new Date()),
         }
-      },
-      handleDownloadExcelTemplate() {
-        window.open(
-          'https://oss.sparksys.top/images/用户导入模板.xlsx',
-          '_blank'
-        )
       },
     },
   }

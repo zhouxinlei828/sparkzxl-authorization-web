@@ -6,6 +6,8 @@ const api = {
   saveStation: '/authorization/station/save',
   updateStation: '/authorization/station/update',
   deleteStation: '/authorization/station/delete',
+  importStationData: '/authorization/station/import',
+  exportStationData: '/authorization/station/export',
 }
 
 export default api
@@ -46,6 +48,23 @@ export function deleteStation(parameter) {
   return request({
     url: api.deleteStation,
     method: 'delete',
+    data: parameter,
+  })
+}
+
+export function importStationData(parameter) {
+  return request({
+    url: api.importStationData,
+    method: 'post',
+    data: parameter,
+  })
+}
+
+export function exportStationExcelData(parameter) {
+  return request({
+    url: api.exportStationData,
+    method: 'post',
+    responseType: 'blob',
     data: parameter,
   })
 }
