@@ -27,18 +27,41 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <div class="table-operator">
-      <el-button size="small" type="primary" @click="handleAdd">新建</el-button>
+    <el-divider content-position="left">角色列表</el-divider>
+    <div class="filter-container">
+      <el-button
+        size="small"
+        class="filter-item"
+        icon="el-icon-plus"
+        type="primary"
+        @click="handleAdd"
+      >
+        新建
+      </el-button>
+      <el-button
+        class="filter-item button-item"
+        icon="el-icon-delete"
+        type="danger"
+        @click="handleBatchDelete"
+      >
+        批量删除
+      </el-button>
     </div>
     <el-table
       v-loading="tableLoading"
       element-loading-text="拼命加载中"
       element-loading-spinner="el-icon-loading"
-      :data="modelData"
+      :data="roleData"
       border
       style="width: 100%"
       max-height="450"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column
+        show-overflow-tooltip
+        type="selection"
+        width="40"
+      ></el-table-column>
       <el-table-column prop="code" label="编码"></el-table-column>
       <el-table-column prop="name" label="角色名称"></el-table-column>
       <el-table-column
@@ -116,16 +139,7 @@
     },
     data() {
       return {
-        createVisible: false,
-        createData: null,
-        updateVisible: false,
-        updateData: null,
-        roleUserVisible: false,
-        roleAuthorityVisible: false,
-        roleUserData: null,
-        roleAuthorityData: null,
-        confirmLoading: false,
-        advanced: false,
+        selectedRows: [],
         tableLoading: false,
         userList: [],
         // 查询参数
@@ -137,7 +151,7 @@
         },
         total: 0,
         layout: 'total, sizes, prev, pager, next, jumper',
-        modelData: [],
+        roleData: [],
       }
     },
     mounted() {
@@ -145,6 +159,9 @@
       this.getUserList()
     },
     methods: {
+      handleSelectionChange(val) {
+        this.selectedRows = val
+      },
       handleSizeChange(val) {
         this.queryParam.pageSize = val
         this.getRoleList()
@@ -167,8 +184,8 @@
         getRoleList(params).then((response) => {
           const responseData = response.data
           this.total = parseInt(responseData.total)
-          this.modelData = responseData.list
-          for (const model of this.modelData) {
+          this.roleData = responseData.list
+          for (const model of this.roleData) {
             model.createTime = moment(model.createTime).format(
               'YYYY-MM-DD HH:mm:ss'
             )
@@ -205,6 +222,29 @@
             this.$message.error('删除角色失败')
           }
         })
+      },
+      handleBatchDelete() {
+        if (this.selectedRows.length > 0) {
+          const ids = []
+          this.selectedRows.map((item) => ids.push(item.id))
+          this.$baseConfirm('你确定要删除选中项吗', null, async () => {
+            const parameter = {
+              ids: ids,
+            }
+            debugger
+            deleteRole(parameter).then((response) => {
+              const responseData = response.data
+              if (responseData) {
+                this.$message.success('删除角色成功')
+                this.getRoleList()
+              } else {
+                this.$message.error('删除角色失败')
+              }
+            })
+          })
+        } else {
+          this.$message.error('未选中任何行')
+        }
       },
       handleRoleUser(id) {
         const data = {

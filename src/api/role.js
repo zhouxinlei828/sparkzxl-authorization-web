@@ -43,7 +43,7 @@ export function deleteRole(parameter) {
   return request({
     url: api.deleteRole,
     method: 'delete',
-    params: parameter,
+    data: parameter,
   })
 }
 
