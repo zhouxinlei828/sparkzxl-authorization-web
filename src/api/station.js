@@ -10,10 +10,11 @@ const api = {
 
 export default api
 
-export function getStationList() {
+export function getStationList(parameter) {
   return request({
     url: api.stationList,
-    method: 'get',
+    method: 'post',
+    data: parameter,
   })
 }
 

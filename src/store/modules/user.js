@@ -98,7 +98,6 @@ const actions = {
     return false
   },
   async getUserInfo({ commit }) {
-    debugger
     const { data } = await userInfo()
     if (!data) {
       Vue.prototype.$baseMessage('获取用户信息失败，请重新登录...', 'error')

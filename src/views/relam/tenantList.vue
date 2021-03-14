@@ -185,7 +185,15 @@
       },
       async getTenantList() {
         this.tableLoading = true
-        getTenantPageList(this.queryParam).then((response) => {
+        const queryParam = {
+          pageNum: this.queryParam.pageNum,
+          pageSize: this.queryParam.pageSize,
+          model: {
+            code: this.queryParam.code,
+            name: this.queryParam.name,
+          },
+        }
+        getTenantPageList(queryParam).then((response) => {
           const result = response.data
           this.total = parseInt(result.total)
           this.stationData = result.list

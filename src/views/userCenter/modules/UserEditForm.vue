@@ -38,6 +38,7 @@
           class="edit-form-item"
           :load-options="loadListOptions"
           :multiple="false"
+          placeholder="组织"
           :searchable="true"
           :options="orgData"
         />
@@ -250,7 +251,7 @@
       },
       getStationList() {
         if (this.stationData.length === 0) {
-          getStationList().then((response) => {
+          getStationList({}).then((response) => {
             this.stationData = response.data
           })
         }

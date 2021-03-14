@@ -148,7 +148,7 @@
       getOrgList() {
         if (this.orgData.length === 0) {
           const parameter = {
-            name: '',
+            name: null,
             status: true,
           }
           getOrgList(parameter).then((response) => {
@@ -169,14 +169,16 @@
         const params = {
           pageNum: this.queryParam.pageNum,
           pageSize: this.queryParam.pageSize,
-          name: this.queryParam.name,
-          org:
-            this.queryParam.orgId === ''
-              ? null
-              : {
-                  key: this.queryParam.orgId,
-                  data: null,
-                },
+          model: {
+            name: this.queryParam.name,
+            org:
+              this.queryParam.orgId === null
+                ? null
+                : {
+                    key: this.queryParam.orgId,
+                    data: null,
+                  },
+          },
         }
         getStationPageList(params).then((response) => {
           const result = response.data

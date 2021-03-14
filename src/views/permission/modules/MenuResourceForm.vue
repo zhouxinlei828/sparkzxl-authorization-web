@@ -177,7 +177,6 @@
         this.form.describe = record.describe
       },
       handleDeleteResource(id) {
-        debugger
         deleteResource({ ids: [id] }).then((response) => {
           const responseData = response.data
           if (responseData) {

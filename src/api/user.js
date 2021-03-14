@@ -3,7 +3,7 @@ import request from '@/utils/request'
 const api = {
   userPage: '/authorization/user/page',
   userList: '/authorization/user/list',
-  exportExcelUser: '/authorization/user/exportUserData',
+  exportExcelUser: '/authorization/user/export',
   saveUser: '/authorization/user/save',
   updateUser: '/authorization/user/update',
   deleteUser: '/authorization/user/delete',
@@ -31,9 +31,9 @@ export function getUserList(parameter) {
 export function exportExcelUserData(parameter) {
   return request({
     url: api.exportExcelUser,
-    method: 'get',
+    method: 'post',
     responseType: 'blob',
-    params: parameter,
+    data: parameter,
   })
 }
 export function saveUser(parameter) {

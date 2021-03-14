@@ -359,7 +359,12 @@
         })
       },
       async exportExcelUserData() {
-        exportExcelUserData({}).then((response) => {
+        const params = {
+          account: this.queryParam.account,
+          name: this.queryParam.name,
+          orgId: this.queryParam.org,
+        }
+        exportExcelUserData(params).then((response) => {
           downloadFile(response)
         })
       },

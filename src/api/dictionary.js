@@ -15,8 +15,8 @@ const api = {
 export function getDictionaryItemList(parameter) {
   return request({
     url: api.dictionaryItemList,
-    method: 'get',
-    params: parameter,
+    method: 'post',
+    data: parameter,
   })
 }
 

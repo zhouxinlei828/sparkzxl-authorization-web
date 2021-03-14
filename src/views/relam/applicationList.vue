@@ -154,7 +154,15 @@
       },
       getApplicationPageList() {
         this.tableLoading = true
-        getApplicationPageList(this.queryParam).then((response) => {
+        const queryModel = {
+          pageNum: this.queryParam.pageNum,
+          pageSize: this.queryParam.pageSize,
+          model: {
+            clientId: this.queryParam.clientId,
+            appName: this.queryParam.appName,
+          },
+        }
+        getApplicationPageList(queryModel).then((response) => {
           const result = response.data
           this.total = parseInt(result.total)
           this.stationData = result.list

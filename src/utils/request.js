@@ -19,7 +19,6 @@ import { isArray } from '@/utils/validate'
 let loadingInstance
 
 const handleCode = (code, msg) => {
-  debugger
   switch (code) {
     case tokenExpiredCode:
       Vue.prototype.$baseNotify(msg, '错误', 'error')
