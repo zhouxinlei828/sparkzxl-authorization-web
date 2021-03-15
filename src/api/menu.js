@@ -82,6 +82,6 @@ export function deleteResource(parameter) {
   return request({
     url: api.deleteResource,
     method: 'delete',
-    params: parameter,
+    data: parameter,
   })
 }

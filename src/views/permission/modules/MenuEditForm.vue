@@ -27,7 +27,7 @@
       <el-form-item label="菜单标题:" prop="label" required>
         <el-input v-model="form.label" class="edit-form-item" />
       </el-form-item>
-      <el-form-item label="菜单图标:" prop="icon" required style="width: 300px">
+      <el-form-item label="菜单图标:" prop="icon" style="width: 300px">
         <el-popover
           v-model="iconVisible"
           placement="bottom-start"
@@ -317,9 +317,6 @@
         rules: {
           label: [
             { required: true, message: '菜单名称不能为空', trigger: 'blur' },
-          ],
-          icon: [
-            { required: true, message: '菜单图标不能为空', trigger: 'blur' },
           ],
           status: [
             { required: true, message: '状态不能为空', trigger: 'blur' },

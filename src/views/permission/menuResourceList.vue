@@ -167,7 +167,7 @@
           describe: row.describe,
           menuTree: this.menuData,
         }
-        this.$refs['createMenuForm'].showDialog(data)
+        this.$refs['menuEditForm'].showDialog(data)
       },
       handleAddResource(menuId) {
         const data = {
