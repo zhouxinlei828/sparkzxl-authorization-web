@@ -1,12 +1,12 @@
 import request from '@/utils/request'
 
 const api = {
-  processInstanceList: '/activiti/instance/page',
-  instanceOverview: '/activiti/instance/overview',
-  historyList: '/activiti/instance/historyList',
-  suspendProcess: '/activiti/drive/suspend',
-  deleteProcessInstance: '/activiti/drive/process/delete',
-  showFlowChart: '/activiti/instance/flowChart',
+  processInstanceList: '/workflow/instance/page',
+  instanceOverview: '/workflow/instance/overview',
+  historyList: '/workflow/instance/historyList',
+  suspendProcess: '/workflow/drive/suspend',
+  deleteProcessInstance: '/workflow/drive/process/delete',
+  showFlowChart: '/workflow/instance/flowChart',
 }
 
 export default api

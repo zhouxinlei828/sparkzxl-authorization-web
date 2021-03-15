@@ -1,16 +1,16 @@
 import request from '@/utils/request'
 
 const api = {
-  modelList: '/activiti/modeler/page',
-  createModel: '/activiti/modeler/save',
-  deleteModel: '/activiti/modeler/delete',
-  publishProcess: '/activiti/modeler/publish',
-  revokePublish: '/activiti/modeler/backout',
-  processDetailList: '/activiti/process/detail/list',
-  processAction: '/activiti/process/rule/action',
-  saveProcessTaskRule: '/activiti/process/rule/save',
-  getProcessTaskRule: '/activiti/process/rule/get',
-  deleteProcessTaskRule: '/activiti/process/rule/delete',
+  modelList: '/workflow/modeler/page',
+  createModel: '/workflow/modeler/save',
+  deleteModel: '/workflow/modeler/delete',
+  publishProcess: '/workflow/modeler/publish',
+  revokePublish: '/workflow/modeler/backout',
+  processDetailList: '/workflow/process/detail/list',
+  processAction: '/workflow/process/rule/action',
+  saveProcessTaskRule: '/workflow/process/rule/save',
+  getProcessTaskRule: '/workflow/process/rule/get',
+  deleteProcessTaskRule: '/workflow/process/rule/delete',
 }
 
 export default api

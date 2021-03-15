@@ -61,7 +61,7 @@ module.exports = {
         ws: false,
         changeOrigin: true,
         pathRewrite: {
-          '^/service': '/api/activiti/',
+          '^/service': '/api/workflow/',
         },
       },
     },
