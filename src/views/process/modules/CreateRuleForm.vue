@@ -165,7 +165,7 @@
       },
       loadData() {
         const requestData = {
-          processDefinitionKey: this.processDefinitionKey,
+          procDefKey: this.processDefinitionKey,
           taskDefKey: this.taskDefKey,
         }
         return getProcessTaskRule(requestData).then((response) => {

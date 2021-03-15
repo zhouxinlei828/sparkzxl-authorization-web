@@ -225,7 +225,7 @@
         this.$refs['createRuleForm'].showDialog(data)
       },
       handleDelete(id) {
-        deleteModel({ modelId: id }).then((response) => {
+        deleteModel({ ids: [id] }).then((response) => {
           const responseData = response.data
           if (responseData) {
             this.$message.success('删除流程成功')

@@ -1,10 +1,85 @@
 <template>
   <el-dialog
-    title="查看流程任务历史"
+    title="查看流程实例信息"
     :visible.sync="dialogFormVisible"
     width="950px"
     @close="closeDialog"
   >
+    <el-form
+      ref="ruleForm"
+      :model="form"
+      :inline="true"
+      size="small"
+      label-width="100px"
+    >
+      <el-divider content-position="left">流程实例基本信息</el-divider>
+      <el-row>
+        <el-col span="8">
+          <el-form-item label="流程定义key:" prop="processKey">
+            <el-tag type="success" disable-transitions>
+              {{ form.processKey }}
+            </el-tag>
+          </el-form-item>
+        </el-col>
+        <el-col span="8">
+          <el-form-item label="流程名称:" prop="processName">
+            <el-tag type="success" disable-transitions>
+              {{ form.processName }}
+            </el-tag>
+          </el-form-item>
+        </el-col>
+        <el-col span="8">
+          <el-form-item label="流程运行状态:" prop="status">
+            <el-tag type="success" disable-transitions>
+              {{ form.status }}
+            </el-tag>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col span="8">
+          <el-form-item label="是否挂起:" prop="suspensionState">
+            <el-tag
+              :type="form.suspensionState.id === 2 ? 'danger' : 'primary'"
+              disable-transitions
+            >
+              {{ form.suspensionState.name }}
+            </el-tag>
+          </el-form-item>
+        </el-col>
+        <el-col span="8">
+          <el-form-item label="开始时间:" prop="suspensionState">
+            <el-tag type="success" disable-transitions>
+              {{ form.startTime }}
+            </el-tag>
+          </el-form-item>
+        </el-col>
+        <el-col span="8">
+          <el-form-item label="完成时间:" prop="finishTime">
+            <el-tag type="success" disable-transitions>
+              {{ form.finishTime }}
+            </el-tag>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col span="8">
+          <el-form-item label="发起人:" prop="originator">
+            <el-tag type="success" disable-transitions>
+              {{ form.originator }}
+            </el-tag>
+          </el-form-item>
+        </el-col>
+        <el-col span="8">
+          <el-form-item label="流程耗时:" prop="originator">
+            <el-tag type="success" disable-transitions>
+              {{ form.dueTime }}
+            </el-tag>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <el-divider content-position="left">流程任务历史</el-divider>
     <el-table
       :data="tableData"
       border
@@ -52,64 +127,35 @@
   }
 </style>
 <script>
-  import { processHistoryByProcessInstanceId } from '@/api/instance'
+  import { historyList } from '@/api/instance'
   import moment from 'moment'
 
   export default {
     data() {
       return {
         dialogFormVisible: false,
-        ruleColumns: [
-          {
-            title: '任务名称',
-            dataIndex: 'taskName',
+        form: {
+          processInstanceId: null,
+          processKey: null,
+          processName: null,
+          status: null,
+          suspensionState: {
+            id: null,
+            name: null,
           },
-          {
-            title: '开始时间',
-            dataIndex: 'startTime',
-            align: 'center',
-          },
-          {
-            title: '处理时间',
-            dataIndex: 'endTime',
-            align: 'center',
-          },
-          {
-            title: '耗时',
-            dataIndex: 'durationTime',
-            align: 'center',
-          },
-          {
-            title: '候选人',
-            dataIndex: 'candidate',
-            align: 'center',
-          },
-          {
-            title: '处理人',
-            dataIndex: 'assignee',
-            align: 'center',
-          },
-          {
-            title: '到期时间',
-            dataIndex: 'dueDate',
-          },
-          {
-            title: '任务处理状态',
-            dataIndex: 'taskStatus',
-            align: 'center',
-          },
-          {
-            title: '备注/意见',
-            dataIndex: 'comment',
-          },
-        ],
+          startTime: null,
+          finishTime: null,
+          originator: null,
+          dueTime: null,
+        },
         tableData: [],
       }
     },
     methods: {
       showDialog(data) {
+        this.form = data
         this.dialogFormVisible = true
-        this.loadData(data)
+        this.loadData(data.processInstanceId)
       },
       tableRowClassName({ row, rowIndex }) {
         if (rowIndex === this.tableData.length - 1) {
@@ -118,8 +164,9 @@
         return ''
       },
       loadData(processInstanceId) {
-        return processHistoryByProcessInstanceId({
+        return historyList({
           processInstanceId: processInstanceId,
+          type: 2,
         }).then((response) => {
           this.tableData = response.data
           for (let i = 0; i < this.tableData.length; i++) {

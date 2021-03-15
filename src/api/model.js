@@ -1,14 +1,16 @@
 import request from '@/utils/request'
 
 const api = {
-  modelList: '/activiti/modeler/model/list',
-  createModel: '/activiti/modeler/model',
-  deleteModel: '/activiti/modeler/deleteProcessInstance',
+  modelList: '/activiti/modeler/page',
+  createModel: '/activiti/modeler/save',
+  deleteModel: '/activiti/modeler/delete',
   publishProcess: '/activiti/modeler/publish',
-  revokePublish: '/activiti/modeler/revokePublish',
-  processDetailList: '/activiti/process/detail/processDetail',
+  revokePublish: '/activiti/modeler/backout',
+  processDetailList: '/activiti/process/detail/list',
   processAction: '/activiti/process/rule/action',
-  operateProcessTaskRule: '/activiti/process/rule/processTaskRule',
+  saveProcessTaskRule: '/activiti/process/rule/save',
+  getProcessTaskRule: '/activiti/process/rule/get',
+  deleteProcessTaskRule: '/activiti/process/rule/delete',
 }
 
 export default api
@@ -33,7 +35,7 @@ export function deleteModel(parameter) {
   return request({
     url: api.deleteModel,
     method: 'delete',
-    params: parameter,
+    data: parameter,
   })
 }
 
@@ -70,7 +72,7 @@ export function getProcessAction() {
 
 export function saveProcessTaskRule(parameter) {
   return request({
-    url: api.operateProcessTaskRule,
+    url: api.saveProcessTaskRule,
     method: 'post',
     data: parameter,
   })
@@ -78,7 +80,7 @@ export function saveProcessTaskRule(parameter) {
 
 export function getProcessTaskRule(parameter) {
   return request({
-    url: api.operateProcessTaskRule,
+    url: api.getProcessTaskRule,
     method: 'get',
     params: parameter,
   })
@@ -86,7 +88,7 @@ export function getProcessTaskRule(parameter) {
 
 export function deleteProcessTaskRule(parameter) {
   return request({
-    url: api.operateProcessTaskRule,
+    url: api.deleteProcessTaskRule,
     method: 'delete',
     params: parameter,
   })

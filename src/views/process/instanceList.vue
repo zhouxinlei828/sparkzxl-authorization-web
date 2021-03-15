@@ -28,7 +28,7 @@
         </el-button>
       </el-form-item>
     </el-form>
-    <el-divider content-position="left">流程列表</el-divider>
+    <el-divider content-position="left">流程实例列表</el-divider>
     <div class="filter-container">
       <el-button
         class="filter-item button-item"
@@ -62,27 +62,16 @@
       <el-table-column prop="processName" label="流程名称"></el-table-column>
       <el-table-column prop="processKey" label="流程key"></el-table-column>
       <el-table-column prop="status" label="流程状态"></el-table-column>
-      <el-table-column prop="suspensionState" label="是否挂起">
-        <template #default="{ row }">
-          <el-tag
-            :type="row.suspensionState.id === 2 ? 'danger' : 'primary'"
-            disable-transitions
-          >
-            {{ row.suspensionState.name }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="startTime" label="创建时间"></el-table-column>
+      <el-table-column
+        prop="startTime"
+        label="创建时间"
+        width="160"
+      ></el-table-column>
       <el-table-column prop="originator" label="发起人"></el-table-column>
-      <el-table-column prop="finishTime" label="完成时间"></el-table-column>
-      <el-table-column prop="dueTime" label="耗时"></el-table-column>
       <el-table-column label="操作" align="center" width="200">
         <template #default="{ row }">
           <el-link type="primary">
-            <el-button
-              type="text"
-              @click="getProcessHistory(row.processInstanceId)"
-            >
+            <el-button type="text" @click="getProcessHistory(row)">
               查看
             </el-button>
           </el-link>
@@ -221,21 +210,25 @@
         })
       },
       handlerSuspendProcess(processInstanceId) {
-        suspendProcess({ processInstanceId: processInstanceId }).then(
-          (response) => {
-            const responseData = response.data
-            if (responseData) {
-              this.$message.success('挂起流程实例成功')
-              this.getProcessInstanceList()
-            } else {
-              this.$message.error('挂起流程实例失败')
-            }
+        const parameter = {
+          processInstanceId: processInstanceId,
+          type: 2,
+        }
+        suspendProcess(parameter).then((response) => {
+          const responseData = response.data
+          if (responseData) {
+            this.$message.success('挂起流程实例成功')
+            this.getProcessInstanceList()
+          } else {
+            this.$message.error('挂起流程实例失败')
           }
-        )
+        })
       },
       handlerDeleteProcess(processInstanceId) {
         const requestData = {
-          ids: [processInstanceId],
+          processInstanceIds: [processInstanceId],
+          type: 2,
+          deleteReason: '删除流程',
         }
         deleteProcessInstance(requestData).then((response) => {
           const responseData = response.data
@@ -253,7 +246,9 @@
           this.selectedRows.map((item) => ids.push(item.id))
           this.$baseConfirm('你确定要删除选中项吗', null, async () => {
             const requestData = {
-              ids: ids,
+              processInstanceIds: ids,
+              type: 2,
+              deleteReason: '删除流程',
             }
             deleteProcessInstance(requestData).then((response) => {
               const responseData = response.data
@@ -269,8 +264,19 @@
           this.$message.error('未选中任何行')
         }
       },
-      getProcessHistory(processInstanceId) {
-        this.$refs['processHistoryForm'].showDialog(processInstanceId)
+      getProcessHistory(row) {
+        const formData = {
+          processInstanceId: row.processInstanceId,
+          processKey: row.processKey,
+          processName: row.processName,
+          status: row.status,
+          suspensionState: row.suspensionState,
+          startTime: row.startTime,
+          finishTime: row.finishTime,
+          originator: row.originator,
+          dueTime: row.dueTime,
+        }
+        this.$refs['processHistoryForm'].showDialog(row)
       },
     },
   }

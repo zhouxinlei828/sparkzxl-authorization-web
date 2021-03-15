@@ -1,13 +1,12 @@
 import request from '@/utils/request'
 
 const api = {
-  processInstanceList: '/activiti/act/process/instances',
-  instanceOverview: '/activiti/act/process/instanceOverview',
-  processHistoryByProcessInstanceId:
-    '/activiti/act/process/processHistoryByProcessInstanceId',
-  suspendProcess: '/activiti/act/driver/suspendProcessByProcessInstanceId',
-  deleteProcessInstance: '/activiti/act/driver/deleteProcessByProcInsId',
-  showFlowChart: '/activiti/act/process/history/processImg',
+  processInstanceList: '/activiti/instance/page',
+  instanceOverview: '/activiti/instance/overview',
+  historyList: '/activiti/instance/historyList',
+  suspendProcess: '/activiti/drive/suspend',
+  deleteProcessInstance: '/activiti/drive/process/delete',
+  showFlowChart: '/activiti/instance/flowChart',
 }
 
 export default api
@@ -27,9 +26,9 @@ export function getProcessInstanceList(parameter) {
   })
 }
 
-export function processHistoryByProcessInstanceId(parameter) {
+export function historyList(parameter) {
   return request({
-    url: api.processHistoryByProcessInstanceId,
+    url: api.historyList,
     method: 'get',
     params: parameter,
   })
@@ -38,15 +37,15 @@ export function processHistoryByProcessInstanceId(parameter) {
 export function suspendProcess(parameter) {
   return request({
     url: api.suspendProcess,
-    method: 'delete',
-    params: parameter,
+    method: 'post',
+    data: parameter,
   })
 }
 
 export function deleteProcessInstance(parameter) {
   return request({
     url: api.deleteProcessInstance,
-    method: 'delete',
+    method: 'post',
     data: parameter,
   })
 }
