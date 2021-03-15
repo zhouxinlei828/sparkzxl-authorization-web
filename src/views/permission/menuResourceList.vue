@@ -21,6 +21,7 @@
         </el-button>
       </el-form-item>
     </el-form>
+    <el-divider content-position="left">菜单列表</el-divider>
     <div class="table-operator">
       <el-button size="small" type="primary" @click="handleAdd">
         添加菜单
