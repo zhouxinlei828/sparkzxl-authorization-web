@@ -89,7 +89,7 @@
           >
             {{ row.healthStatus === true ? '健康' : '下线' }}
           </el-tag>
-          <el-tag v-else type="success" disable-transitions>未注册</el-tag>
+          <el-tag v-else type="warning" disable-transitions>未注册</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="clientId" label="客户端"></el-table-column>
